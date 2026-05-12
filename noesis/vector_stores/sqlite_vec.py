@@ -125,9 +125,12 @@ class SqliteVecStore:
                 json.dumps(payload.get("extra", {})),
             ),
         )
-        rowid = cur.lastrowid
+        # cur.rowcount == 1 means a row was actually inserted
+        # (INSERT OR IGNORE succeeds only when the row is new)
+        inserted = cur.rowcount > 0
+        rowid = cur.lastrowid if inserted else 0
 
-        if _HAS_VEC and rowid:
+        if _HAS_VEC and inserted:
             self._con.execute(
                 "INSERT OR IGNORE INTO vec_items(rowid, embedding) VALUES (?,?)",
                 [rowid, _pack(vector)],
