@@ -1,0 +1,41 @@
+# ~/.noesis/config.yaml
+# Copy this file to ~/.noesis/config.yaml and edit to taste.
+#
+# Quick start:
+#   mkdir -p ~/.noesis
+#   cp config.example.yaml ~/.noesis/config.yaml
+#   noesis start
+
+# ── Hot store (local, always required) ───────────────────────────────────────
+vector_store:
+  config:
+    db_path: ~/.noesis/hot.db   # sqlite-vec database
+
+# ── Local embedding (no network, ~80MB download on first run) ────────────────
+embedder:
+  config:
+    model: all-MiniLM-L6-v2    # 384-dim, 3-8ms/sentence on CPU
+
+# ── Cold store (Obsidian vault) ───────────────────────────────────────────────
+cold_store:
+  config:
+    vault_path: ~/Documents/NoesisVault  # change to your Obsidian vault path
+
+# ── Cloud LLM for thought extraction (optional but recommended) ──────────────
+# Without this, nodes are stored as raw text with no type classification.
+# With this, the system extracts typed thoughts (position/question/event/etc.)
+llm:
+  provider: anthropic                          # or: openai
+  model:    claude-haiku-4-5-20251001          # or: gpt-4o-mini
+  # api_key: sk-ant-...                        # or set ANTHROPIC_API_KEY env var
+
+# ── API proxy settings ────────────────────────────────────────────────────────
+proxy:
+  port: 8080    # set your tool's base URL to http://localhost:8080/v1
+
+# ── Context injection tuning ──────────────────────────────────────────────────
+context:
+  budget_tokens:  1200   # max tokens of memory injected per turn
+  recency_n:         3   # always include this many recent nodes
+  core_top_k:        3   # always include this many identity/preference nodes
+  semantic_top_k:    8   # semantic search candidates before graph expansion

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 260px;
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    background: #0f0f0f;
+    color: #e0e0e0;
+    padding: 16px;
+    font-size: 13px;
+  }
+  h1 { font-size: 14px; font-weight: 600; color: #7edddd; margin-bottom: 4px; }
+  .sub { font-size: 11px; color: #666; margin-bottom: 16px; }
+  .card {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .row:last-child { margin-bottom: 0; }
+  .label { color: #888; }
+  .value { font-weight: 500; }
+  .settled    { color: #4ec994; }
+  .provisional{ color: #f0a847; }
+  .tentative  { color: #888; }
+  .disconnected { color: #e05555; font-size: 11px; }
+  input {
+    width: 100%;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 5px;
+    color: #e0e0e0;
+    padding: 6px 8px;
+    font-size: 12px;
+    margin-top: 6px;
+  }
+  button {
+    width: 100%;
+    background: #1a4a4a;
+    border: 1px solid #1a6b6b;
+    color: #7edddd;
+    border-radius: 5px;
+    padding: 7px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  button:hover { background: #1e5555; }
+  .status-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    margin-right: 5px;
+  }
+  .dot-ok  { background: #4ec994; }
+  .dot-err { background: #e05555; }
+</style>
+</head>
+<body>
+
+<h1>⬡ Noesis</h1>
+<div class="sub">Your thinking layer</div>
+
+<div class="card" id="status-card">
+  <div class="row">
+    <span class="label">Daemon</span>
+    <span id="daemon-status">checking…</span>
+  </div>
+  <div class="row">
+    <span class="label">Settled</span>
+    <span class="value settled"  id="stat-settled">—</span>
+  </div>
+  <div class="row">
+    <span class="label">Provisional</span>
+    <span class="value provisional" id="stat-prov">—</span>
+  </div>
+  <div class="row">
+    <span class="label">Tentative</span>
+    <span class="value tentative"  id="stat-tent">—</span>
+  </div>
+</div>
+
+<div class="card">
+  <div class="label">User ID</div>
+  <input type="text" id="user-id" placeholder="default" />
+  <button id="save-btn">Save</button>
+</div>
+
+<script>
+const DAEMON = "http://localhost:8082";
+
+async function refresh() {
+  const userId = document.getElementById("user-id").value || "default";
+  try {
+    const r = await fetch(`${DAEMON}/status/${userId}`, { signal: AbortSignal.timeout(2000) });
+    if (!r.ok) throw new Error("non-200");
+    const d = await r.json();
+    document.getElementById("daemon-status").innerHTML =
+      '<span class="status-dot dot-ok"></span>connected';
+    document.getElementById("stat-settled").textContent = d.settled     ?? "—";
+    document.getElementById("stat-prov").textContent    = d.provisional ?? "—";
+    document.getElementById("stat-tent").textContent    = d.tentative   ?? "—";
+  } catch {
+    document.getElementById("daemon-status").innerHTML =
+      '<span class="status-dot dot-err"></span><span class="disconnected">not running</span>';
+  }
+}
+
+// Load saved user ID
+chrome.storage.local.get(["noesisUserId"], (r) => {
+  if (r.noesisUserId) {
+    document.getElementById("user-id").value = r.noesisUserId;
+  }
+  refresh();
+});
+
+document.getElementById("save-btn").addEventListener("click", () => {
+  const uid = document.getElementById("user-id").value.trim() || "default";
+  chrome.storage.local.set({ noesisUserId: uid });
+  // Tell content scripts to update their user ID via localStorage
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs[0]) {
+      chrome.scripting.executeScript({
+        target: { tabId: tabs[0].id },
+        func:   (id) => { try { localStorage.setItem("noesis_user_id", id); } catch {} },
+        args:   [uid],
+      });
+    }
+  });
+  refresh();
+});
+
+setInterval(refresh, 5000);
+</script>
+</body>
+</html>
