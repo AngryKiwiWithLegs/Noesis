@@ -191,16 +191,29 @@ class ConfidenceScorer:
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
+STOP = {
+    "的", "了", "是", "在", "我", "你", "他", "她", "它",
+    "和", "或", "但", "that", "this", "the", "a", "an",
+    "is", "are", "was", "were", "be", "to", "of", "and",
+    "or", "but", "in", "on", "at", "for", "with",
+}
+
+
 def _keywords(text: str) -> set[str]:
-    """Extract meaningful tokens (length > 1, ignore stop words)."""
-    STOP = {
-        "的", "了", "是", "在", "我", "你", "他", "她", "它",
-        "和", "或", "但", "that", "this", "the", "a", "an",
-        "is", "are", "was", "were", "be", "to", "of", "and",
-        "or", "but", "in", "on", "at", "for", "with",
-    }
-    tokens = re.findall(r"[\w\u4e00-\u9fff]+", text.lower())
-    return {t for t in tokens if len(t) > 1 and t not in STOP}
+    """
+    Extract meaningful tokens from mixed Chinese/Latin text.
+    - CJK: character bigrams to handle compound phrases
+    - Latin: whole-word tokens (preserves model IDs like 'gpt-4o')
+    """
+    tokens: set[str] = set()
+    # Latin words
+    tokens.update(t for t in re.findall(r"[\w][\w-]*", text.lower())
+                  if len(t) > 1 and t not in STOP)
+    # CJK character bigrams (captures meaningful multi-char units)
+    cjk_chars = re.findall(r"[\u4e00-\u9fff]", text)
+    for i in range(len(cjk_chars) - 1):
+        tokens.add(cjk_chars[i] + cjk_chars[i + 1])
+    return tokens
 
 
 def _is_negation(candidate: str, reference: str) -> bool:
