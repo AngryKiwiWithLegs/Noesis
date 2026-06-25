@@ -199,14 +199,23 @@ class CloudLLMExtractor(AbstractExtractor):
 
 class MockExtractor(AbstractExtractor):
     """
-    Deterministic extractor for tests.
+    Deterministic extractor for tests and offline development (no API key).
+
+    Unlike the cloud extractor, this runs entirely locally with rule-based
+    classification. To make offline experiments viable, it:
+      - Stores ONLY the user's statements (assistant response is discarded),
+        normalised into a clean third-person declarative form
+      - Tags each candidate with an elevated assertion_strength so the
+        ConfidenceScorer can promote single strong statements to provisional
+        (see mock_boost in confidence.py)
+
     Rules (in order):
       - "随口" or "也许" in text → return [] (weak assertion, skip)
-      - "决定" or "确定" in text → position with high confidence
       - "我叫" or "I am" in text → identity
+      - "决定" or "确定" in text → event
       - "偏好" or "prefer" in text → preference
       - "?" or "？" at end → question
-      - default → position with medium confidence
+      - default → position
     """
 
     def extract(
@@ -215,41 +224,44 @@ class MockExtractor(AbstractExtractor):
         source_tool: str = "",
         session_id:  str = "",
     ) -> list[ThoughtCandidate]:
-        text = _format_conversation(messages)
-        if not text.strip():
+        # In mock mode we only care about what the user actually said.
+        user_text = _extract_user_only(messages)
+        if not user_text.strip():
             return []
 
-        t = text.lower()
+        t = user_text.lower()
 
         # Weak assertions → skip
         if any(w in t for w in ["随口", "也许", "maybe", "perhaps", "不确定"]):
             return []
 
-        # Determine type
+        # Determine type + assertion strength
         if any(w in t for w in ["我叫", "i am", "i'm a", "我是"]):
             thought_type: ThoughtType = "identity"
-            strength, conf = 0.9, 0.7
-        elif any(w in t for w in ["决定", "decided", "确定", "i've chosen"]):
+            strength, conf = 0.95, 0.8
+        elif any(w in t for w in ["决定", "decided", "确定", "i've chosen", "我选择"]):
             thought_type = "event"
-            strength, conf = 0.9, 0.6
-        elif any(w in t for w in ["偏好", "prefer", "喜欢用", "prefer to"]):
+            strength, conf = 0.95, 0.8
+        elif any(w in t for w in ["偏好", "prefer", "喜欢用", "倾向", "倾向用"]):
             thought_type = "preference"
-            strength, conf = 0.7, 0.4
-        elif text.rstrip().endswith(("?", "？")):
+            strength, conf = 0.85, 0.7
+        elif user_text.rstrip().endswith(("?", "？")):
             thought_type = "question"
-            strength, conf = 0.5, 0.3
+            strength, conf = 0.6, 0.5
         else:
             thought_type = "position"
-            strength, conf = 0.6, 0.35
+            strength, conf = 0.8, 0.65
+
+        clean = _normalise_thought(user_text)
 
         return [ThoughtCandidate(
             type=thought_type,
-            text=text[:200].strip(),
+            text=clean,
             initial_confidence=conf,
             assertion_strength=strength,
             source_tool=source_tool,
             source_session=session_id,
-            topic_cluster="test-topic",
+            topic_cluster=_infer_cluster(clean),
         )]
 
 
@@ -267,6 +279,51 @@ def _format_conversation(messages: list[dict] | str) -> str:
         if content:
             lines.append(f"{role.upper()}: {content}")
     return "\n".join(lines)
+
+
+def _extract_user_only(messages: list[dict] | str) -> str:
+    """Return only the user's utterance(s), discarding assistant/system turns.
+
+    Used by MockExtractor so the stored thought is the user's own words,
+    not the full conversation transcript.
+    """
+    if isinstance(messages, str):
+        return messages
+    parts = []
+    for m in messages:
+        if not isinstance(m, dict):
+            continue
+        if m.get("role") == "user":
+            content = m.get("content", "")
+            if isinstance(content, str) and content.strip():
+                parts.append(content.strip())
+    return "\n".join(parts)
+
+
+def _normalise_thought(user_text: str) -> str:
+    """Trim to a single clean statement, drop role prefixes.
+
+    The proxy forwards turns as [{'role':'user','content':...}] but the raw
+    text can still contain 'USER:' prefixes from upstream formatting. We also
+    collapse whitespace and cap length so injected context stays compact.
+    """
+    line = user_text.strip().split("\n")[0]            # first statement only
+    line = re.sub(r"^(user|用户)\s*[:：]\s*", "", line, flags=re.IGNORECASE)
+    line = re.sub(r"\s+", " ", line).strip()
+    return line[:240]
+
+
+def _infer_cluster(text: str) -> str:
+    """Cheap topic-cluster guess from keywords. Lets repetition/cross-tool
+    signals fire for related statements in mock mode."""
+    t = text.lower()
+    if any(k in t for k in ["sqlite-vec", "sqlite", "faiss", "向量", "检索", "embedding"]):
+        return "vector-store"
+    if any(k in t for k in ["python", "rust", "java", "后端", "前端", "工程师"]):
+        return "tech-stack"
+    if any(k in t for k in ["模型", "llm", "gemini", "gpt", "claude", "deepseek"]):
+        return "llm-choice"
+    return "general"
 
 
 def _parse_response(raw: str) -> list[dict]:

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import logging
+import os
 import time
 from pathlib import Path
 from typing import Any, Optional
@@ -99,14 +100,35 @@ class Memory:
 
     def _attach_pipeline(self, llm_cfg: dict):
         try:
-            from ..thoughts.extractor import CloudLLMExtractor
             from ..thoughts.confidence import ConfidenceScorer
             from .pipeline import ConsolidationPipeline
-            extractor = CloudLLMExtractor(
-                provider=llm_cfg.get("provider", "anthropic"),
-                model   =llm_cfg.get("model", "claude-haiku-4-5-20251001"),
-                api_key =llm_cfg.get("api_key"),
-            )
+
+            # Resolve api_key: explicit config first, then env var, else fall back.
+            provider = llm_cfg.get("provider", "anthropic")
+            model    = llm_cfg.get("model", "claude-haiku-4-5-20251001")
+            api_key  = llm_cfg.get("api_key")
+            if not api_key:
+                env_var = {
+                    "anthropic": "ANTHROPIC_API_KEY",
+                    "openai":    "OPENAI_API_KEY",
+                }.get(provider, "OPENAI_API_KEY")
+                api_key = os.environ.get(env_var)
+
+            if api_key:
+                from ..thoughts.extractor import CloudLLMExtractor
+                extractor = CloudLLMExtractor(
+                    provider=provider, model=model, api_key=api_key,
+                )
+                logger.info("Pipeline attached with Cloud LLM extractor (%s)", provider)
+            else:
+                from ..thoughts.extractor import MockExtractor
+                extractor = MockExtractor()
+                logger.warning(
+                    "No API key for provider '%s' (config or env); "
+                    "falling back to MockExtractor. Thoughts will NOT be "
+                    "classified/consolidated — set an API key to enable extraction.",
+                    provider,
+                )
             self._pipeline = ConsolidationPipeline(
                 vector_store=self.vector_store,
                 embedding   =self.embedding,
@@ -114,7 +136,6 @@ class Memory:
                 extractor   =extractor,
                 scorer      =ConfidenceScorer(),
             )
-            logger.info("Pipeline attached with Cloud LLM extractor")
         except Exception as e:
             logger.warning(f"Pipeline attach failed: {e}")
 

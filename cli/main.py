@@ -26,7 +26,7 @@ import click
 # ── Config loading ────────────────────────────────────────────────────────────
 
 def _get_memory(config_path: Optional[str] = None):
-    from daemon import load_memory
+    from noesis.daemon import load_memory
     return load_memory(config_path)
 
 
@@ -54,7 +54,7 @@ def start(config, port, ws, verbose):
         format = "%(asctime)s  %(name)-24s  %(levelname)s  %(message)s",
     )
     memory = _get_memory(config)
-    from daemon import NoesDaemon
+    from noesis.daemon import NoesDaemon
     daemon = NoesDaemon(
         memory     = memory,
         proxy_port = port,

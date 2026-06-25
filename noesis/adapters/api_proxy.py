@@ -15,8 +15,9 @@ Routing table (model name prefix → base URL):
   gpt-      → api.openai.com/v1
   claude-   → api.anthropic.com/v1   (OpenAI-compat endpoint)
   gemini-   → generativelanguage.googleapis.com/v1beta/openai
+  deepseek  → api.deepseek.com/v1
   mistral-  → api.mistral.ai/v1
-  llama / phi / qwen / deepseek → localhost:11434/v1  (Ollama)
+  llama / phi / qwen / mixtral → localhost:11434/v1  (Ollama)
   default   → api.openai.com/v1
 
 User identification:
@@ -47,9 +48,10 @@ _ROUTES: list[tuple[str, str]] = [
     ("gemini",     "https://generativelanguage.googleapis.com/v1beta/openai"),
     ("mistral",    "https://api.mistral.ai/v1"),
     ("llama",      "http://localhost:11434/v1"),
+    ("gemma",      "http://localhost:11434/v1"),
     ("phi",        "http://localhost:11434/v1"),
     ("qwen",       "http://localhost:11434/v1"),
-    ("deepseek",   "http://localhost:11434/v1"),
+    ("deepseek",   "https://api.deepseek.com/v1"),
     ("mixtral",    "http://localhost:11434/v1"),
 ]
 _DEFAULT_BASE = "https://api.openai.com/v1"
