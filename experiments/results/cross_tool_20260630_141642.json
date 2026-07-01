@@ -1,0 +1,162 @@
+{
+  "experiment": "exp2_cross_tool",
+  "timestamp": "20260630_141642",
+  "summary": {
+    "noesis_hits": 8,
+    "isolated_hits": 0,
+    "cross_tool_noesis": 4,
+    "cross_tool_isolated": 0,
+    "total": 12
+  },
+  "details": [
+    {
+      "user": "u1",
+      "query": "What vector database should I use?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "sqlite",
+      "corroborated": false,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u2",
+      "query": "Which database do I use?",
+      "query_tool": "gemini-web",
+      "source_tools": [
+        "chatgpt-web"
+      ],
+      "expect": "postgres",
+      "corroborated": false,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u3",
+      "query": "What language am I learning?",
+      "query_tool": "claude-desktop",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "rust",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u4",
+      "query": "What is my architecture preference?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "perplexity-web"
+      ],
+      "expect": "microservice",
+      "corroborated": false,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u5",
+      "query": "How do I manage dev environments?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "docker",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u6",
+      "query": "What CSS framework do I use?",
+      "query_tool": "gemini-web",
+      "source_tools": [
+        "claude-desktop",
+        "chatgpt-web"
+      ],
+      "expect": "tailwind",
+      "corroborated": true,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u7",
+      "query": "Which editor keybindings do I use?",
+      "query_tool": "claude-desktop",
+      "source_tools": [
+        "gemini-web",
+        "perplexity-web"
+      ],
+      "expect": "vim",
+      "corroborated": true,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u8",
+      "query": "What API style do I prefer?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "claude-desktop",
+        "chatgpt-web"
+      ],
+      "expect": "graphql",
+      "corroborated": true,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u9",
+      "query": "What message queue do I use?",
+      "query_tool": "claude-desktop",
+      "source_tools": [
+        "gemini-web",
+        "perplexity-web"
+      ],
+      "expect": "kafka",
+      "corroborated": true,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u10",
+      "query": "Which cloud do I deploy on?",
+      "query_tool": "gemini-web",
+      "source_tools": [
+        "claude-desktop",
+        "chatgpt-web"
+      ],
+      "expect": "gcp",
+      "corroborated": true,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u11",
+      "query": "What ML framework do I prefer?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "pytorch",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u12",
+      "query": "How do I manage K8s packages?",
+      "query_tool": "claude-desktop",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "helm",
+      "corroborated": false,
+      "noesis_hit": true,
+      "isolated_hit": false
+    }
+  ]
+}

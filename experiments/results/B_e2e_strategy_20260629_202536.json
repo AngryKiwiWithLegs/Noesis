@@ -1,0 +1,220 @@
+{
+  "experiment": "B_e2e_strategy_comparison",
+  "model": "gemini-flash-lite-latest",
+  "timestamp": "20260629_202536",
+  "summary": {
+    "Noesis": {
+      "hit": 7,
+      "total": 15
+    },
+    "朴素RAG": {
+      "hit": 8,
+      "total": 15
+    },
+    "最近窗口": {
+      "hit": 5,
+      "total": 15
+    },
+    "无记忆": {
+      "hit": 3,
+      "total": 15
+    }
+  },
+  "details": [
+    {
+      "profile": "zhang_wei",
+      "question": "帮我推荐一个数据库",
+      "expect": "postgres",
+      "Noesis_hit": false,
+      "Noesis_ans": "为了给你推荐最合适的数据库，我需要结合你之前提到的技术背景和偏好。基于你提供的信息，我整理了你的画像：\n\n*   **技术栈偏好**：你对 **Python** 持欢迎/倾向态度，对 **Java**",
+      "朴素RAG_hit": true,
+      "朴素RAG_ans": "你好，张伟！很高兴认识你。基于你作为后端工程师的经验以及对技术栈的偏好，我为你梳理并推荐如下：\n\n### 1. 关于你的问题与背景回顾\n*   **你的职位**：你是一名拥有 8 年经验的后端工程师。",
+      "最近窗口_hit": false,
+      "最近窗口_ans": "基于您之前的信息背景（**后端架构师/资深开发**，偏好 **Java（稳定/生态）** 和 **Python（AI/数据处理）**，熟悉**微服务架构**，且有过**向量检索**的实战经验），在推荐",
+      "无记忆_hit": true,
+      "无记忆_ans": "选择数据库就像选择交通工具：**没有最好的，只有最适合的。**\n\n为了给你最精准的推荐，我将目前的数据库分为几个大类。请根据你的**应用场景**来对号入座：\n\n---\n\n### 1. 关系型数据库 ("
+    },
+    {
+      "profile": "zhang_wei",
+      "question": "我之前用什么做向量检索的?",
+      "expect": "sqlite",
+      "Noesis_hit": false,
+      "Noesis_ans": "根据已知信息，你之前使用 **Milvus** 作为向量检索工具。",
+      "朴素RAG_hit": true,
+      "朴素RAG_ans": "根据您提供的信息，您之前决定使用 **sqlite-vec** 进行向量检索。\n\n您提到选择它是因为您认为这种嵌入式方案比 FAISS 更轻量。",
+      "最近窗口_hit": false,
+      "最近窗口_ans": "根据我们之前的对话记录，你之前在向量检索方面使用过 **Milvus**。\n\n具体来说，你在评估技术方案时，曾经提到过在处理向量存储和检索需求时，Milvus 是你比较熟悉或已经应用过的工具。如果你有",
+      "无记忆_hit": false,
+      "无记忆_ans": "作为一个人工智能，我无法直接调取你的本地文件、历史记录或项目代码，除非你之前在当前的对话历史中告诉过我。\n\n为了帮你回忆起你之前使用了什么，你可以按照以下几个维度进行排查：\n\n### 1. 常见的向量"
+    },
+    {
+      "profile": "zhang_wei",
+      "question": "我对 Python 和 Java 的态度?",
+      "expect": "python",
+      "Noesis_hit": true,
+      "Noesis_ans": "根据我目前掌握的信息，关于您对 Python 和 Java 的态度，记录如下：\n\n*   **对于 Python：** 您倾向于将其视为一种**高效的开发工具**，特别看重其在快速原型设计、数据科学、",
+      "朴素RAG_hit": true,
+      "朴素RAG_ans": "张伟，根据你的反馈，你认为 **Python 比 Java 更简洁**。你倾向于使用 Python 来编写后端服务，而不喜欢 Java 的繁琐。",
+      "最近窗口_hit": true,
+      "最近窗口_ans": "根据我们之前的交流，关于你对 Python 和 Java 的态度，总结如下：\n\n*   **对于 Python：** 你非常推崇它的**灵活性和生态广度**。在处理人工智能、数据科学以及快速原型开发时",
+      "无记忆_hit": true,
+      "无记忆_ans": "要了解你对 Python 和 Java 的态度，我们需要从这两门语言在开发者心中通常代表的**“人格特质”**出发。\n\n虽然我不知道你个人的具体偏好，但你可以根据以下几个维度来对照一下，看看哪种描述最"
+    },
+    {
+      "profile": "zhang_wei",
+      "question": "我对微服务的看法?",
+      "expect": "微服务",
+      "Noesis_hit": true,
+      "Noesis_ans": "根据我们之前的交流记录，您对**微服务（Microservices）**持有相当务实且略带审慎的观点。总结起来，您的核心看法主要包含以下几点：\n\n1.  **反对“为了微服务而微服务”**：您认为如果",
+      "朴素RAG_hit": true,
+      "朴素RAG_ans": "根据你提供的信息，你认为**微服务架构比单体架构更适合快速迭代**。",
+      "最近窗口_hit": true,
+      "最近窗口_ans": "根据我们之前的交流记录，你对微服务的核心看法可以总结为：**你并不盲目推崇微服务，而是持有一种“务实且谨慎”的态度。**\n\n具体体现为以下几个方面：\n\n1.  **反对“为了微服务而微服务”**：你认",
+      "无记忆_hit": true,
+      "无记忆_ans": "关于“你对微服务的看法”，这个问题其实没有标准答案，因为它取决于你所处的**技术背景、业务规模以及团队组织架构**。\n\n微服务（Microservices）不是银弹，而是一种**权衡（Trade-of"
+    },
+    {
+      "profile": "zhang_wei",
+      "question": "我是什么职位的?",
+      "expect": "后端",
+      "Noesis_hit": true,
+      "Noesis_ans": "根据我们之前的对话记录，你是一位**后端开发工程师**（或系统架构师）。\n\n在你过往的职业背景和技术选型中，你曾提到过使用 **Milvus** 作为向量检索工具。在技术栈选择上，你倾向于使用 **J",
+      "朴素RAG_hit": false,
+      "朴素RAG_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota",
+      "最近窗口_hit": false,
+      "最近窗口_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota",
+      "无记忆_hit": false,
+      "无记忆_ans": "作为一个人工智能，我无法直接“看到”你的现实身份、公司工牌或入职记录。\n\n不过，我们可以通过以下几种方式来确认你的职位：\n\n1. **如果你在职场沟通中问我**：请告诉我你所在的**行业、主要负责的工"
+    },
+    {
+      "profile": "li_lei",
+      "question": "我平时用什么处理数据?",
+      "expect": "pandas",
+      "Noesis_hit": false,
+      "Noesis_ans": "HTTP 429: [{\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check y",
+      "朴素RAG_hit": false,
+      "朴素RAG_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota",
+      "最近窗口_hit": false,
+      "最近窗口_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota",
+      "无记忆_hit": false,
+      "无记忆_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota"
+    },
+    {
+      "profile": "li_lei",
+      "question": "我在学什么编程语言?",
+      "expect": "rust",
+      "Noesis_hit": false,
+      "Noesis_ans": "HTTP 429: [{\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check y",
+      "朴素RAG_hit": false,
+      "朴素RAG_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota",
+      "最近窗口_hit": false,
+      "最近窗口_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota",
+      "无记忆_hit": false,
+      "无记忆_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota"
+    },
+    {
+      "profile": "li_lei",
+      "question": "我用什么做笔记?",
+      "expect": "obsidian",
+      "Noesis_hit": false,
+      "Noesis_ans": "HTTP 429: [{\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check y",
+      "朴素RAG_hit": false,
+      "朴素RAG_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota",
+      "最近窗口_hit": false,
+      "最近窗口_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota",
+      "无记忆_hit": false,
+      "无记忆_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota"
+    },
+    {
+      "profile": "li_lei",
+      "question": "我对本地装依赖的态度?",
+      "expect": "docker",
+      "Noesis_hit": false,
+      "Noesis_ans": "HTTP 429: [{\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check y",
+      "朴素RAG_hit": false,
+      "朴素RAG_ans": "基于你目前掌握的背景信息，可以推断出你对“本地装依赖”的态度：\n\n作为一个**数据科学家**，你习惯使用 **pandas**，并且正在通过 **Rust** 进阶系统编程，同时又偏好使用 **Obs",
+      "最近窗口_hit": false,
+      "最近窗口_ans": "基于你提供的信息（虽然你尚未明确填写各项内容），我目前对你**关于“本地装依赖”的态度**推测如下。\n\n为了给出更准确的回答，我们需要先明确你的画像。目前我们可以基于你可能的职业背景进行**情景化分析",
+      "无记忆_hit": false,
+      "无记忆_ans": "要界定你对“本地装依赖”的态度，可以从**“开发哲学”**、**“工程实践”**和**“心理舒适区”**三个维度来剖析。\n\n你可以看看你是以下哪种类型：\n\n### 1. 实用主义者（“能跑就行，别折腾"
+    },
+    {
+      "profile": "li_lei",
+      "question": "我的职业是什么?",
+      "expect": "数据",
+      "Noesis_hit": true,
+      "Noesis_ans": "根据已知信息，你的职业是**数据科学家**，并且擅长机器学习。",
+      "朴素RAG_hit": true,
+      "朴素RAG_ans": "李雷，你的职业是**数据科学家**。",
+      "最近窗口_hit": false,
+      "最近窗口_ans": "根据您提供的已知信息，目前在[position·provisional]这一项中，关于您职业的具体内容是**暂缺（provisional）**的状态。\n\n也就是说，在我们的对话记录或系统资料中，**尚",
+      "无记忆_hit": false,
+      "无记忆_ans": "作为一个人工智能，我无法直接通过你的账号信息知道你在现实生活中的职业。\n\n不过，你可以通过以下几种方式让我“猜”一下，或者告诉我你的职业：\n\n1. **直接告诉我：** 如果你愿意分享，可以直接告诉我"
+    },
+    {
+      "profile": "han_meimei",
+      "question": "我擅长什么前端框架?",
+      "expect": "react",
+      "Noesis_hit": true,
+      "Noesis_ans": "根据您提供的信息，目前关于您**“擅长什么前端框架”**这一项，系统中尚未记录具体的偏好或结论。\n\n为了完善您的用户画像，以便我能更精准地为您提供开发建议，您可以告知我以下信息：\n\n*   **您目前",
+      "朴素RAG_hit": true,
+      "朴素RAG_ans": "韩梅梅，你擅长的前端框架是 **React**。",
+      "最近窗口_hit": true,
+      "最近窗口_ans": "根据您之前的分享，您是一名**全栈工程师**，您擅长的前端框架是 **React**。\n\n除了 React，您还提到过您非常喜欢使用 **TypeScript** 来提升开发体验，并且在样式处理上，您",
+      "无记忆_hit": false,
+      "无记忆_ans": "这是一个非常好的自我认知问题。由于我无法直接查看你的代码库或工作历史，我无法直接“告诉你”你擅长什么。\n\n但是，你可以通过以下**四个维度的自我评估**，来理清你目前最擅长的框架是哪一个。你可以对照下"
+    },
+    {
+      "profile": "han_meimei",
+      "question": "我用什么写样式?",
+      "expect": "tailwind",
+      "Noesis_hit": true,
+      "Noesis_ans": "根据目前的系统记录，尚未发现关于你使用何种样式方案（如 CSS Modules, Tailwind CSS, Styled Components, Emotion, SCSS 等）的明确偏好或记录。\n",
+      "朴素RAG_hit": true,
+      "朴素RAG_ans": "你选择使用 **Tailwind CSS** 来编写样式，并认为它比手写 CSS 更高效。",
+      "最近窗口_hit": true,
+      "最近窗口_ans": "根据我们之前的交流记录，您在处理样式时倾向于使用 **Tailwind CSS**。\n\n您偏好通过原子化类名（utility-first）的方式来快速构建响应式界面，并认为这种方式在维护大型项目或保持",
+      "无记忆_hit": false,
+      "无记忆_ans": "写样式（Style）主要取决于你所处的**技术领域**和**开发场景**。以下是目前最主流的几种方式：\n\n### 1. 网页开发（Web Development）—— 最常见的场景\n如果你是在写网站或"
+    },
+    {
+      "profile": "han_meimei",
+      "question": "我对 TypeScript 的偏好?",
+      "expect": "typescript",
+      "Noesis_hit": true,
+      "Noesis_ans": "根据你提供的信息，你对 TypeScript 的偏好非常明确：\n\n**你偏好使用 TypeScript 而不是 JavaScript。**\n\n你倾向于在开发中使用 TypeScript 来获得更好的类",
+      "朴素RAG_hit": true,
+      "朴素RAG_ans": "韩梅梅，你偏好使用 **TypeScript** 而不是 JavaScript，因为你认为它在前端开发中更具优势。",
+      "最近窗口_hit": false,
+      "最近窗口_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota",
+      "无记忆_hit": false,
+      "无记忆_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota"
+    },
+    {
+      "profile": "han_meimei",
+      "question": "我对 GraphQL 和 REST 的看法?",
+      "expect": "graphql",
+      "Noesis_hit": false,
+      "Noesis_ans": "HTTP 429: [{\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check y",
+      "朴素RAG_hit": false,
+      "朴素RAG_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota",
+      "最近窗口_hit": true,
+      "最近窗口_ans": "根据我们之前的交流记录，你对 GraphQL 和 REST 的看法如下：\n\n*   **REST**：你认为它非常成熟，在简单的资源获取和缓存机制上表现得更直观、更具优势。你倾向于在结构固定、不需要频",
+      "无记忆_hit": false,
+      "无记忆_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota"
+    },
+    {
+      "profile": "han_meimei",
+      "question": "我是什么工程师?",
+      "expect": "前端",
+      "Noesis_hit": false,
+      "Noesis_ans": "HTTP 429: [{\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check y",
+      "朴素RAG_hit": false,
+      "朴素RAG_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota",
+      "最近窗口_hit": false,
+      "最近窗口_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota",
+      "无记忆_hit": false,
+      "无记忆_ans": "HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota"
+    }
+  ]
+}

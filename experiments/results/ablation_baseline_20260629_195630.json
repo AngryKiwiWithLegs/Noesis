@@ -1,0 +1,809 @@
+{
+  "experiment": "ablation_baseline",
+  "timestamp": "20260629_195630",
+  "memory_pool_size": 16,
+  "num_test_cases": 10,
+  "results": [
+    {
+      "config": "Noesis-full",
+      "recall@5": 0.45,
+      "mrr": 0.345,
+      "precision@5": 1.0,
+      "tentative_leak_total": 0,
+      "detail": [
+        {
+          "query": "我是什么职位?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我的职业是什么",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "帮我推荐一个数据库",
+          "recall": 0.5,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "向量检索方案选什么好",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我用什么编程语言",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我对架构的看法",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "最近在忙什么",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "团队有多少人",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "部署在哪个云",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我之前提过数据库迁移吗",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "Noesis-无核心事实",
+      "recall@5": 0.45,
+      "mrr": 0.345,
+      "precision@5": 1.0,
+      "tentative_leak_total": 0,
+      "detail": [
+        {
+          "query": "我是什么职位?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我的职业是什么",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "帮我推荐一个数据库",
+          "recall": 0.5,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "向量检索方案选什么好",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我用什么编程语言",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我对架构的看法",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "最近在忙什么",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "团队有多少人",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "部署在哪个云",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我之前提过数据库迁移吗",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "Noesis-无近因",
+      "recall@5": 0.45,
+      "mrr": 0.345,
+      "precision@5": 1.0,
+      "tentative_leak_total": 0,
+      "detail": [
+        {
+          "query": "我是什么职位?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我的职业是什么",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "帮我推荐一个数据库",
+          "recall": 0.5,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "向量检索方案选什么好",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我用什么编程语言",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我对架构的看法",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "最近在忙什么",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "团队有多少人",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "部署在哪个云",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我之前提过数据库迁移吗",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "Noesis-无语义",
+      "recall@5": 0.45,
+      "mrr": 0.22,
+      "precision@5": 1.0,
+      "tentative_leak_total": 0,
+      "detail": [
+        {
+          "query": "我是什么职位?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我的职业是什么",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "帮我推荐一个数据库",
+          "recall": 0.5,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "向量检索方案选什么好",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我用什么编程语言",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我对架构的看法",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "最近在忙什么",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "团队有多少人",
+          "recall": 1.0,
+          "mrr": 0.5,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "部署在哪个云",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我之前提过数据库迁移吗",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "Noesis-无门控",
+      "recall@5": 0.45,
+      "mrr": 0.345,
+      "precision@5": 0.88,
+      "tentative_leak_total": 6,
+      "detail": [
+        {
+          "query": "我是什么职位?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我的职业是什么",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "帮我推荐一个数据库",
+          "recall": 0.5,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "向量检索方案选什么好",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我用什么编程语言",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我对架构的看法",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "最近在忙什么",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.6,
+          "tentative_leak": 2,
+          "retrieved_count": 5
+        },
+        {
+          "query": "团队有多少人",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.6,
+          "tentative_leak": 2,
+          "retrieved_count": 5
+        },
+        {
+          "query": "部署在哪个云",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我之前提过数据库迁移吗",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "朴素RAG",
+      "recall@5": 0.45,
+      "mrr": 0.345,
+      "precision@5": 0.88,
+      "tentative_leak_total": 6,
+      "detail": [
+        {
+          "query": "我是什么职位?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我的职业是什么",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "帮我推荐一个数据库",
+          "recall": 0.5,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "向量检索方案选什么好",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我用什么编程语言",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我对架构的看法",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "最近在忙什么",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.6,
+          "tentative_leak": 2,
+          "retrieved_count": 5
+        },
+        {
+          "query": "团队有多少人",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.6,
+          "tentative_leak": 2,
+          "retrieved_count": 5
+        },
+        {
+          "query": "部署在哪个云",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我之前提过数据库迁移吗",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "最近窗口",
+      "recall@5": 0.45,
+      "mrr": 0.225,
+      "precision@5": 1.0,
+      "tentative_leak_total": 0,
+      "detail": [
+        {
+          "query": "我是什么职位?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我的职业是什么",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "帮我推荐一个数据库",
+          "recall": 0.5,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "向量检索方案选什么好",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我用什么编程语言",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我对架构的看法",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "最近在忙什么",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "团队有多少人",
+          "recall": 1.0,
+          "mrr": 0.5,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "部署在哪个云",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我之前提过数据库迁移吗",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "全量注入",
+      "recall@5": 0.45,
+      "mrr": 0.225,
+      "precision@5": 1.0,
+      "tentative_leak_total": 0,
+      "detail": [
+        {
+          "query": "我是什么职位?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我的职业是什么",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "帮我推荐一个数据库",
+          "recall": 0.5,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "向量检索方案选什么好",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我用什么编程语言",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我对架构的看法",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "最近在忙什么",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "团队有多少人",
+          "recall": 1.0,
+          "mrr": 0.5,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "部署在哪个云",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我之前提过数据库迁移吗",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "随机",
+      "recall@5": 0.25,
+      "mrr": 0.175,
+      "precision@5": 1.0,
+      "tentative_leak_total": 0,
+      "detail": [
+        {
+          "query": "我是什么职位?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我的职业是什么",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "帮我推荐一个数据库",
+          "recall": 0.5,
+          "mrr": 0.5,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "向量检索方案选什么好",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我用什么编程语言",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我对架构的看法",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "最近在忙什么",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "团队有多少人",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "部署在哪个云",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "我之前提过数据库迁移吗",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    }
+  ]
+}

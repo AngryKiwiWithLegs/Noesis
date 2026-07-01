@@ -1,0 +1,250 @@
+{
+  "timestamp": "20260701_100648",
+  "baseline_leak": 28,
+  "n": 30,
+  "superseded_count": 1,
+  "new_surfaced": 28,
+  "old_leaked": 13,
+  "details": [
+    {
+      "query": "What database do I use now?",
+      "old": "I prefer MySQL for my database",
+      "new": "I switched to PostgreSQL, it has better JSON support",
+      "new_surfaced": true,
+      "old_leaked": true,
+      "old_superseded": false
+    },
+    {
+      "query": "What language do I program in now?",
+      "old": "I use Python for everything",
+      "new": "I have moved to Rust for systems programming",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "What is my current view on architecture?",
+      "old": "I think monoliths are the way to go",
+      "new": "I now believe microservices are better for scaling",
+      "new_surfaced": false,
+      "old_leaked": true,
+      "old_superseded": false
+    },
+    {
+      "query": "Which cloud do I deploy on now?",
+      "old": "I deploy on AWS",
+      "new": "I migrated everything to GCP last month",
+      "new_surfaced": false,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "What do I code in now?",
+      "old": "I like JavaScript",
+      "new": "I switched to TypeScript, the type safety is worth it",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": true
+    },
+    {
+      "query": "What API style do I prefer now?",
+      "old": "I use REST APIs everywhere",
+      "new": "I have moved to GraphQL for complex apps",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "Which editor do I use now?",
+      "old": "I use Vim",
+      "new": "I switched to Emacs recently",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "What cache do I use now?",
+      "old": "I prefer Redis for caching",
+      "new": "I moved to Memcached, simpler for my needs",
+      "new_surfaced": true,
+      "old_leaked": true,
+      "old_superseded": false
+    },
+    {
+      "query": "What message queue do I use now?",
+      "old": "I use RabbitMQ for messaging",
+      "new": "I migrated to Kafka for higher throughput",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "What database do I use now?",
+      "old": "I prefer MongoDB",
+      "new": "I switched to PostgreSQL for relational integrity",
+      "new_surfaced": true,
+      "old_leaked": true,
+      "old_superseded": false
+    },
+    {
+      "query": "What backend language do I use now?",
+      "old": "I use Java for backend",
+      "new": "I have moved to Go for concurrency",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "Where do I deploy now?",
+      "old": "I deploy on Heroku",
+      "new": "I migrated to Kubernetes on AWS",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "What version control do I use now?",
+      "old": "I use SVN for version control",
+      "new": "I switched to Git years ago",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "What web service style do I use now?",
+      "old": "I prefer SOAP web services",
+      "new": "I have moved to REST for simplicity",
+      "new_surfaced": true,
+      "old_leaked": true,
+      "old_superseded": false
+    },
+    {
+      "query": "What do I use for sessions now?",
+      "old": "I use Memcached for sessions",
+      "new": "I migrated to Redis for persistence",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "What web runtime do I use now?",
+      "old": "I prefer PHP for web",
+      "new": "I switched to Node.js for async I/O",
+      "new_surfaced": true,
+      "old_leaked": true,
+      "old_superseded": false
+    },
+    {
+      "query": "What web server do I use now?",
+      "old": "I use Apache as my web server",
+      "new": "I moved to Nginx for performance",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "What do I script in now?",
+      "old": "I prefer Bash scripting",
+      "new": "I have switched to Python for scripting",
+      "new_surfaced": true,
+      "old_leaked": true,
+      "old_superseded": false
+    },
+    {
+      "query": "What BaaS do I use now?",
+      "old": "I use Firebase for backend",
+      "new": "I migrated to Supabase for open-source",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "What data format do I use now?",
+      "old": "I prefer XML for data",
+      "new": "I switched to JSON for lighter payloads",
+      "new_surfaced": true,
+      "old_leaked": true,
+      "old_superseded": false
+    },
+    {
+      "query": "What CI tool do I use now?",
+      "old": "I use Jenkins for CI",
+      "new": "I migrated to GitHub Actions last quarter",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "What orchestrator do I use now?",
+      "old": "I prefer Docker Swarm",
+      "new": "I have moved to Kubernetes for orchestration",
+      "new_surfaced": true,
+      "old_leaked": true,
+      "old_superseded": false
+    },
+    {
+      "query": "What analytics database do I use now?",
+      "old": "I use MySQL for analytics",
+      "new": "I switched to ClickHouse for columnar queries",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "What build tool do I use now?",
+      "old": "I prefer Grunt for builds",
+      "new": "I moved to Webpack for module bundling",
+      "new_surfaced": true,
+      "old_leaked": true,
+      "old_superseded": false
+    },
+    {
+      "query": "What frontend framework do I use now?",
+      "old": "I use Vue for frontend",
+      "new": "I have switched to Svelte for smaller bundles",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "What payment processor do I use now?",
+      "old": "I prefer Stripe for payments",
+      "new": "I migrated to Adyen for global reach",
+      "new_surfaced": true,
+      "old_leaked": true,
+      "old_superseded": false
+    },
+    {
+      "query": "What search engine do I use now?",
+      "old": "I use ElasticSearch for search",
+      "new": "I moved to Meilisearch for simplicity",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "What bundler do I use now?",
+      "old": "I prefer Webpack for bundling",
+      "new": "I switched to Vite for faster builds",
+      "new_surfaced": true,
+      "old_leaked": true,
+      "old_superseded": false
+    },
+    {
+      "query": "Where do I host now?",
+      "old": "I use Vercel for hosting",
+      "new": "I migrated to Cloudflare Pages for edge",
+      "new_surfaced": true,
+      "old_leaked": false,
+      "old_superseded": false
+    },
+    {
+      "query": "What email service do I use now?",
+      "old": "I prefer SendGrid for email",
+      "new": "I moved to Postmark for deliverability",
+      "new_surfaced": true,
+      "old_leaked": true,
+      "old_superseded": false
+    }
+  ]
+}

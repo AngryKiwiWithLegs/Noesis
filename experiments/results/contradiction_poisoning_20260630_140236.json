@@ -1,0 +1,161 @@
+{
+  "timestamp": "20260630_140236",
+  "exp1": {
+    "experiment": "exp1_contradiction",
+    "n": 8,
+    "noesis_new_surfaced": 5,
+    "noesis_ideal_suppress_old": 1,
+    "noesis_old_leak": 7,
+    "naive_rag_ideal": 1,
+    "details": [
+      {
+        "query": "What database do I use now?",
+        "old": "I prefer MySQL for my database",
+        "new": "I switched to PostgreSQL, it has better JSON support",
+        "exp_new": "postgresql",
+        "exp_old": "mysql",
+        "noesis_new": false,
+        "noesis_old": true,
+        "noesis_correct": false,
+        "rag_new": false,
+        "rag_old": true,
+        "rag_correct": false
+      },
+      {
+        "query": "What language do I program in now?",
+        "old": "I use Python for everything",
+        "new": "I have moved to Rust for systems programming",
+        "exp_new": "rust",
+        "exp_old": "python",
+        "noesis_new": true,
+        "noesis_old": true,
+        "noesis_correct": false,
+        "rag_new": true,
+        "rag_old": true,
+        "rag_correct": false
+      },
+      {
+        "query": "What is my current view on architecture?",
+        "old": "I think monoliths are the way to go",
+        "new": "I now believe microservices are better for scaling",
+        "exp_new": "microservice",
+        "exp_old": "monolith",
+        "noesis_new": true,
+        "noesis_old": false,
+        "noesis_correct": true,
+        "rag_new": true,
+        "rag_old": false,
+        "rag_correct": true
+      },
+      {
+        "query": "Which cloud do I deploy on now?",
+        "old": "I deploy on AWS",
+        "new": "I migrated everything to GCP last month",
+        "exp_new": "gcp",
+        "exp_old": "aws",
+        "noesis_new": true,
+        "noesis_old": true,
+        "noesis_correct": false,
+        "rag_new": true,
+        "rag_old": true,
+        "rag_correct": false
+      },
+      {
+        "query": "What do I code in now?",
+        "old": "I like JavaScript",
+        "new": "I switched to TypeScript, the type safety is worth it",
+        "exp_new": "typescript",
+        "exp_old": "javascript",
+        "noesis_new": false,
+        "noesis_old": true,
+        "noesis_correct": false,
+        "rag_new": false,
+        "rag_old": true,
+        "rag_correct": false
+      },
+      {
+        "query": "What API style do I prefer now?",
+        "old": "I use REST APIs everywhere",
+        "new": "I have moved to GraphQL for complex apps",
+        "exp_new": "graphql",
+        "exp_old": "rest",
+        "noesis_new": false,
+        "noesis_old": true,
+        "noesis_correct": false,
+        "rag_new": false,
+        "rag_old": true,
+        "rag_correct": false
+      },
+      {
+        "query": "Which editor do I use now?",
+        "old": "I use Vim",
+        "new": "I switched to Emacs recently",
+        "exp_new": "emacs",
+        "exp_old": "vim",
+        "noesis_new": true,
+        "noesis_old": true,
+        "noesis_correct": false,
+        "rag_new": true,
+        "rag_old": true,
+        "rag_correct": false
+      },
+      {
+        "query": "What cache do I use now?",
+        "old": "I prefer Redis for caching",
+        "new": "I moved to Memcached, simpler for my needs",
+        "exp_new": "memcached",
+        "exp_old": "redis",
+        "noesis_new": true,
+        "noesis_old": true,
+        "noesis_correct": false,
+        "rag_new": true,
+        "rag_old": true,
+        "rag_correct": false
+      }
+    ]
+  },
+  "exp3": {
+    "experiment": "exp3_poisoning",
+    "n_queries": 5,
+    "n_poison": 8,
+    "noesis_total_leak": 5,
+    "naive_rag_total_leak": 13,
+    "details": [
+      {
+        "query": "What database do I prefer?",
+        "noesis_leak": 1,
+        "naive_rag_leak": 3,
+        "noesis_retrieved": 5,
+        "rag_retrieved": 5
+      },
+      {
+        "query": "What language do I develop in?",
+        "noesis_leak": 1,
+        "naive_rag_leak": 3,
+        "noesis_retrieved": 5,
+        "rag_retrieved": 5
+      },
+      {
+        "query": "What is my view on architecture?",
+        "noesis_leak": 1,
+        "naive_rag_leak": 3,
+        "noesis_retrieved": 5,
+        "rag_retrieved": 5
+      },
+      {
+        "query": "What tools do I use?",
+        "noesis_leak": 1,
+        "naive_rag_leak": 1,
+        "noesis_retrieved": 5,
+        "rag_retrieved": 5
+      },
+      {
+        "query": "Which editor do I prefer?",
+        "noesis_leak": 1,
+        "naive_rag_leak": 3,
+        "noesis_retrieved": 5,
+        "rag_retrieved": 5
+      }
+    ]
+  }
+}

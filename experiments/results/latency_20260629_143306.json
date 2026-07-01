@@ -1,0 +1,33 @@
+{
+  "experiment": "latency",
+  "description": "延迟开销: Memory.add() 和 build_context() 的响应时间分布",
+  "seed": 42,
+  "environment": {
+    "python": "3.12.11",
+    "platform": "macOS-10.16-x86_64-i386-64bit",
+    "machine": "x86_64",
+    "processor": "i386",
+    "timestamp": "2026-06-29T14:33:01.585047",
+    "noesis_dir": "/Users/mac27ssd/Noesis",
+    "torch": "2.2.2",
+    "numpy": "1.26.4",
+    "transformers": "4.44.2",
+    "sentence-transformers": "3.0.1",
+    "fastapi": "0.138.0",
+    "uvicorn": "0.49.0",
+    "sqlite-vec": "0.1.9",
+    "anthropic": "0.111.0"
+  },
+  "metrics": {
+    "add_p50_ms": 20.84,
+    "add_p99_ms": 683.74,
+    "add_mean_ms": 28.26,
+    "ctx_p50_ms": 20.56,
+    "ctx_p99_ms": 54.9,
+    "ctx_mean_ms": 21.91,
+    "num_adds": 100,
+    "num_queries": 50
+  },
+  "raw_data": [],
+  "duration_sec": 3.9217762938933447
+}
