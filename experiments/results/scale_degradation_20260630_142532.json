@@ -1,0 +1,103 @@
+{
+  "experiment": "exp4_scale_degradation",
+  "timestamp": "20260630_142532",
+  "scale_points": [
+    10,
+    50,
+    100,
+    200,
+    500
+  ],
+  "curve": [
+    {
+      "n_memories": 10,
+      "Noesis": {
+        "recall": 0.9,
+        "mrr": 0.9,
+        "avg_tokens_per_query": 144
+      },
+      "naive-RAG": {
+        "recall": 0.9,
+        "mrr": 0.9,
+        "avg_tokens_per_query": 66
+      },
+      "recent-window": {
+        "recall": 0.5,
+        "mrr": 0.2283,
+        "avg_tokens_per_query": 57
+      }
+    },
+    {
+      "n_memories": 50,
+      "Noesis": {
+        "recall": 0.9,
+        "mrr": 0.9,
+        "avg_tokens_per_query": 196
+      },
+      "naive-RAG": {
+        "recall": 0.9,
+        "mrr": 0.9,
+        "avg_tokens_per_query": 68
+      },
+      "recent-window": {
+        "recall": 0.0,
+        "mrr": 0.0,
+        "avg_tokens_per_query": 66
+      }
+    },
+    {
+      "n_memories": 100,
+      "Noesis": {
+        "recall": 0.9,
+        "mrr": 0.9,
+        "avg_tokens_per_query": 196
+      },
+      "naive-RAG": {
+        "recall": 0.9,
+        "mrr": 0.9,
+        "avg_tokens_per_query": 68
+      },
+      "recent-window": {
+        "recall": 0.0,
+        "mrr": 0.0,
+        "avg_tokens_per_query": 66
+      }
+    },
+    {
+      "n_memories": 200,
+      "Noesis": {
+        "recall": 0.9,
+        "mrr": 0.9,
+        "avg_tokens_per_query": 196
+      },
+      "naive-RAG": {
+        "recall": 0.9,
+        "mrr": 0.9,
+        "avg_tokens_per_query": 68
+      },
+      "recent-window": {
+        "recall": 0.0,
+        "mrr": 0.0,
+        "avg_tokens_per_query": 66
+      }
+    },
+    {
+      "n_memories": 500,
+      "Noesis": {
+        "recall": 0.9,
+        "mrr": 0.9,
+        "avg_tokens_per_query": 196
+      },
+      "naive-RAG": {
+        "recall": 0.9,
+        "mrr": 0.9,
+        "avg_tokens_per_query": 68
+      },
+      "recent-window": {
+        "recall": 0.0,
+        "mrr": 0.0,
+        "avg_tokens_per_query": 66
+      }
+    }
+  ]
+}

@@ -1,0 +1,1020 @@
+{
+  "experiment": "ab_comparison_en_150",
+  "language": "en",
+  "model": "gemini-flash-lite-latest",
+  "note": "Partial run: Gemini free-tier rate-limited after n=111 of planned 150. Captured questions are complete and valid.",
+  "timestamp": "20260630_224936",
+  "num_questions": 111,
+  "summary": {
+    "with_hit": 94,
+    "without_hit": 46,
+    "total": 111,
+    "errors": 0
+  },
+  "discordant": {
+    "b": 50,
+    "c": 2,
+    "chi2_mcnemar": 42.48
+  },
+  "details": [
+    {
+      "profile": "prof_1",
+      "question": "Recommend a database for me",
+      "expect": "postgres",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_1",
+      "question": "What do I use for vector search?",
+      "expect": "sqlite",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_1",
+      "question": "How do I feel about Python vs Java?",
+      "expect": "python",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_1",
+      "question": "What is my view on microservices?",
+      "expect": "microservice",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_1",
+      "question": "What is my job title?",
+      "expect": "backend",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_2",
+      "question": "What do I use to process data?",
+      "expect": "pandas",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_2",
+      "question": "What programming language am I learn",
+      "expect": "rust",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_2",
+      "question": "What do I use for notes?",
+      "expect": "obsidian",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_2",
+      "question": "How do I feel about local dependency",
+      "expect": "docker",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_2",
+      "question": "What is my profession?",
+      "expect": "data",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_3",
+      "question": "What frontend framework am I expert",
+      "expect": "react",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_3",
+      "question": "What do I use for styling?",
+      "expect": "tailwind",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_3",
+      "question": "What is my preference on TypeScript?",
+      "expect": "typescript",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_3",
+      "question": "What is my view on GraphQL vs REST?",
+      "expect": "graphql",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_3",
+      "question": "What kind of engineer am I?",
+      "expect": "frontend",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_4",
+      "question": "What is my monitoring tool of choice",
+      "expect": "grafana",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_4",
+      "question": "What do I use for infrastructure?",
+      "expect": "terraform",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_4",
+      "question": "What is my view on ArgoCD vs Flux?",
+      "expect": "argocd",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_4",
+      "question": "What do I use for package management",
+      "expect": "helm",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_4",
+      "question": "What kind of engineer am I?",
+      "expect": "devops",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_5",
+      "question": "What language do I prefer for iOS?",
+      "expect": "swift",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_5",
+      "question": "What UI framework do I use for new p",
+      "expect": "swiftui",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_5",
+      "question": "What is my view on Combine vs RxSwif",
+      "expect": "combine",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_5",
+      "question": "What do I use for mobile CI/CD?",
+      "expect": "fastlane",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_5",
+      "question": "What kind of developer am I?",
+      "expect": "mobile",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_6",
+      "question": "What deep learning framework do I pr",
+      "expect": "pytorch",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_6",
+      "question": "What do I use for model deployment?",
+      "expect": "hugging",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_6",
+      "question": "What is my view on LoRA vs full fine",
+      "expect": "lora",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_6",
+      "question": "What do I use for experiment trackin",
+      "expect": "weights",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_6",
+      "question": "What kind of engineer am I?",
+      "expect": "ml",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_7",
+      "question": "What game engine do I use?",
+      "expect": "unity",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_7",
+      "question": "What language do I prefer for script",
+      "expect": "c#",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_7",
+      "question": "What do I use for 3D modeling?",
+      "expect": "blender",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_7",
+      "question": "What is my view on game architecture",
+      "expect": "ecs",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_7",
+      "question": "What kind of developer am I?",
+      "expect": "game",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_8",
+      "question": "What endpoint tool do I prefer?",
+      "expect": "sentinelone",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_8",
+      "question": "What do I use for secrets management",
+      "expect": "vault",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_8",
+      "question": "What is my security philosophy?",
+      "expect": "zero-trust",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_8",
+      "question": "What do I use for runtime threat det",
+      "expect": "falco",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_8",
+      "question": "What kind of engineer am I?",
+      "expect": "security",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_9",
+      "question": "What language do I use for smart con",
+      "expect": "solidity",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_9",
+      "question": "What development tool do I prefer?",
+      "expect": "hardhat",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_9",
+      "question": "What is my view on Ethereum scaling?",
+      "expect": "rollup",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_9",
+      "question": "What do I use for data indexing?",
+      "expect": "graph",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_9",
+      "question": "What kind of developer am I?",
+      "expect": "blockchain",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_10",
+      "question": "What orchestration tool do I prefer?",
+      "expect": "airflow",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_10",
+      "question": "What do I use for transformations?",
+      "expect": "dbt",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_10",
+      "question": "What is my view on Snowflake vs BigQ",
+      "expect": "snowflake",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_10",
+      "question": "What do I use for streaming?",
+      "expect": "kafka",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_10",
+      "question": "What kind of engineer am I?",
+      "expect": "data",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_11",
+      "question": "What language do I prefer for firmwa",
+      "expect": "c",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_11",
+      "question": "Which RTOS do I use?",
+      "expect": "zephyr",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_11",
+      "question": "What IDE do I prefer for embedded?",
+      "expect": "platformio",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_11",
+      "question": "What debugger do I use?",
+      "expect": "j-link",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_11",
+      "question": "What kind of engineer am I?",
+      "expect": "embedded",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_12",
+      "question": "What metrics tool do I prefer?",
+      "expect": "prometheus",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_12",
+      "question": "What on-call tool do I use?",
+      "expect": "pagerduty",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_12",
+      "question": "What chaos engineering tool do I pre",
+      "expect": "chaos",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_12",
+      "question": "Which service mesh do I prefer?",
+      "expect": "linkerd",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_12",
+      "question": "What is my SRE role?",
+      "expect": "sre",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_13",
+      "question": "What E2E testing tool do I prefer?",
+      "expect": "playwright",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_13",
+      "question": "What test management tool do I use?",
+      "expect": "testrail",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_13",
+      "question": "What Python testing framework do I p",
+      "expect": "pytest",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_13",
+      "question": "What reporting tool do I use?",
+      "expect": "allure",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_13",
+      "question": "What is my QA role?",
+      "expect": "qa",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_14",
+      "question": "What markup language do I prefer?",
+      "expect": "markdown",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_14",
+      "question": "What docs framework do I use?",
+      "expect": "docusaurus",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_14",
+      "question": "What do I think of GitBook vs Conflu",
+      "expect": "gitbook",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_14",
+      "question": "What diagram tool do I use?",
+      "expect": "mermaid",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_14",
+      "question": "What is my profession?",
+      "expect": "writer",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_15",
+      "question": "What engine do I prefer for AR?",
+      "expect": "unity",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_15",
+      "question": "What AR framework do I use?",
+      "expect": "ar foundation",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_15",
+      "question": "What is my view on immersive web?",
+      "expect": "webxr",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_15",
+      "question": "What 3D tool do I use?",
+      "expect": "blender",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_15",
+      "question": "What kind of developer am I?",
+      "expect": "ar",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_16",
+      "question": "What IaC tool do I prefer?",
+      "expect": "terraform",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_16",
+      "question": "What multi-cloud tool do I use?",
+      "expect": "pulumi",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_16",
+      "question": "What is my view on AWS CDK?",
+      "expect": "cdk",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_16",
+      "question": "What Terraform orchestration tool do",
+      "expect": "terragrunt",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_16",
+      "question": "What is my role?",
+      "expect": "architect",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_17",
+      "question": "What enterprise database do I prefer",
+      "expect": "postgresql",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_17",
+      "question": "What admin tool do I use?",
+      "expect": "pgadmin",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_17",
+      "question": "What HA solution do I prefer?",
+      "expect": "patroni",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_17",
+      "question": "What connection pooler do I use?",
+      "expect": "pgbouncer",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_17",
+      "question": "What is my DBA role?",
+      "expect": "database",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_18",
+      "question": "What design tool do I prefer?",
+      "expect": "figma",
+      "with_mem_hit": false,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_18",
+      "question": "What usability testing tool do I use",
+      "expect": "maze",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_18",
+      "question": "What research synthesis tool do I pr",
+      "expect": "dovetail",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_18",
+      "question": "What card sorting tool do I use?",
+      "expect": "optimal",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_18",
+      "question": "What is my UX role?",
+      "expect": "ux",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_19",
+      "question": "What network OS do I prefer?",
+      "expect": "cisco",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_19",
+      "question": "What automation tool do I use?",
+      "expect": "ansible",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_19",
+      "question": "What VPN solution do I prefer?",
+      "expect": "wireguard",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_19",
+      "question": "What scripting framework do I use?",
+      "expect": "nornir",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_19",
+      "question": "What kind of engineer am I?",
+      "expect": "network",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_20",
+      "question": "What dashboard tool do I prefer?",
+      "expect": "tableau",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_20",
+      "question": "What analytics platform do I use?",
+      "expect": "looker",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_20",
+      "question": "What is my view on SQL vs Python?",
+      "expect": "sql",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_20",
+      "question": "What metric tool do I use?",
+      "expect": "dbt",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_20",
+      "question": "What is my analyst role?",
+      "expect": "analyst",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_21",
+      "question": "What web framework do I prefer?",
+      "expect": "phoenix",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_21",
+      "question": "What real-time UI approach do I use?",
+      "expect": "liveview",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_21",
+      "question": "What is my concurrency philosophy?",
+      "expect": "otp",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_21",
+      "question": "What database query tool do I use?",
+      "expect": "ecto",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_21",
+      "question": "What language do I use?",
+      "expect": "elixir",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_22",
+      "question": "What UI framework do I prefer for co",
+      "expect": "uikit",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_22",
+      "question": "What constraints tool do I use?",
+      "expect": "snapkit",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_22",
+      "question": "What reactive framework do I prefer?",
+      "expect": "combine",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_22",
+      "question": "What beta distribution tool do I use",
+      "expect": "fastlane",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_22",
+      "question": "What platform do I develop for?",
+      "expect": "ios",
+      "with_mem_hit": false,
+      "without_mem_hit": true,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    },
+    {
+      "profile": "prof_23",
+      "question": "What language do I prefer for Androi",
+      "expect": "kotlin",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "",
+      "without_mem_ans": ""
+    }
+  ]
+}

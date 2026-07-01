@@ -1,0 +1,46 @@
+{
+  "experiment": "injection_accuracy",
+  "description": "注入准确率: Noesis 是否在正确时机注入记忆 (基于 30-case benchmark)",
+  "seed": 42,
+  "environment": {
+    "python": "3.12.11",
+    "platform": "macOS-10.16-x86_64-i386-64bit",
+    "machine": "x86_64",
+    "processor": "i386",
+    "timestamp": "2026-06-29T14:32:45.443565",
+    "noesis_dir": "/Users/mac27ssd/Noesis",
+    "torch": "2.2.2",
+    "numpy": "1.26.4",
+    "transformers": "4.44.2",
+    "sentence-transformers": "3.0.1",
+    "fastapi": "0.138.0",
+    "uvicorn": "0.49.0",
+    "sqlite-vec": "0.1.9",
+    "anthropic": "0.111.0"
+  },
+  "metrics": {
+    "accuracy": 0.92,
+    "passed": 23,
+    "total": 25,
+    "category_scores": {
+      "status_gating": 1.0,
+      "time_awareness": 0.8333,
+      "cross_tool": 0.8,
+      "core_facts": 1.0,
+      "budget": 1.0
+    },
+    "tentative_leakage": 0,
+    "num_failures": 2
+  },
+  "raw_data": [
+    {
+      "name": "old_event_decayed",
+      "reason": "leaked 'STALE_EVENT_60DAYS_AGO'"
+    },
+    {
+      "name": "cross_tool_user_isolation",
+      "reason": "context empty but must_inject=True"
+    }
+  ],
+  "duration_sec": 15.770493984222412
+}

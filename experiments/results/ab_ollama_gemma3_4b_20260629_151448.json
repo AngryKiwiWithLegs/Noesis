@@ -1,0 +1,162 @@
+{
+  "experiment": "ab_ollama",
+  "model": "gemma3:4b",
+  "timestamp": "20260629_151448",
+  "summary": {
+    "with_hit": 12,
+    "without_hit": 4,
+    "total": 15
+  },
+  "details": [
+    {
+      "profile": "zhang_wei",
+      "model": "gemma3:4b",
+      "question": "帮我推荐一个数据库",
+      "expect": "postgres",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "好的，根据您提供的信息，我可以为您推荐几款数据库：\n\n**首选：PostgreSQL**\n\n* **原因:**\n    * **与您的偏好一致:** 您喜欢 Python 和简洁，PostgreSQL 支持 Python 的各种 ORM (",
+      "without_mem_ans": "好的，根据你的需求和经验水平，我可以为你推荐一些数据库：\n\n**1. 如果你是初学者，或者项目规模较小且对数据处理要求不高:**\n\n*   **SQLite:**\n    *   **优点:**\n        *   易于学习和使用。\n "
+    },
+    {
+      "profile": "zhang_wei",
+      "model": "gemma3:4b",
+      "question": "我之前用什么做向量检索的?",
+      "expect": "sqlite",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "根据您提供的已知信息，您喜欢使用 Python 开发后端，并且倾向于微服务架构。\n\n虽然您没有明确说明之前使用过什么工具进行向量检索，但结合您的偏好和技术背景，可以推测您可能曾经或正在使用以下工具：\n\n* **Faiss (Facebook",
+      "without_mem_ans": "要回答你“我之前用什么做向量检索”这个问题，需要一些你的具体信息，因为这取决于你在不同时间使用的方法。不过，我可以根据常见的场景和历史发展，列出你可能曾经使用的各种方法和工具：\n\n**1. 早期的向量检索 (2016-2018): 基于传统"
+    },
+    {
+      "profile": "zhang_wei",
+      "model": "gemma3:4b",
+      "question": "我对 Python 和 Java 的态度?",
+      "expect": "python",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "根据已知信息，您的态度是：\n\n*   **对 Python 更偏好:** 您认为 Python 比 Java 更简洁，并且主要使用 Python 写后端。\n*   **对 Java 持有一定认识:** 虽然您更喜欢 Python，但您也知道",
+      "without_mem_ans": "作为一个大型语言模型，我没有个人情感或观点，因此我无法对 Python 或 Java 有“态度”。 但是，我可以根据大量的技术数据、社区反馈和行业趋势，客观地分析我对这两种编程语言的看法。以下是我基于现有信息呈现的对 Python 和 Ja"
+    },
+    {
+      "profile": "zhang_wei",
+      "model": "gemma3:4b",
+      "question": "我对微服务的看法?",
+      "expect": "微服务",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "我需要更多信息才能回答你“我对微服务的看法”这个问题。 请提供以下信息，以便我更好地理解你的观点：\n\n*   **[preference·provisional] 我对 Python 和 Java 的态度？** (例如：喜欢使用Python",
+      "without_mem_ans": "您的看法对微服务至关重要，因为它们是一个复杂且有争议的技术。以下是一些关于微服务的常见看法和思考方向，你可以根据自己的经验和理解来评估：\n\n**积极的看法 (为什么人们喜欢微服务):**\n\n* **灵活性与敏捷性:** 微服务的核心优势在于"
+    },
+    {
+      "profile": "zhang_wei",
+      "model": "gemma3:4b",
+      "question": "我是什么职位的?",
+      "expect": "后端",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "根据您提供的信息，您可以被认为是 **后端工程师** 或者 **软件工程师 (专注于后端开发)**。\n\n您的偏好（喜欢 Python 的简洁和向量检索）以及对微服务的看法都与后端开发相关。  “[identity·provisional]”",
+      "without_mem_ans": "我是一个大型语言模型，由 Google 训练。\n\n也就是说，我没有职位，因为我不是一个人类，而是一个AI程序。 我的目标是根据您的提示提供信息和帮助。\n\n您想了解关于我的更多信息吗？例如：\n\n*   我擅长什么？\n*   我如何运作？"
+    },
+    {
+      "profile": "li_lei",
+      "model": "gemma3:4b",
+      "question": "我平时用什么处理数据?",
+      "expect": "pandas",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "根据您提供的信息，您平时主要使用 **pandas** 来处理数据。 您觉得 pandas 比 Excel 强。",
+      "without_mem_ans": "作为一个大型语言模型，我并没有“使用”任何工具来处理数据，因为我本身就是一种数据处理工具。我的核心功能是根据你提供的输入（文本），利用海量的训练数据进行理解、分析和生成新的文本内容。\n\n以下是我如何“处理”数据的详细解释：\n\n1. **接收"
+    },
+    {
+      "profile": "li_lei",
+      "model": "gemma3:4b",
+      "question": "我在学什么编程语言?",
+      "expect": "rust",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "你正在学习 Rust。你选择它是因为你认为它比 C++ 更安全，并且在系统编程方面有兴趣。",
+      "without_mem_ans": "我无法直接知道你在学习哪种编程语言，因为这需要你告诉我！  \n\n请告诉我你正在学习的编程语言。 例如：\n\n*   Python\n*   JavaScript\n*   Java\n*   C++\n*   C#\n*   Ruby\n*   Go\n*"
+    },
+    {
+      "profile": "li_lei",
+      "model": "gemma3:4b",
+      "question": "我用什么做笔记?",
+      "expect": "obsidian",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "你喜欢用 Obsidian 做笔记，因为它比 Notion 灵活。",
+      "without_mem_ans": "选择用来做笔记的工具取决于你的个人偏好、学习方式和笔记的目的。这里给你列出一些常见的选项，并分析它们的优缺点：\n\n**1. 手写笔记:**\n\n* **纸张 & 笔:** 这是最经典的方式！\n    * **优点:** 更有创意，可以自由书写"
+    },
+    {
+      "profile": "li_lei",
+      "model": "gemma3:4b",
+      "question": "我对本地装依赖的态度?",
+      "expect": "docker",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "根据您提供的信息，我认为您对本地安装依赖持**积极**态度。\n\n理由如下：\n\n*   **学习 Rust 的驱动力:**  您选择学习 Rust，并认为它比 C++ 更安全，这表明您注重底层技术的控制和理解。 Rust 本身也需要本地环境的",
+      "without_mem_ans": "对本地安装依赖（例如 Node.js 项目中的 npm 包、Python 项目中的 pip 包等）的态度是一个比较复杂的问题，并没有绝对的“好”或“坏”，而是需要根据具体情况权衡利弊，并选择最适合你的方式。\n\n以下是一些关于你对本地安装依赖"
+    },
+    {
+      "profile": "li_lei",
+      "model": "gemma3:4b",
+      "question": "我的职业是什么?",
+      "expect": "数据",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "你是一名数据科学家。",
+      "without_mem_ans": "作为大型语言模型，我没有具体的“职业”。 我是一个人工智能程序，由 Google 开发。 我的主要工作是：\n\n* **处理自然语言：** 我可以理解和生成人类语言，并根据你的要求进行各种任务。\n* **提供信息：**  我可以回答问题、提供"
+    },
+    {
+      "profile": "han_meimei",
+      "model": "gemma3:4b",
+      "question": "我擅长什么前端框架?",
+      "expect": "react",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "根据您提供的信息，您精通 **React**。 同时，由于您喜欢使用 Vim 快捷键和认为 GraphQL 比 REST 更适合复杂前端，这虽然是辅助信息，但更核心的技能是 React 前端工程师。",
+      "without_mem_ans": "要确定你擅长的前端框架，需要考虑几个方面，包括：\n\n**1. 你之前的经验：**\n\n*   **你之前用过哪些框架？**  这绝对是判断你最熟悉的框架的关键。\n*   **你对每个框架的熟悉程度如何？** 仅仅知道它的基础概念还是能够熟练地"
+    },
+    {
+      "profile": "han_meimei",
+      "model": "gemma3:4b",
+      "question": "我用什么写样式?",
+      "expect": "tailwind",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "根据您提供的已知信息，您可以很可能使用 **CSS (或者 CSS-in-JS)** 来编写样式。\n\n虽然您喜欢 Vim 和 GraphQL，并且认为 GraphQL 更适合复杂前端，但作为一名前端工程师，尤其是精通 React 的韩梅梅，",
+      "without_mem_ans": "你可以使用多种工具和语言来编写网页样式，最常见的有：\n\n**1. CSS (Cascading Style Sheets) - 最常用且标准的方法:**\n\n*   **核心方式:**  CSS 是控制网页外观 (颜色、字体、布局等) 的标准"
+    },
+    {
+      "profile": "han_meimei",
+      "model": "gemma3:4b",
+      "question": "我对 TypeScript 的偏好?",
+      "expect": "typescript",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "你对 TypeScript 有偏好，并且明确表示你更喜欢在项目中用 TypeScript 而不是 JavaScript。",
+      "without_mem_ans": "好的，为了更好地了解您对 TypeScript 的偏好，请您回答以下问题：\n\n**1. 您为什么要使用 TypeScript？**\n\n*   您主要在什么类型的项目中用到 TypeScript？（例如：Web 应用、Node.js 应用、库"
+    },
+    {
+      "profile": "han_meimei",
+      "model": "gemma3:4b",
+      "question": "我对 GraphQL 和 REST 的看法?",
+      "expect": "graphql",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "根据您提供的已知信息，您的看法是：\n\n*   **GraphQL 比 REST 更适合复杂前端。** 这表明您认为 GraphQL 在处理复杂的前端场景时具有优势。\n\n您没有提供关于你对 REST 的具体看法，只能推断出您并不完全满意它在复",
+      "without_mem_ans": "好的，关于 GraphQL 和 REST 的看法，我来给你一个相对全面的分析：\n\n**REST (Representational State Transfer) - 经典的方式**\n\n* **历史和普及:** REST 是构建 Web A"
+    },
+    {
+      "profile": "han_meimei",
+      "model": "gemma3:4b",
+      "question": "我是什么工程师?",
+      "expect": "前端",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "你是一名前端工程师。 你的资料显示，你叫韩梅梅，精通 React。",
+      "without_mem_ans": "我无法直接知道您是什么工程师。作为一个大型语言模型，我没有访问您的个人信息或背景数据库的能力。\n\n要确定您是哪种类型的工程师，您需要考虑以下因素：\n\n1. **您所从事的行业:** 您是从事建筑、机械、电子、软件、化学或其他行业的吗？\n2."
+    }
+  ]
+}

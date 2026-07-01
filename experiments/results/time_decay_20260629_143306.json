@@ -1,0 +1,66 @@
+{
+  "experiment": "time_decay",
+  "description": "时间衰减: event/position/identity 等类型的半衰期配置与检索行为",
+  "seed": 42,
+  "environment": {
+    "python": "3.12.11",
+    "platform": "macOS-10.16-x86_64-i386-64bit",
+    "machine": "x86_64",
+    "processor": "i386",
+    "timestamp": "2026-06-29T14:33:06.819978",
+    "noesis_dir": "/Users/mac27ssd/Noesis",
+    "torch": "2.2.2",
+    "numpy": "1.26.4",
+    "transformers": "4.44.2",
+    "sentence-transformers": "3.0.1",
+    "fastapi": "0.138.0",
+    "uvicorn": "0.49.0",
+    "sqlite-vec": "0.1.9",
+    "anthropic": "0.111.0"
+  },
+  "metrics": {
+    "half_life_days": {
+      "event": 7.0,
+      "question": 30.0,
+      "position": 90.0,
+      "preference": 90.0,
+      "synthesis": 180.0,
+      "contradiction": null,
+      "identity": null
+    },
+    "identity_decays": true,
+    "event_half_life": 7.0,
+    "position_half_life": 90.0
+  },
+  "raw_data": [
+    {
+      "type": "event",
+      "half_life_days": 7.0
+    },
+    {
+      "type": "question",
+      "half_life_days": 30.0
+    },
+    {
+      "type": "position",
+      "half_life_days": 90.0
+    },
+    {
+      "type": "preference",
+      "half_life_days": 90.0
+    },
+    {
+      "type": "synthesis",
+      "half_life_days": 180.0
+    },
+    {
+      "type": "contradiction",
+      "half_life_days": null
+    },
+    {
+      "type": "identity",
+      "half_life_days": null
+    }
+  ],
+  "duration_sec": 0.1
+}

@@ -1,0 +1,162 @@
+{
+  "experiment": "ab_ollama",
+  "model": "qwen2.5:3b",
+  "timestamp": "20260629_151736",
+  "summary": {
+    "with_hit": 10,
+    "without_hit": 6,
+    "total": 15
+  },
+  "details": [
+    {
+      "profile": "zhang_wei",
+      "model": "qwen2.5:3b",
+      "question": "帮我推荐一个数据库",
+      "expect": "postgres",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "当然可以，选择适合你的数据库取决于你的具体需求。以下是一些流行的数据库类型以及它们的一些特点：\n\n1. **关系型数据库**（如 MySQL, PostgreSQL）：非常适合结构化数据的存储和管理，提供了强大的事务控制功能。\n\n2. **",
+      "without_mem_ans": "选择适合您的数据库类型取决于您正在处理的数据类型、数据规模以及您项目的具体需求。以下是一种常见的分类，根据不同情况为您进行推荐：\n\n1. 关系型数据库：这是最常见的数据库类型，如 MySQL、PostgreSQL 和 Oracle 等。其优"
+    },
+    {
+      "profile": "zhang_wei",
+      "model": "qwen2.5:3b",
+      "question": "我之前用什么做向量检索的?",
+      "expect": "sqlite",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "您没有提供足够的信息让我了解您的具体情况。您能否提供更多细节？例如，您是从事数据科学、人工智能还是其他相关领域的工作？您使用了哪些具体的技术或工具来做向量检索？这些信息将有助于我更好地理解您的需求并给出更有针对性的建议。",
+      "without_mem_ans": "您具体使用了哪种方法进行向量检索，取决于您的应用场景和选择的技术栈。不同的场景可能采用不同的技术和工具，例如在自然语言处理领域中常见的基于TF-IDF或词袋模型的方法、以及在深度学习领域的word2vec或者预训练的语言模型编码器等来进行文"
+    },
+    {
+      "profile": "zhang_wei",
+      "model": "qwen2.5:3b",
+      "question": "我对 Python 和 Java 的态度?",
+      "expect": "python",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "根据您之前的偏好信息，您表示偏爱使用Python编写后端，并且觉得Python比Java更简洁。因此，我可以推测您可能倾向于使用Python来编程，尤其是如果您正在处理后端开发工作的话。不过这仅仅是基于您过去提供的信息做出的推测。\n\n至于微",
+      "without_mem_ans": "我理解你可能认为Python和Java是两种不同的编程语言，它们各有其特点。选择哪种语言通常取决于具体的应用场景和个人/团队的偏好。\n\n**Python** 是一种高级、解释型、通用、动态类型的语言。它非常易于学习和使用，常被用来进行Web"
+    },
+    {
+      "profile": "zhang_wei",
+      "model": "qwen2.5:3b",
+      "question": "我对微服务的看法?",
+      "expect": "微服务",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "在处理大型且动态变化的应用系统时，我认为微服务架构提供了极大的灵活性和可扩展性。每个独立的服务都能够通过标准化API进行交互，这使得各部分的维护和开发都能更加高效、灵活，并且能够更快地响应业务需求的变化。\n\n微服务的优势还包括：更好的隔离性",
+      "without_mem_ans": "微服务架构是一种软件架构风格，它将单个应用程序划分为一组小型的服务，这些服务是围绕业务能力（而非数据源或功能）来构建。每个服务由包含业务逻辑的独立部署单元组成，并可通过标准协议进行通信。\n\n在微服务架构中，你可以根据不同的需求开发、部署和扩"
+    },
+    {
+      "profile": "zhang_wei",
+      "model": "qwen2.5:3b",
+      "question": "我是什么职位的?",
+      "expect": "后端",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "您之前已经询问过该问题，您被称作是某个职务。请您明确一下是哪个职位呢？ 是在准备一个新的职业身份吗？还是有其他特定的情况或背景信息需要补充呢？这将帮助我提供更准确的回答。",
+      "without_mem_ans": "您并未提供任何个人信息，因此无法得知您的具体职务。您可以直接告诉我相关信息或需要关于什么主题的帮助和指导。"
+    },
+    {
+      "profile": "li_lei",
+      "model": "qwen2.5:3b",
+      "question": "我平时用什么处理数据?",
+      "expect": "pandas",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "根据您之前提供的信息，您平常习惯使用 Pandas 进行数据处理，并且觉得它比Excel更强大。所以我推测您可能会回答说我平时用Pandas处理数据。如果您还有其他工具或方法，请随时告知！",
+      "without_mem_ans": "你平时处理数据的方式取决于你的需求和使用的工具。有些人可能使用专门的数据分析软件，如Excel、Google Sheets等进行简单的数据分析；另一些人可能会用专业级的统计软件，如SPSS或R语言来进行更复杂的数据挖掘及分析。\n\n如果你在做"
+    },
+    {
+      "profile": "li_lei",
+      "model": "qwen2.5:3b",
+      "question": "我在学什么编程语言?",
+      "expect": "rust",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "为了更好地帮助您，我需要更多的信息。请问您的职业目标、项目需求或者是兴趣所在是什么？这样我可以更准确地为您提供关于学习哪种编程语言的建议。比如，您是想开发一个应用程序还是进行数据分析？是否有一些特定的技术栈或者框架吸引您去了解？",
+      "without_mem_ans": "您没有提供具体的上下文信息，我无法直接判断您当前学习的是哪种编程语言。您可以告诉我您正在使用的编程环境、开发项目或者查看的文档等更多信息吗？这样我可以给出更准确的回答。常见的几种编程语言包括Python, Java, JavaScript,"
+    },
+    {
+      "profile": "li_lei",
+      "model": "qwen2.5:3b",
+      "question": "我用什么做笔记?",
+      "expect": "obsidian",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "您提到你喜欢使用 Obsidian 来做笔记，并且认为它比 Notion 更灵活。根据您的偏好信息，您可以继续使用 Obsidian 作为您的笔记工具。如果需要跨平台或协同编辑方案，Notion 可能是另一个值得考虑的选择。",
+      "without_mem_ans": "对于学习和工作中的记录，可以选择适合自己的方式来使用不同类型的工具进行笔记。这里为您提供一些广泛适用的方法：\n\n1. 笔记本电脑或平板：这允许您随时在任何地点、任何时候做笔记，并且还能存储大量的信息。\n\n2. 便签纸：非常方便实用，在咖啡厅"
+    },
+    {
+      "profile": "li_lei",
+      "model": "qwen2.5:3b",
+      "question": "我对本地装依赖的态度?",
+      "expect": "docker",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "根据你提供的信息，你在学机器学习，并且擅长使用处理数据的相关技能。不过，在“对我对本地安装依赖抱有怎样的态度？”这个问题上，你还没有提供具体的信息。你的兴趣和领域集中在机器学习和数据处理方面，但关于是否倾向于自行安装依赖包或更偏好使用已经集",
+      "without_mem_ans": "作为一个AI助手，我理解到在开发和部署应用程序的过程中，确定并管理所需的库或包是非常重要的。这些库通常称为“依赖项”。这些依赖项可以帮助你实现你的项目需求。\n\n如果你正在独自进行一个项目，那么选择哪些依赖项可能会更加灵活，并且可以自由决定要"
+    },
+    {
+      "profile": "li_lei",
+      "model": "qwen2.5:3b",
+      "question": "我的职业是什么?",
+      "expect": "数据",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "您的职业是数据科学家，您擅长机器学习。",
+      "without_mem_ans": "您没有提供足够的信息来确定您的职业。您能分享更多关于您的兴趣、技能和工作的细节吗？这样我就能更好地帮助您了解自己的职业定位了。"
+    },
+    {
+      "profile": "han_meimei",
+      "model": "qwen2.5:3b",
+      "question": "我擅长什么前端框架?",
+      "expect": "react",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "您提供的信息中并没有提及您擅长的前端框架。为了帮助您更好地了解自己的技能，可以告诉我您使用过哪些前端技术或框架，或者您对某些特定方面感兴趣吗？这样我可以为您提供更有针对性的信息。比如，您是否熟悉 React、Vue 或者 Angular 等",
+      "without_mem_ans": "很高兴您询问关于您擅长的前端框架。不过，能否回答这个问题，需要知道您的技能水平和专业领域。\n\n通常情况下，如果您刚入门或对几种流行的前端框架非常熟悉，那么可以考虑以下这些：\n\n1. React - 此为Facebook开发的一种顶级JS库。"
+    },
+    {
+      "profile": "han_meimei",
+      "model": "qwen2.5:3b",
+      "question": "我用什么写样式?",
+      "expect": "tailwind",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "你提到你用 Vim 编辑器来使用快捷键，但我目前没有足够的信息判断哪一种工具（例如 CSS、HTML 或者其他前端技术）是你用来写的样式。如果你能提供更多细节，我会很乐意提供更准确的回答。",
+      "without_mem_ans": "你可以在代码编辑器中编写CSS（层叠样式表）来定义网页元素的样式。如果你想在HTML文档中使用CSS，请确保遵循以下步骤：\n\n1. 在HTML文档中的`<head>`部分或直接在要应用样式的具体标签内部，添加一个`<style>`或者`<l"
+    },
+    {
+      "profile": "han_meimei",
+      "model": "qwen2.5:3b",
+      "question": "我对 TypeScript 的偏好?",
+      "expect": "typescript",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "根据您之前的提示，我了解您偏好使用 TypeScript 语言而非 JavaScript。这是一种常见的选择，特别是对于希望提升代码质量和可维护性的开发者。您可以利用 TypeScript 的类型检查功能和函数注释来提高团队协作以及构建大型",
+      "without_mem_ans": "作为AI助手，我并未实际体验或感受过对于任何技术语言的“偏好”。但我可以给您解释一些关于 TypeScript 优点的信息。\n\nTypeScript 是 JavaScript 的扩展性增强版本。它是为大型企业级项目而开发的一个静态类型的超集"
+    },
+    {
+      "profile": "han_meimei",
+      "model": "qwen2.5:3b",
+      "question": "我对 GraphQL 和 REST 的看法?",
+      "expect": "graphql",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "根据你提供的信息，我认为你认为 GraphQL 适合复杂前端的情况。而关于 REST，则没有提供直接的看法。因此，可以推测你是倾向于GraphQL适用于复杂前端架构的立场，但对于REST是否同样适用或有其他偏好，则未能从现有信息中确定。\n\n",
+      "without_mem_ans": "GraphQL 和 REST 都是现代架构中非常重要的技术，它们各自满足了开发人员根据不同需求构建服务或应用程序时的不同期待。\n\nREST 是一种设计用于互连资源的网络架构风格。它使用标准HTTP请求的方法来操作资源，比如GET、POST、"
+    },
+    {
+      "profile": "han_meimei",
+      "model": "qwen2.5:3b",
+      "question": "我是什么工程师?",
+      "expect": "前端",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "您是指在技术职能或职业道路上的自我身份定位吗？如果是这样的话，您可以是一位前端工程师、全栈工程师或是专注于某一特定领域的专家。也有可能是其他类型的工程师取决于您的具体工作职责和技术背景。如果需要更具体的类别，请提供更多信息！",
+      "without_mem_ans": "根据您的描述，您可能是某个领域的工程师。不同的领域对应着不同的角色及专业技能。请问您是哪个技术或工程领域的工程师呢？例如嵌入式系统工程师、软件开发工程师、数据分析师、机械工程师等等。如果可以提供更多细节，我会帮助您更好地解答您的问题或者提供"
+    }
+  ]
+}

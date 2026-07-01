@@ -1,0 +1,506 @@
+{
+  "experiment": "exp2_cross_tool",
+  "timestamp": "20260630_205622",
+  "summary": {
+    "noesis_hits": 20,
+    "isolated_hits": 3,
+    "cross_tool_noesis": 10,
+    "cross_tool_isolated": 0,
+    "total": 40
+  },
+  "details": [
+    {
+      "user": "u1",
+      "query": "What vector database should I use?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "sqlite",
+      "corroborated": false,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u2",
+      "query": "Which database do I use?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "postgres",
+      "corroborated": false,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u3",
+      "query": "What language am I learning?",
+      "query_tool": "claude-desktop",
+      "source_tools": [
+        "claude-desktop",
+        "chatgpt-web"
+      ],
+      "expect": "rust",
+      "corroborated": true,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u4",
+      "query": "What is my architecture preference?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "microservice",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u5",
+      "query": "How do I manage dev environments?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "docker",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u6",
+      "query": "What CSS framework do I use?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web",
+        "perplexity-web"
+      ],
+      "expect": "tailwind",
+      "corroborated": true,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u7",
+      "query": "Which editor keybindings do I use?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "vim",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u8",
+      "query": "What API style do I prefer?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "graphql",
+      "corroborated": false,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u9",
+      "query": "What message queue do I use?",
+      "query_tool": "gemini-web",
+      "source_tools": [
+        "claude-desktop",
+        "chatgpt-web"
+      ],
+      "expect": "kafka",
+      "corroborated": true,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u10",
+      "query": "Which cloud do I deploy on?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "gcp",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u11",
+      "query": "How do I manage K8s packages?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "helm",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u12",
+      "query": "What data warehouse do I use?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "gemini-web",
+        "perplexity-web"
+      ],
+      "expect": "snowflake",
+      "corroborated": true,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u13",
+      "query": "What orchestration tool do I use?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "airflow",
+      "corroborated": false,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u14",
+      "query": "What do I use for infrastructure?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "terraform",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u15",
+      "query": "What is my GitOps tool?",
+      "query_tool": "claude-desktop",
+      "source_tools": [
+        "claude-desktop",
+        "chatgpt-web"
+      ],
+      "expect": "argocd",
+      "corroborated": true,
+      "noesis_hit": true,
+      "isolated_hit": true
+    },
+    {
+      "user": "u16",
+      "query": "What do I use for transformations?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "dbt",
+      "corroborated": false,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u17",
+      "query": "What monitoring tool do I prefer?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "grafana",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u18",
+      "query": "What language do I use for smart contracts?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web",
+        "perplexity-web"
+      ],
+      "expect": "solidity",
+      "corroborated": true,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u19",
+      "query": "What dev tool do I prefer?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "hardhat",
+      "corroborated": false,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u20",
+      "query": "What do I use for mobile CI/CD?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "fastlane",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u21",
+      "query": "What UI framework do I use for new projects?",
+      "query_tool": "gemini-web",
+      "source_tools": [
+        "claude-desktop",
+        "chatgpt-web"
+      ],
+      "expect": "swiftui",
+      "corroborated": true,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u22",
+      "query": "What is my reactive framework?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "combine",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u23",
+      "query": "What ML framework do I prefer?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "pytorch",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u24",
+      "query": "What is my fine-tuning approach?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "gemini-web",
+        "perplexity-web"
+      ],
+      "expect": "lora",
+      "corroborated": true,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u25",
+      "query": "What do I use for experiment tracking?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "weights",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u26",
+      "query": "What do I use for model deployment?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "hugging",
+      "corroborated": false,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u27",
+      "query": "What do I use for 3D modeling?",
+      "query_tool": "claude-desktop",
+      "source_tools": [
+        "claude-desktop",
+        "chatgpt-web"
+      ],
+      "expect": "blender",
+      "corroborated": true,
+      "noesis_hit": true,
+      "isolated_hit": true
+    },
+    {
+      "user": "u28",
+      "query": "What is my game architecture view?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "ecs",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u29",
+      "query": "What game engine do I use?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "unity",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u30",
+      "query": "What language do I prefer for scripting?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web",
+        "perplexity-web"
+      ],
+      "expect": "c#",
+      "corroborated": true,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u31",
+      "query": "What do I use for secrets management?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "vault",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u32",
+      "query": "What endpoint tool do I prefer?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "sentinelone",
+      "corroborated": false,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u33",
+      "query": "What is my security philosophy?",
+      "query_tool": "gemini-web",
+      "source_tools": [
+        "claude-desktop",
+        "chatgpt-web"
+      ],
+      "expect": "zero-trust",
+      "corroborated": true,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u34",
+      "query": "What do I use for runtime threat detection?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "falco",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u35",
+      "query": "What JS runtime do I prefer?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "bun",
+      "corroborated": false,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u36",
+      "query": "What do I use for analytical SQL?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "gemini-web",
+        "perplexity-web"
+      ],
+      "expect": "duckdb",
+      "corroborated": true,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u37",
+      "query": "What do I use for networking?",
+      "query_tool": "chatgpt-web",
+      "source_tools": [
+        "claude-desktop"
+      ],
+      "expect": "tailscale",
+      "corroborated": false,
+      "noesis_hit": true,
+      "isolated_hit": false
+    },
+    {
+      "user": "u38",
+      "query": "What is my web server?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "caddy",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    },
+    {
+      "user": "u39",
+      "query": "What OS is my home server?",
+      "query_tool": "claude-desktop",
+      "source_tools": [
+        "claude-desktop",
+        "chatgpt-web"
+      ],
+      "expect": "netbsd",
+      "corroborated": true,
+      "noesis_hit": true,
+      "isolated_hit": true
+    },
+    {
+      "user": "u40",
+      "query": "What language for new projects?",
+      "query_tool": "perplexity-web",
+      "source_tools": [
+        "gemini-web"
+      ],
+      "expect": "zig",
+      "corroborated": false,
+      "noesis_hit": false,
+      "isolated_hit": false
+    }
+  ]
+}

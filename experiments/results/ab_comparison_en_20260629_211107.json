@@ -1,0 +1,469 @@
+{
+  "experiment": "ab_comparison_en",
+  "language": "en",
+  "model": "gemini-flash-lite-latest",
+  "timestamp": "20260629_211107",
+  "num_questions": 50,
+  "summary": {
+    "with_hit": 39,
+    "without_hit": 25,
+    "total": 50,
+    "errors": 0
+  },
+  "discordant": {
+    "b": 18,
+    "c": 4
+  },
+  "details": [
+    {
+      "profile": "prof_1",
+      "question": "Recommend a database for me",
+      "expect": "postgres",
+      "with_mem_hit": false,
+      "without_mem_hit": true,
+      "with_mem_ans": "既然你已经决定使用 **`sqlite-vec`**，说明你非常看重**轻量级、零依赖、易于部署**以及与现有 SQL 架构的协同性。\n\n在选择与其搭配的数据库（或者替代方案）时，主要取决于你的具体场",
+      "without_mem_ans": "To give you the best recommendation, I need to know a little bit about what you are building. Howeve"
+    },
+    {
+      "profile": "prof_1",
+      "question": "What do I use for vector search?",
+      "expect": "sqlite",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Since you have already decided on **sqlite-vec**, you have made a great choice for a \"lighter\" archi",
+      "without_mem_ans": "Choosing the right tool for vector search depends on your specific use case (e.g., scale, budget, ex"
+    },
+    {
+      "profile": "prof_1",
+      "question": "How do I feel about Python vs Java?",
+      "expect": "python",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Given your recent decision to use **sqlite-vec** over FAISS, we can infer quite a bit about your tec",
+      "without_mem_ans": "To understand how *you* feel about Python versus Java, we have to look at the \"personality\" of each "
+    },
+    {
+      "profile": "prof_1",
+      "question": "What is my view on microservices?",
+      "expect": "microservice",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, there is **no record of your specific views on microservices.**\n\n",
+      "without_mem_ans": "As an AI, I don’t have personal opinions, beliefs, or the ability to \"view\" things in the way a huma"
+    },
+    {
+      "profile": "prof_1",
+      "question": "What is my job title?",
+      "expect": "backend",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided in your profile, there is **no specific job title mentioned**.\n\nHo",
+      "without_mem_ans": "I do not have access to your personal information, employment records, or files, so **I do not know "
+    },
+    {
+      "profile": "prof_2",
+      "question": "What do I use to process data?",
+      "expect": "pandas",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Since you are learning Rust for systems programming, your approach to processing data will differ de",
+      "without_mem_ans": "To give you the best answer, it helps to know **what kind of data** you are working with (text, numb"
+    },
+    {
+      "profile": "prof_2",
+      "question": "What programming language am I learning?",
+      "expect": "rust",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You are learning **Rust**.",
+      "without_mem_ans": "To tell you which programming language you are learning, I need a little bit of information! Since I"
+    },
+    {
+      "profile": "prof_2",
+      "question": "What do I use for notes?",
+      "expect": "obsidian",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Since you are transitioning into **systems programming with Rust**, your choice of note-taking tool ",
+      "without_mem_ans": "The \"best\" way to take notes depends entirely on **why** you are taking them (e.g., school, work, pe"
+    },
+    {
+      "profile": "prof_2",
+      "question": "How do I feel about local dependency installs?",
+      "expect": "docker",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Given your decision to learn Rust for systems programming and your preference for safety and reliabi",
+      "without_mem_ans": "To determine how you feel about local dependency installs (e.g., `node_modules`, `.venv`, `vendor/`)"
+    },
+    {
+      "profile": "prof_2",
+      "question": "What is my profession?",
+      "expect": "data",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided, it is not explicitly stated what your exact job title is. However",
+      "without_mem_ans": "I don’t know who you are, so I have no way of knowing your profession! \n\nIf you’d like to play a gam"
+    },
+    {
+      "profile": "prof_3",
+      "question": "What frontend framework am I expert in?",
+      "expect": "react",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided, **there is no mention of your expertise in any specific frontend ",
+      "without_mem_ans": "To tell you which frontend framework you are an expert in, I would need to look at your past interac"
+    },
+    {
+      "profile": "prof_3",
+      "question": "What do I use for styling?",
+      "expect": "tailwind",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "You are using **Tailwind CSS** for styling, as you decided it is faster than writing handwritten CSS",
+      "without_mem_ans": "The tools you use for styling depend heavily on **what you are building** (a website, an app, or a d"
+    },
+    {
+      "profile": "prof_3",
+      "question": "What is my preference on TypeScript?",
+      "expect": "typescript",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, there is **no mention of your preference for TypeScript**.\n\nThe o",
+      "without_mem_ans": "To give you an accurate answer, I would need to know what you have previously expressed, either in t"
+    },
+    {
+      "profile": "prof_3",
+      "question": "What is my view on GraphQL vs REST?",
+      "expect": "graphql",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, there is **no record of your views on GraphQL versus REST.**\n\nWe ",
+      "without_mem_ans": "As an AI, I don’t have personal opinions, but I can analyze your stance based on the most common arg"
+    },
+    {
+      "profile": "prof_3",
+      "question": "What kind of engineer am I?",
+      "expect": "frontend",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided, you appear to be a **pragmatic, efficiency-focused Full-Stack or ",
+      "without_mem_ans": "To help you figure out what kind of engineer you are, I need you to tell me a little bit about what "
+    },
+    {
+      "profile": "prof_4",
+      "question": "What is my monitoring tool of choice?",
+      "expect": "grafana",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, there is **no record of your preferred monitoring tool**.\n\nYou ha",
+      "without_mem_ans": "As an AI, I don’t have access to your personal files, work history, or screen unless you have explic"
+    },
+    {
+      "profile": "prof_4",
+      "question": "What do I use for infrastructure?",
+      "expect": "terraform",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided, you have already decided to use **Terraform** for your infrastruc",
+      "without_mem_ans": "Choosing the \"right\" infrastructure depends entirely on what you are building, your budget, your tec"
+    },
+    {
+      "profile": "prof_4",
+      "question": "What is my view on ArgoCD vs Flux?",
+      "expect": "argocd",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, your view is that **ArgoCD is better than Flux for GitOps.**",
+      "without_mem_ans": "Since I am an AI, I don’t know your personal professional history, but based on industry trends and "
+    },
+    {
+      "profile": "prof_4",
+      "question": "What do I use for package management?",
+      "expect": "helm",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the fact that you have decided to use **Terraform** for infrastructure as code and **ArgoCD",
+      "without_mem_ans": "The tool you use for package management depends entirely on your **Operating System** and the **Prog"
+    },
+    {
+      "profile": "prof_4",
+      "question": "What kind of engineer am I?",
+      "expect": "devops",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided, you appear to be a **Platform Engineer, DevOps Engineer, or Infra",
+      "without_mem_ans": "To tell you what kind of engineer you are, I need a little bit of information about your background."
+    },
+    {
+      "profile": "prof_5",
+      "question": "What language do I prefer for iOS?",
+      "expect": "swift",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, you prefer **Swift** for iOS development, specifically through th",
+      "without_mem_ans": "As an AI, I don’t have access to your personal history, development environment, or past coding proj"
+    },
+    {
+      "profile": "prof_5",
+      "question": "What UI framework do I use for new projects?",
+      "expect": "swiftui",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your decision, you are using **SwiftUI** for your new projects.",
+      "without_mem_ans": "There is no single \"best\" framework because the right choice depends entirely on your specific goals"
+    },
+    {
+      "profile": "prof_5",
+      "question": "What is my view on Combine vs RxSwift?",
+      "expect": "combine",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on your decision to transition to **SwiftUI** for all new projects, your stance on Combine vs.",
+      "without_mem_ans": "Because I am an AI, I don’t have personal opinions or professional stakes in the outcome. However, *"
+    },
+    {
+      "profile": "prof_5",
+      "question": "What do I use for mobile CI/CD?",
+      "expect": "fastlane",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "To provide the best recommendation, I need to check my records regarding your current setup.\n\nBased ",
+      "without_mem_ans": "Choosing the right mobile CI/CD (Continuous Integration/Continuous Deployment) tool depends on your "
+    },
+    {
+      "profile": "prof_5",
+      "question": "What kind of developer am I?",
+      "expect": "mobile",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided, here is a profile of the type of developer you are:\n\n### 1. **Mod",
+      "without_mem_ans": "To tell you what kind of developer you are, I need a little bit of information about your habits, yo"
+    },
+    {
+      "profile": "prof_6",
+      "question": "What deep learning framework do I prefer?",
+      "expect": "pytorch",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on your decision to use **Hugging Face Transformers**, it is highly likely that you prefer **P",
+      "without_mem_ans": "As an AI, I don’t have personal feelings, career goals, or the ability to \"use\" a framework to write"
+    },
+    {
+      "profile": "prof_6",
+      "question": "What do I use for model deployment?",
+      "expect": "hugging",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Since you have decided to use **Hugging Face Transformers**, you have several pathways for deploymen",
+      "without_mem_ans": "Choosing the right tool for model deployment depends on **where** your model lives, **how many users"
+    },
+    {
+      "profile": "prof_6",
+      "question": "What is my view on LoRA vs full fine-tuning?",
+      "expect": "lora",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, there is **no record of your specific views or opinions** on LoRA",
+      "without_mem_ans": "As an AI, I don’t have personal opinions, but I can synthesize the **expert consensus** on the trade"
+    },
+    {
+      "profile": "prof_6",
+      "question": "What do I use for experiment tracking?",
+      "expect": "weights",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "既然你已经决定使用 **Hugging Face Transformers** 进行部署，选择实验追踪工具时，最顺理成章的选择是 **Weights & Biases (W&B)**，因为它与 Hug",
+      "without_mem_ans": "Choosing an experiment tracking tool depends on your team size, your infrastructure (cloud vs. on-pr"
+    },
+    {
+      "profile": "prof_6",
+      "question": "What kind of engineer am I?",
+      "expect": "ml",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "基于你提出的问题和后续的决策，可以推断你是一位正在深入**机器学习工程（ML Engineering）**或**机器学习运维（MLOps）**领域的工程师。\n\n以下是具体的分析：\n\n### 1. 你的",
+      "without_mem_ans": "To tell you what kind of engineer you are, I need a little bit of information about your background!"
+    },
+    {
+      "profile": "prof_7",
+      "question": "What game engine do I use?",
+      "expect": "unity",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the tools you’ve already selected—**FMOD** for audio and **Blender** for 3D modeling—you ar",
+      "without_mem_ans": "Choosing the right game engine depends entirely on your **goals, programming experience, and the typ"
+    },
+    {
+      "profile": "prof_7",
+      "question": "What language do I prefer for scripting?",
+      "expect": "c#",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided in your profile, **there is currently no mention of your preferred",
+      "without_mem_ans": "To determine your preferred language for scripting, I would need to look at your past interactions w"
+    },
+    {
+      "profile": "prof_7",
+      "question": "What do I use for 3D modeling?",
+      "expect": "blender",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "You use **Blender** for 3D modeling.",
+      "without_mem_ans": "Choosing the right 3D modeling software depends entirely on **what you want to create** (games, indu"
+    },
+    {
+      "profile": "prof_7",
+      "question": "What is my view on game architecture?",
+      "expect": "ecs",
+      "with_mem_hit": false,
+      "without_mem_hit": true,
+      "with_mem_ans": "基于目前掌握的信息，你并没有明确表达过关于“游戏架构”（Game Architecture）的特定看法。\n\n不过，根据你对工具的选择偏好，可以推测出你对游戏开发技术栈的一些倾向：\n\n1.  **倾向于",
+      "without_mem_ans": "As an AI, I don’t have personal opinions, but I have access to the collective knowledge of the indus"
+    },
+    {
+      "profile": "prof_7",
+      "question": "What kind of developer am I?",
+      "expect": "game",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided, you appear to be an **independent or \"indie-minded\" game develope",
+      "without_mem_ans": "To tell you what kind of developer you are, I need a little bit of information about your habits, pr"
+    },
+    {
+      "profile": "prof_8",
+      "question": "What endpoint tool do I prefer?",
+      "expect": "sentinelone",
+      "with_mem_hit": false,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, you prefer **HashiCorp Vault** for secrets management over AWS Se",
+      "without_mem_ans": "As an AI, I don’t have access to your personal browsing history, private work files, or specific dev"
+    },
+    {
+      "profile": "prof_8",
+      "question": "What do I use for secrets management?",
+      "expect": "vault",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, you have decided to use **HashiCorp Vault** for secrets managemen",
+      "without_mem_ans": "Choosing a secrets management solution depends on your infrastructure (cloud vs. on-premise), your t"
+    },
+    {
+      "profile": "prof_8",
+      "question": "What is my security philosophy?",
+      "expect": "zero-trust",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided, your security philosophy appears to be characterized by **infrast",
+      "without_mem_ans": "Because I am an AI, I don’t \"have\" a personal philosophy in the human sense—I don’t have assets to p"
+    },
+    {
+      "profile": "prof_8",
+      "question": "What do I use for runtime threat detection?",
+      "expect": "falco",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Since you’ve already standardized on **HashiCorp Vault** for secrets management, your choice for run",
+      "without_mem_ans": "Runtime threat detection is a critical layer of security that monitors applications and infrastructu"
+    },
+    {
+      "profile": "prof_8",
+      "question": "What kind of engineer am I?",
+      "expect": "security",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided, you are likely a **DevOps Engineer, Platform Engineer, or Securit",
+      "without_mem_ans": "To help you figure out what kind of engineer you are, I need a little bit of information about your "
+    },
+    {
+      "profile": "prof_9",
+      "question": "What language do I use for smart contracts?",
+      "expect": "solidity",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Since you have chosen **Hardhat** for your development workflow, the standard and most widely suppor",
+      "without_mem_ans": "The language you choose for smart contracts depends entirely on the **blockchain ecosystem** you wan"
+    },
+    {
+      "profile": "prof_9",
+      "question": "What development tool do I prefer?",
+      "expect": "hardhat",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You prefer **Hardhat** over Truffle for your development workflow.",
+      "without_mem_ans": "I don’t know which development tool you prefer yet! As an AI, I don’t have access to your personal h"
+    },
+    {
+      "profile": "prof_9",
+      "question": "What is my view on Ethereum scaling?",
+      "expect": "rollup",
+      "with_mem_hit": false,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on your decision to transition from Truffle to **Hardhat**, we can infer several aspects of yo",
+      "without_mem_ans": "As an AI, I don’t have personal opinions, but I can synthesize your views based on how you have enga"
+    },
+    {
+      "profile": "prof_9",
+      "question": "What do I use for data indexing?",
+      "expect": "graph",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided, there is currently **no record** of which tool you use for data i",
+      "without_mem_ans": "Choosing the right tool for data indexing depends entirely on **what kind of data you have**, **wher"
+    },
+    {
+      "profile": "prof_9",
+      "question": "What kind of developer am I?",
+      "expect": "blockchain",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided in your profile, we can infer a clear picture of your developer id",
+      "without_mem_ans": "To determine what kind of developer you are, I need a little bit of \"code\" regarding your habits, pr"
+    },
+    {
+      "profile": "prof_10",
+      "question": "What orchestration tool do I prefer?",
+      "expect": "airflow",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided, **there is no evidence suggesting a preference for a specific orc",
+      "without_mem_ans": "As an AI, I don’t have personal feelings, a job, or a production environment, so **I don’t have a pe"
+    },
+    {
+      "profile": "prof_10",
+      "question": "What do I use for transformations?",
+      "expect": "dbt",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, you have decided to use **dbt (data build tool)** for your data t",
+      "without_mem_ans": "The tools you use for \"transformations\" depend entirely on **what** you are trying to transform (dat"
+    },
+    {
+      "profile": "prof_10",
+      "question": "What is my view on Snowflake vs BigQuery?",
+      "expect": "snowflake",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, your view is that **Snowflake is better than BigQuery** for data ",
+      "without_mem_ans": "Because I am an AI, I don’t have personal opinions or professional stakes in the outcome. However, *"
+    },
+    {
+      "profile": "prof_10",
+      "question": "What do I use for streaming?",
+      "expect": "kafka",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Since you’ve already settled on **Snowflake** for your data warehouse and **dbt** for transformation",
+      "without_mem_ans": "To stream effectively, you need a combination of hardware and software. Depending on whether you are"
+    },
+    {
+      "profile": "prof_10",
+      "question": "What kind of engineer am I?",
+      "expect": "data",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "基于你提供的这些信息，你很可能是一位**数据工程师（Data Engineer）**，且目前正处于从传统架构向现代云原生数据栈（Modern Data Stack）转型的过程中。\n\n以下是具体的分析依",
+      "without_mem_ans": "To tell you what kind of engineer you are, I need a little bit of information about your background,"
+    }
+  ]
+}

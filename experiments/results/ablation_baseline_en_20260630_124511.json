@@ -1,0 +1,3690 @@
+{
+  "experiment": "ablation_baseline_en",
+  "language": "en",
+  "timestamp": "20260630_124511",
+  "memory_pool_size": 28,
+  "num_queries": 50,
+  "results": [
+    {
+      "config": "Noesis-full",
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "precision@5": 0.96,
+      "tentative_leak_total": 10,
+      "detail": [
+        {
+          "query": "What is my name?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Who am I?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my job title?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where do I work?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many years of experience do I have?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my specialty?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What language do I speak natively?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Tell me about my background",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Am I a frontend or backend engineer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What city do I live in?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which database do I prefer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "PostgreSQL or MySQL for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I use for vector search?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "sqlite-vec or FAISS?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What programming language do I prefer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Python or Java for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What editor keybindings do I use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What monitoring tool do I like?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What CSS framework do I use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "TypeScript or JavaScript?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I handle dev environments?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I like local dependency installs?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Grafana or Prometheus?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think of handwritten CSS?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Vim or mouse?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on microservices?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Microservices or monoliths?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about Rust vs C++?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Rust or C++ in my opinion?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "GraphQL or REST for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on GraphQL?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Kafka or RabbitMQ?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about message queues?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I prefer monoliths?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I feel about type safety?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What bug did I fix recently?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I migrate last week?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Did I attend any conferences?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I just deploy?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Database migration",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How big is our team?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many engineers are on the backend?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where does production run?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which AWS region do we use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many daily active users do we have?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is our user base size?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How large is the codebase?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "AWS deployment region",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Team composition",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Lines of code",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "Noesis-no-core",
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "precision@5": 0.96,
+      "tentative_leak_total": 10,
+      "detail": [
+        {
+          "query": "What is my name?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Who am I?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my job title?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where do I work?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many years of experience do I have?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my specialty?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What language do I speak natively?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Tell me about my background",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Am I a frontend or backend engineer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What city do I live in?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which database do I prefer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "PostgreSQL or MySQL for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I use for vector search?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "sqlite-vec or FAISS?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What programming language do I prefer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Python or Java for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What editor keybindings do I use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What monitoring tool do I like?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What CSS framework do I use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "TypeScript or JavaScript?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I handle dev environments?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I like local dependency installs?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Grafana or Prometheus?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think of handwritten CSS?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Vim or mouse?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on microservices?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Microservices or monoliths?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about Rust vs C++?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Rust or C++ in my opinion?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "GraphQL or REST for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on GraphQL?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Kafka or RabbitMQ?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about message queues?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I prefer monoliths?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I feel about type safety?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What bug did I fix recently?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I migrate last week?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Did I attend any conferences?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I just deploy?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Database migration",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How big is our team?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many engineers are on the backend?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where does production run?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which AWS region do we use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many daily active users do we have?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is our user base size?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How large is the codebase?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "AWS deployment region",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Team composition",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Lines of code",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "Noesis-no-recency",
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "precision@5": 0.96,
+      "tentative_leak_total": 10,
+      "detail": [
+        {
+          "query": "What is my name?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Who am I?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my job title?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where do I work?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many years of experience do I have?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my specialty?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What language do I speak natively?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Tell me about my background",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Am I a frontend or backend engineer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What city do I live in?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which database do I prefer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "PostgreSQL or MySQL for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I use for vector search?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "sqlite-vec or FAISS?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What programming language do I prefer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Python or Java for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What editor keybindings do I use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What monitoring tool do I like?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What CSS framework do I use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "TypeScript or JavaScript?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I handle dev environments?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I like local dependency installs?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Grafana or Prometheus?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think of handwritten CSS?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Vim or mouse?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on microservices?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Microservices or monoliths?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about Rust vs C++?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Rust or C++ in my opinion?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "GraphQL or REST for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on GraphQL?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Kafka or RabbitMQ?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about message queues?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I prefer monoliths?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I feel about type safety?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What bug did I fix recently?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I migrate last week?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Did I attend any conferences?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I just deploy?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Database migration",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How big is our team?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many engineers are on the backend?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where does production run?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which AWS region do we use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many daily active users do we have?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is our user base size?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How large is the codebase?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "AWS deployment region",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Team composition",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Lines of code",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "Noesis-no-gating",
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "precision@5": 0.884,
+      "tentative_leak_total": 29,
+      "detail": [
+        {
+          "query": "What is my name?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Who am I?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my job title?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where do I work?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many years of experience do I have?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my specialty?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What language do I speak natively?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.4,
+          "tentative_leak": 3,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Tell me about my background",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Am I a frontend or backend engineer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What city do I live in?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which database do I prefer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "PostgreSQL or MySQL for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I use for vector search?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "sqlite-vec or FAISS?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.6,
+          "tentative_leak": 2,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What programming language do I prefer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Python or Java for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What editor keybindings do I use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What monitoring tool do I like?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What CSS framework do I use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "TypeScript or JavaScript?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I handle dev environments?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I like local dependency installs?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Grafana or Prometheus?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think of handwritten CSS?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Vim or mouse?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on microservices?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Microservices or monoliths?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about Rust vs C++?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Rust or C++ in my opinion?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "GraphQL or REST for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on GraphQL?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Kafka or RabbitMQ?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.4,
+          "tentative_leak": 3,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about message queues?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I prefer monoliths?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I feel about type safety?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What bug did I fix recently?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I migrate last week?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Did I attend any conferences?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I just deploy?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Database migration",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How big is our team?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many engineers are on the backend?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where does production run?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which AWS region do we use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many daily active users do we have?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is our user base size?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How large is the codebase?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "AWS deployment region",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Team composition",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Lines of code",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "naive-RAG",
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "precision@5": 0.884,
+      "tentative_leak_total": 29,
+      "detail": [
+        {
+          "query": "What is my name?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Who am I?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my job title?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where do I work?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many years of experience do I have?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my specialty?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What language do I speak natively?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.4,
+          "tentative_leak": 3,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Tell me about my background",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Am I a frontend or backend engineer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What city do I live in?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which database do I prefer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "PostgreSQL or MySQL for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I use for vector search?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "sqlite-vec or FAISS?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.6,
+          "tentative_leak": 2,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What programming language do I prefer?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Python or Java for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What editor keybindings do I use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What monitoring tool do I like?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What CSS framework do I use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "TypeScript or JavaScript?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I handle dev environments?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I like local dependency installs?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Grafana or Prometheus?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think of handwritten CSS?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Vim or mouse?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on microservices?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Microservices or monoliths?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about Rust vs C++?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Rust or C++ in my opinion?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "GraphQL or REST for me?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on GraphQL?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Kafka or RabbitMQ?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.4,
+          "tentative_leak": 3,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about message queues?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I prefer monoliths?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I feel about type safety?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What bug did I fix recently?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I migrate last week?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Did I attend any conferences?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I just deploy?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Database migration",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How big is our team?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many engineers are on the backend?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where does production run?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which AWS region do we use?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many daily active users do we have?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is our user base size?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How large is the codebase?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "AWS deployment region",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Team composition",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Lines of code",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "Noesis-no-semantic",
+      "recall@5": 0.49,
+      "mrr": 0.16,
+      "precision@5": 1.0,
+      "tentative_leak_total": 0,
+      "detail": [
+        {
+          "query": "What is my name?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Who am I?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my job title?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where do I work?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many years of experience do I have?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my specialty?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What language do I speak natively?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Tell me about my background",
+          "recall": 0.5,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Am I a frontend or backend engineer?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What city do I live in?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which database do I prefer?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "PostgreSQL or MySQL for me?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I use for vector search?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "sqlite-vec or FAISS?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What programming language do I prefer?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Python or Java for me?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What editor keybindings do I use?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What monitoring tool do I like?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What CSS framework do I use?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "TypeScript or JavaScript?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I handle dev environments?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I like local dependency installs?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Grafana or Prometheus?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think of handwritten CSS?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Vim or mouse?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on microservices?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Microservices or monoliths?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about Rust vs C++?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Rust or C++ in my opinion?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "GraphQL or REST for me?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on GraphQL?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Kafka or RabbitMQ?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about message queues?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I prefer monoliths?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I feel about type safety?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What bug did I fix recently?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I migrate last week?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Did I attend any conferences?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I just deploy?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Database migration",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How big is our team?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many engineers are on the backend?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where does production run?",
+          "recall": 1.0,
+          "mrr": 0.3333333333333333,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which AWS region do we use?",
+          "recall": 1.0,
+          "mrr": 0.3333333333333333,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many daily active users do we have?",
+          "recall": 1.0,
+          "mrr": 0.5,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is our user base size?",
+          "recall": 1.0,
+          "mrr": 0.5,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How large is the codebase?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "AWS deployment region",
+          "recall": 1.0,
+          "mrr": 0.3333333333333333,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Team composition",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Lines of code",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "random",
+      "recall@5": 0.45,
+      "mrr": 0.206,
+      "precision@5": 0.94,
+      "tentative_leak_total": 15,
+      "detail": [
+        {
+          "query": "What is my name?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Who am I?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my job title?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where do I work?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many years of experience do I have?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my specialty?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What language do I speak natively?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Tell me about my background",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Am I a frontend or backend engineer?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What city do I live in?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which database do I prefer?",
+          "recall": 0.5,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "PostgreSQL or MySQL for me?",
+          "recall": 1.0,
+          "mrr": 0.5,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I use for vector search?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "sqlite-vec or FAISS?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What programming language do I prefer?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Python or Java for me?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What editor keybindings do I use?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What monitoring tool do I like?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What CSS framework do I use?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "TypeScript or JavaScript?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I handle dev environments?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I like local dependency installs?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Grafana or Prometheus?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think of handwritten CSS?",
+          "recall": 1.0,
+          "mrr": 0.3333333333333333,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Vim or mouse?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on microservices?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Microservices or monoliths?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about Rust vs C++?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Rust or C++ in my opinion?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "GraphQL or REST for me?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on GraphQL?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Kafka or RabbitMQ?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about message queues?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I prefer monoliths?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I feel about type safety?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What bug did I fix recently?",
+          "recall": 1.0,
+          "mrr": 0.3333333333333333,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I migrate last week?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Did I attend any conferences?",
+          "recall": 1.0,
+          "mrr": 0.3333333333333333,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I just deploy?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Database migration",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How big is our team?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many engineers are on the backend?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where does production run?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which AWS region do we use?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many daily active users do we have?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is our user base size?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 0.8,
+          "tentative_leak": 1,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How large is the codebase?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "AWS deployment region",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Team composition",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Lines of code",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "recent-window",
+      "recall@5": 0.22,
+      "mrr": 0.099,
+      "precision@5": 1.0,
+      "tentative_leak_total": 0,
+      "detail": [
+        {
+          "query": "What is my name?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Who am I?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my job title?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where do I work?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many years of experience do I have?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my specialty?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What language do I speak natively?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Tell me about my background",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Am I a frontend or backend engineer?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What city do I live in?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which database do I prefer?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "PostgreSQL or MySQL for me?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I use for vector search?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "sqlite-vec or FAISS?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What programming language do I prefer?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Python or Java for me?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What editor keybindings do I use?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What monitoring tool do I like?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What CSS framework do I use?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "TypeScript or JavaScript?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I handle dev environments?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I like local dependency installs?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Grafana or Prometheus?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think of handwritten CSS?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Vim or mouse?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on microservices?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Microservices or monoliths?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about Rust vs C++?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Rust or C++ in my opinion?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "GraphQL or REST for me?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on GraphQL?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Kafka or RabbitMQ?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about message queues?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I prefer monoliths?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I feel about type safety?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What bug did I fix recently?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I migrate last week?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Did I attend any conferences?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I just deploy?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Database migration",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How big is our team?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many engineers are on the backend?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where does production run?",
+          "recall": 1.0,
+          "mrr": 0.3333333333333333,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which AWS region do we use?",
+          "recall": 1.0,
+          "mrr": 0.3333333333333333,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many daily active users do we have?",
+          "recall": 1.0,
+          "mrr": 0.5,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is our user base size?",
+          "recall": 1.0,
+          "mrr": 0.5,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How large is the codebase?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "AWS deployment region",
+          "recall": 1.0,
+          "mrr": 0.3333333333333333,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Team composition",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Lines of code",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    },
+    {
+      "config": "all-inject",
+      "recall@5": 0.22,
+      "mrr": 0.099,
+      "precision@5": 1.0,
+      "tentative_leak_total": 0,
+      "detail": [
+        {
+          "query": "What is my name?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Who am I?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my job title?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where do I work?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many years of experience do I have?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my specialty?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What language do I speak natively?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Tell me about my background",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Am I a frontend or backend engineer?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What city do I live in?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which database do I prefer?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "PostgreSQL or MySQL for me?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I use for vector search?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "sqlite-vec or FAISS?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What programming language do I prefer?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Python or Java for me?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What editor keybindings do I use?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What monitoring tool do I like?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What CSS framework do I use?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "TypeScript or JavaScript?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I handle dev environments?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I like local dependency installs?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Grafana or Prometheus?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think of handwritten CSS?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Vim or mouse?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on microservices?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Microservices or monoliths?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about Rust vs C++?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Rust or C++ in my opinion?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "GraphQL or REST for me?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is my view on GraphQL?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Kafka or RabbitMQ?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What do I think about message queues?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Do I prefer monoliths?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How do I feel about type safety?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What bug did I fix recently?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I migrate last week?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Did I attend any conferences?",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What did I just deploy?",
+          "recall": 1.0,
+          "mrr": 0.2,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Database migration",
+          "recall": 0.0,
+          "mrr": 0.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How big is our team?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many engineers are on the backend?",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Where does production run?",
+          "recall": 1.0,
+          "mrr": 0.3333333333333333,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Which AWS region do we use?",
+          "recall": 1.0,
+          "mrr": 0.3333333333333333,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How many daily active users do we have?",
+          "recall": 1.0,
+          "mrr": 0.5,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "What is our user base size?",
+          "recall": 1.0,
+          "mrr": 0.5,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "How large is the codebase?",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "AWS deployment region",
+          "recall": 1.0,
+          "mrr": 0.3333333333333333,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Team composition",
+          "recall": 1.0,
+          "mrr": 0.25,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        },
+        {
+          "query": "Lines of code",
+          "recall": 1.0,
+          "mrr": 1.0,
+          "precision": 1.0,
+          "tentative_leak": 0,
+          "retrieved_count": 5
+        }
+      ]
+    }
+  ]
+}
