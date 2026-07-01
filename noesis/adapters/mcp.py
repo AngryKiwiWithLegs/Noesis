@@ -1,9 +1,10 @@
 """
 noesis/adapters/mcp.py
 
-MCP server exposing four tools:
+MCP server exposing five tools:
   remember(content, user_id)    — store a thought
-  recall(query, user_id)        — retrieve relevant context
+  recall(query, user_id)        — retrieve relevant thoughts/context
+  wiki_query(query)             — retrieve compiled wiki knowledge (documents)
   inspect_memory(hash_id)       — read a specific node (human-edited version)
   memory_status(user_id)        — dashboard summary
 
@@ -70,7 +71,8 @@ TOOLS = [
         "description": (
             "Retrieve relevant memories before answering. "
             "Returns a formatted string ready for system prompt injection. "
-            "Call at the start of any conversation turn where user context matters."
+            "Call at the start of any conversation turn where user context matters. "
+            "Searches the user's evolving thoughts/positions, NOT compiled documents."
         ),
         "inputSchema": {
             "type": "object",
@@ -80,6 +82,26 @@ TOOLS = [
                 "user_id": {"type": "string", "default": "default"},
                 "budget":  {"type": "integer", "default": 1200,
                             "description": "Max tokens of context to return"},
+            },
+            "required": ["query"],
+        },
+    },
+    {
+        "name": "wiki_query",
+        "description": (
+            "Search compiled wiki pages (documents the user has ingested: papers, "
+            "notes, manuals) for knowledge relevant to a query. Use this for factual "
+            "or documented knowledge, complementing recall() which covers the user's "
+            "own evolving thoughts. Returns ranked wiki excerpts with [[wiki/...]] "
+            "citations."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "query":  {"type": "string",
+                           "description": "What to look up in compiled documents"},
+                "top_k":  {"type": "integer", "default": 5,
+                           "description": "Max pages to return"},
             },
             "required": ["query"],
         },
@@ -179,6 +201,29 @@ class NoesisMCPServer:
                     budget_tokens= args.get("budget", 1200),
                 )
                 return ctx if ctx else "(No relevant memories found)"
+
+            elif name == "wiki_query":
+                from ..context.signals import wiki_signal
+                # The vault path lives on the cold store; bail cleanly if the
+                # user runs with a hot-only memory (no compiled documents).
+                cs = getattr(self.memory, "cold_store", None)
+                if cs is None:
+                    return "(No wiki configured: no cold store / vault path.)"
+                vault_path = str(cs.root)
+                hits = wiki_signal(
+                    args.get("query", ""),
+                    vault_path,
+                    embedding_model=getattr(self.memory, "embedding", None),
+                    top_k=args.get("top_k", 5),
+                )
+                if not hits:
+                    return "(No matching wiki pages found.)"
+                lines = []
+                for i, h in enumerate(hits, 1):
+                    cite = h.get("source", "")
+                    text = " ".join(h.get("text", "").split())
+                    lines.append(f"{i}. {cite} — {text[:240]}")
+                return "\n".join(lines)
 
             elif name == "inspect_memory":
                 text = self.memory.get(args.get("hash_id", ""))

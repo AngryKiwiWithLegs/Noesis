@@ -11,6 +11,12 @@ Commands:
   noesis import  --source chatgpt FILE        Batch import conversations
   noesis eval    [--user USER]                Run injection accuracy test
   noesis mcp                                  Start MCP server (stdio)
+
+  noesis wiki ingest <file|url>               Compile a document into wiki pages
+  noesis wiki query <text>                    Search wiki pages for knowledge
+  noesis wiki answer <hash> <page_id>         Mark a question answered by a wiki page
+  noesis wiki lint                            Audit wiki for open questions / orphans
+  noesis wiki status                          Show wiki page stats
 """
 from __future__ import annotations
 
@@ -260,6 +266,247 @@ def mcp(config):
     memory = _get_memory(config)
     from noesis.adapters.mcp import run_stdio
     asyncio.run(run_stdio(memory))
+
+
+# ── wiki ──────────────────────────────────────────────────────────────────────
+
+def _load_config_dict(config: Optional[str] = None) -> dict:
+    """Load the raw config dict from the config file, mirroring daemon.load_memory.
+
+    There is no public `_load_config` in noesis.daemon; Memory.from_config_file
+    consumes the dict internally but does not return it. We replicate the same
+    file-resolution logic so the wiki helpers can read llm/cold_store settings
+    without a Memory instance.
+    """
+    import yaml
+    from pathlib import Path
+    if config is None:
+        config = str(Path("~/.noesis/config.yaml").expanduser())
+    p = Path(config).expanduser()
+    if p.exists():
+        with open(p) as f:
+            return yaml.safe_load(f) or {}
+    return {}
+
+
+def _get_vault_path(config: Optional[str] = None) -> str:
+    """Resolve the vault path from config (shared with the cold store)."""
+    cfg = _load_config_dict(config)
+    cs = cfg.get("cold_store", {})
+    return cs.get("config", {}).get("vault_path", "~/NoesisVault")
+
+
+def _build_wiki_extractor(config: Optional[str] = None):
+    """Pick Cloud or Mock wiki extractor, mirroring Memory._attach_pipeline."""
+    import os
+    cfg = _load_config_dict(config)
+    llm = cfg.get("llm", {})
+    provider = llm.get("provider", "anthropic")
+    model = llm.get("model", "claude-haiku-4-5-20251001")
+    api_key = llm.get("api_key")
+    if not api_key:
+        env_var = {"anthropic": "ANTHROPIC_API_KEY",
+                   "openai": "OPENAI_API_KEY"}.get(provider, "OPENAI_API_KEY")
+        api_key = os.environ.get(env_var)
+    if api_key:
+        from noesis.wiki import CloudWikiExtractor
+        return CloudWikiExtractor(provider=provider, model=model, api_key=api_key)
+    from noesis.wiki import MockWikiExtractor
+    return MockWikiExtractor()
+
+
+@cli.group()
+def wiki():
+    """LLM Wiki operations (ingest documents, audit knowledge)."""
+    pass
+
+
+@wiki.command()
+@click.argument("source")
+@click.option("--config", "-c", default=None, help="Config file path")
+@click.option("--chunk-tokens", default=800, help="Max tokens per chunk")
+def ingest(source, config, chunk_tokens):
+    """Compile a document (file path or URL) into wiki pages.
+
+    Supports markdown, text, and PDF. Re-ingesting the same source updates
+    pages without duplicating them.
+
+    \b
+    Examples:
+      noesis wiki ingest notes.md
+      noesis wiki ingest paper.pdf
+      noesis wiki ingest https://example.com/article
+    """
+    vault = _get_vault_path(config)
+    extractor = _build_wiki_extractor(config)
+    from noesis.wiki import WikiIngestor
+    ing = WikiIngestor(vault, extractor, chunk_tokens=chunk_tokens)
+    try:
+        pages = ing.ingest(source)
+    except FileNotFoundError as e:
+        click.echo(str(e), err=True)
+        sys.exit(1)
+    except ImportError as e:
+        click.echo(str(e), err=True)
+        sys.exit(1)
+
+    if not pages:
+        click.echo("No reusable knowledge found in source.")
+        return
+    click.echo(f"Ingested {len(pages)} page(s) from {source}:")
+    for pid in pages:
+        click.echo(f"  - wiki/{pid}")
+    click.echo(f"\nVault: {Path(vault).expanduser() / 'wiki'}")
+
+
+@wiki.command()
+@click.option("--config", "-c", default=None)
+def lint(config):
+    """Audit the wiki: open questions, orphan pages, contradictions, gaps."""
+    memory = _get_memory(config)
+    vault = _get_vault_path(config)
+    from noesis.wiki import WikiLinter
+    linter = WikiLinter(vault, vector_store=memory.vector_store)
+    report = linter.run()
+
+    click.echo(f"\n  Wiki lint report — {Path(vault).expanduser().name}")
+    click.echo(f"  {'─' * 44}")
+
+    oq = report["open_questions"]
+    click.echo(f"  Open questions: {len(oq)}")
+    for q in oq[:10]:
+        click.echo(f"    · [{q['hash'][:8]}] {q['text'][:60]}")
+    if len(oq) > 10:
+        click.echo(f"    … and {len(oq)-10} more")
+
+    orphans = report["orphan_pages"]
+    click.echo(f"  Orphan pages:   {len(orphans)}")
+    for pid in orphans[:10]:
+        click.echo(f"    · wiki/{pid}")
+
+    contradictions = report["contradictions"]
+    click.echo(f"  Contradictions: {len(contradictions)}")
+    for a, b, dom in contradictions[:10]:
+        click.echo(f"    · wiki/{a} vs wiki/{b} (domain: {dom})")
+
+    gaps = report["coverage_gaps"]
+    click.echo(f"  Coverage gaps:  {len(gaps)}")
+    for g in gaps[:10]:
+        click.echo(f"    · cluster '{g}' has thoughts but no wiki page")
+    click.echo()
+
+
+@wiki.command()
+@click.option("--config", "-c", default=None)
+def status(config):
+    """Show wiki page count and recent log entries."""
+    vault = _get_vault_path(config)
+    from noesis.wiki import WikiWriter
+    writer = WikiWriter(vault)
+    pages = writer.list_pages()
+
+    click.echo(f"\n  Wiki status — {Path(vault).expanduser().name}")
+    click.echo(f"  {'─' * 40}")
+    click.echo(f"  Total pages: {len(pages)}")
+
+    # Cluster breakdown
+    clusters: dict[str, int] = {}
+    for pid in pages:
+        p = writer.read_page(pid)
+        if p:
+            c = p.topic_cluster or "general"
+            clusters[c] = clusters.get(c, 0) + 1
+    if clusters:
+        click.echo(f"  Clusters:    {len(clusters)}")
+        for c, n in sorted(clusters.items(), key=lambda x: -x[1]):
+            click.echo(f"    · {c}: {n}")
+
+    # Last few log lines
+    log_path = Path(vault).expanduser() / "wiki" / "log.md"
+    if log_path.exists():
+        lines = log_path.read_text().strip().splitlines()
+        recent = [l for l in lines if l.startswith("- ")][-5:]
+        if recent:
+            click.echo(f"\n  Recent activity:")
+            for l in recent:
+                click.echo(f"  {l}")
+    click.echo()
+
+
+@wiki.command()
+@click.argument("query_text")
+@click.option("--config", "-c", default=None)
+@click.option("--top-k", "-k", default=5, help="Max pages to return")
+def query(query_text, config, top_k):
+    """Search compiled wiki pages for knowledge relevant to a query.
+
+    Ranks pages by embedding similarity (if an embedding model is
+    configured) with a BM25 keyword fallback. Prints ranked hits with
+    their [[wiki/...]] citation and a short excerpt.
+
+    \b
+    Examples:
+      noesis wiki query "vector search in sqlite"
+      noesis wiki query "postgres json support" -k 3
+    """
+    vault = _get_vault_path(config)
+    # Use the configured embedding model for accurate ranking when present.
+    emb = None
+    try:
+        memory = _get_memory(config)
+        emb = getattr(memory, "embedding", None)
+    except Exception:
+        pass  # fall back to keyword ranking
+
+    from noesis.context.signals import wiki_signal
+    hits = wiki_signal(query_text, vault, embedding_model=emb, top_k=top_k)
+
+    if not hits:
+        click.echo("No matching wiki pages found.")
+        click.echo(f"(Vault: {Path(vault).expanduser() / 'wiki'})")
+        return
+
+    click.echo(f"\n  Wiki query — top {len(hits)} match(es)\n")
+    for i, h in enumerate(hits, 1):
+        score = h.get("score", 0.0)
+        cite = h.get("source", "")
+        cluster = h.get("topic_cluster", "")
+        text = " ".join(h.get("text", "").split())
+        click.echo(f"  {i}. {cite}  ({cluster}, score {score:.2f})")
+        click.echo(f"     {text[:120]}{'…' if len(text) > 120 else ''}")
+    click.echo()
+
+
+@wiki.command()
+@click.argument("hash_id")
+@click.argument("page_id")
+@click.option("--config", "-c", default=None)
+def answer(hash_id, page_id, config):
+    """Mark an open question (a thought) as answered by a wiki page.
+
+    Implements schema rule #2's write side: a question thought gains
+    status:answered and an answered_by: [[wiki/{page_id}]] reference.
+
+    \b
+    Example:
+      noesis wiki answer a1b2c3d4e5f6 sqlite-vec
+    """
+    memory = _get_memory(config)
+    vault = _get_vault_path(config)
+    from noesis.wiki import WikiLinter
+    linter = WikiLinter(vault, vector_store=memory.vector_store)
+
+    ok = linter.mark_answered(hash_id, page_id)
+    if not ok:
+        click.echo(
+            f"Could not answer: wiki page '{page_id}' does not exist.",
+            err=True,
+        )
+        sys.exit(1)
+
+    click.echo(f"Question {hash_id[:8]} marked answered by wiki/{page_id}.")
+    click.echo(f"  status: answered")
+    click.echo(f"  answered_by: [[wiki/{page_id}]]")
 
 
 # ── Entry ─────────────────────────────────────────────────────────────────────

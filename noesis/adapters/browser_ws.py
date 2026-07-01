@@ -10,6 +10,7 @@ lifecycle and become available the next time the user uses an API tool.
 """
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import time
@@ -32,11 +33,12 @@ def create_ws_app(memory) -> FastAPI:
     @app.get("/status/{user_id}")
     async def status(user_id: str = "default"):
         """Browser extension polls this to show memory count in popup."""
-        s = memory.status(user_id=user_id)
+        # status() may do DB I/O; run off the event loop.
+        s = await asyncio.to_thread(memory.status, user_id=user_id)
         return {
-            "total":       s["total"],
-            "settled":     s["settled"],
-            "provisional": s["provisional"],
+            "total":       s.get("total", 0),
+            "settled":     s.get("settled", 0),
+            "provisional": s.get("provisional", 0),
         }
 
     @app.websocket("/ingest")
@@ -65,17 +67,29 @@ def create_ws_app(memory) -> FastAPI:
                     messages.append({"role": "assistant", "content": a})
 
                 if messages:
-                    memory.add(
-                        messages,
-                        user_id      = user_id,
-                        source_tool  = source_tool,
-                        session_id   = session_id,
-                    )
-                    logger.debug(
-                        f"Ingested turn from {source_tool} "
-                        f"(user={user_id}, {len(messages)} msg)"
-                    )
-                    await ws.send_text('{"status":"ok"}')
+                    # CRITICAL: memory.add() is synchronous and does
+                    # embedding/pipeline work that blocks. Running it directly
+                    # in this async handler freezes the event loop and crashes
+                    # uvicorn with "'NoneType' object is not callable".
+                    # Push it to a worker thread instead.
+                    try:
+                        await asyncio.to_thread(
+                            memory.add,
+                            messages,
+                            user_id     = user_id,
+                            source_tool = source_tool,
+                            session_id  = session_id,
+                        )
+                        logger.info(
+                            f"Ingested turn from {source_tool} "
+                            f"(user={user_id}, {len(messages)} msg)"
+                        )
+                        await ws.send_text('{"status":"ok"}')
+                    except Exception as e:
+                        logger.error(f"memory.add failed: {e}")
+                        await ws.send_text(
+                            f'{{"status":"error","message":"{type(e).__name__}"}}'
+                        )
                 else:
                     await ws.send_text('{"status":"skip","reason":"empty turn"}')
 
@@ -84,7 +98,10 @@ def create_ws_app(memory) -> FastAPI:
         except Exception as e:
             logger.error(f"WS error: {e}")
         finally:
-            conns.remove(ws)
+            if ws in conns:
+                conns.remove(ws)
+
+    return app
 
 
 def _safe_parse(raw: str) -> Optional[dict]:

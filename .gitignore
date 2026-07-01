@@ -11,3 +11,6 @@ dist/
 build/
 .pytest_cache/
 .mypy_cache/
+
+# Test/benchmark output artifacts
+noesis_benchmark_report.json

@@ -2,17 +2,17 @@
 
 **Your thinking layer. Yours forever.**
 
-Not a memory tool — a thinking tool.  
-Every AI conversation captures a fragment of how you reason.  
-Noesis collects those fragments, structures them, and makes them available  
+Not a memory tool — a thinking tool.
+Every AI conversation captures a fragment of how you reason.
+Noesis collects those fragments, structures them, and makes them available
 to every AI you use — automatically, locally, privately.
 
 ---
 
 ## Why this exists
 
-You talk to Claude. You talk to GPT. You switch tools, start new chats.  
-Each conversation disappears when you close the tab.  
+You talk to Claude. You talk to GPT. You switch tools, start new chats.
+Each conversation disappears when you close the tab.
 Your reasoning — your positions, your questions, your judgements — evaporates.
 
 Noesis captures it. Not as a transcript, but as structured thought:
@@ -25,42 +25,135 @@ identity   — "I'm a senior ML engineer at a healthcare startup"
 preference — "I prefer zero-dependency solutions"
 ```
 
-Every thought lives in your Obsidian vault.  
-Every AI you use can read from it.  
+Every thought lives in your Obsidian vault.
+Every AI you use can read from it.
 You own it.
 
 ---
 
-## Quickstart
+## Setup (new user guide)
+
+### 1. Prerequisites
+
+| Requirement | Why | Check |
+|---|---|---|
+| **Python 3.11+** | Core runtime | `python3 --version` |
+| **~400 MB disk** | Embedding model (~80 MB) + deps | — |
+| **Obsidian** *(optional but recommended)* | Human-readable cold store | [obsidian.md](https://obsidian.md) |
+
+That's it for the base install. Everything below is optional and additive —
+you can start with zero API keys (fully local) and add cloud models later.
+
+### 2. Install
 
 ```bash
-git clone https://github.com/you/noesis
-cd noesis
+git clone https://github.com/AngryKiwiWithLegs/Noesis.git
+cd Noesis
 bash setup.sh
 ```
 
+`setup.sh` creates a `.venv`, installs dependencies, verifies imports, and runs
+the latency test suite. **First run downloads the embedding model (~80 MB).**
+
 ```bash
-# Copy and edit config
+# Activate the venv in every new terminal
+source .venv/bin/activate
+```
+
+### 3. Configure
+
+```bash
 mkdir -p ~/.noesis
 cp config.example.yaml ~/.noesis/config.yaml
-# Edit vault_path and optionally add your LLM API key
-
-# Start the daemon
-noesis start
 ```
 
-**Point any OpenAI-compatible tool at Noesis:**
+Then edit `~/.noesis/config.yaml`. The three sections that matter:
+
+```yaml
+# Hot store — your fast local index (always required)
+vector_store:
+  config:
+    db_path: ~/.noesis/hot.db
+
+# Local embeddings — no network, no key (always required)
+embedder:
+  config:
+    model: all-MiniLM-L6-v2
+
+# Cold store — where thoughts live as readable Markdown (recommended)
+cold_store:
+  config:
+    vault_path: ~/Documents/NoesisVault   # point at your Obsidian vault
+```
+
+### 4. Pick your model tier
+
+Noesis is **model-agnostic**. You can run fully local, fully cloud, or both.
+The two concerns are separate — understand the distinction up front:
+
+> **Thought extraction** (in `config.yaml` `llm:`) classifies *what kind* of
+> thought was captured (position / question / preference / …).
+> **Chat routing** (model name prefix) decides *which provider* answers your
+> tool's requests through the proxy. They are independent.
+
+#### Option A — Fully local, zero keys (simplest start)
+
+No `llm:` block in config. Thoughts are stored as raw text (no type
+classification until you add a key). For chat, run a local model:
+
+```bash
+# Install Ollama: https://ollama.com  (one-time)
+ollama pull gemma3:4b      # or qwen2.5:3b, llama3.2, phi3.5, …
+```
+
+Then send requests to the proxy with `model: gemma3:4b` — no auth needed.
+
+#### Option B — Cloud LLM for thought extraction (recommended)
+
+Add an `llm:` block so Noesis classifies thoughts as you chat:
+
+```yaml
+llm:
+  provider: anthropic                              # or: openai
+  model:    claude-haiku-4-5-20251001              # or: gpt-4o-mini
+  # api_key: sk-ant-...                            # or set ANTHROPIC_API_KEY
+```
+
+#### Option C — Cloud chat models through the proxy
+
+The proxy routes by **model-name prefix** — set your tool's model field and
+send your provider key in the `Authorization` header (the proxy passes it
+through; it never stores keys itself):
+
+| Model prefix in request | Routes to | Auth header |
+|---|---|---|
+| `gpt-`, `o1`, `o3` | api.openai.com | `Bearer $OPENAI_API_KEY` |
+| `claude-` | api.anthropic.com | `Bearer $ANTHROPIC_API_KEY` |
+| `gemini-` | generativelanguage.googleapis.com | `Bearer $GEMINI_API_KEY` |
+| `mistral-` | api.mistral.ai | `Bearer $MISTRAL_API_KEY` |
+| `deepseek` | api.deepseek.com | `Bearer $DEEPSEEK_API_KEY` |
+| `gemma`/`llama`/`phi`/`qwen`/`mixtral` | localhost:11434 (Ollama) | none |
+
+### 5. Start the daemon
+
+```bash
+noesis start          # API proxy on :8080
+noesis start --ws     # also start the browser-extension WebSocket on :8082
+```
+
+### 6. Connect your tools
+
+**Any OpenAI-compatible tool** — change the API base URL:
 
 ```
-Change your tool's API base URL from:
-  https://api.openai.com/v1
-To:
-  http://localhost:8080/v1
-
-Everything else (model name, API key) stays the same.
+from:  https://api.openai.com/v1
+to:    http://localhost:8080/v1
 ```
 
-**Claude Desktop (MCP):**
+Model name and API key stay as they were. Noesis injects memory into the
+system prompt invisibly, then forwards to the real provider.
+
+**Claude Desktop (MCP)** — `~/.config/claude/claude_desktop_config.json`:
 
 ```json
 {
@@ -69,6 +162,64 @@ Everything else (model name, API key) stays the same.
   }
 }
 ```
+
+This exposes five tools: `remember`, `recall`, `wiki_query`,
+`inspect_memory`, `memory_status`.
+
+### 7. Verify it works
+
+```bash
+noesis status                 # should show your memory stats
+noesis inspect <hash_id>      # read a specific node
+
+# Test the proxy with a local model (no key needed):
+curl http://localhost:8080/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"gemma3:4b","messages":[{"role":"user","content":"hi"}]}'
+```
+
+Run the test suite to confirm the install:
+
+```bash
+pytest tests/ -v -k "not slow"
+```
+
+### 8. (Optional) Seed memory from past chats
+
+```bash
+noesis import --source chatgpt conversations.json
+noesis import --source text    notes.txt
+```
+
+Imported nodes start `tentative` and promote as you keep using Noesis.
+
+### 9. (Optional) Build your LLM Wiki
+
+The wiki layer compiles documents (papers, notes, manuals) into cited,
+searchable knowledge pages that cross-link with your thoughts:
+
+```bash
+noesis wiki ingest ~/papers/sqlite-vec.pdf     # compile → wiki pages
+noesis wiki status                             # page counts + clusters
+noesis wiki query "vector search in sqlite"    # search compiled knowledge
+noesis wiki lint                               # find gaps, orphans, contradictions
+noesis wiki answer <hash> <page_id>            # resolve an open question
+```
+
+Without an `llm:` key, the deterministic Mock extractor handles structured
+markdown; with a key, the Cloud extractor compiles with citations.
+
+---
+
+## Troubleshooting
+
+| Symptom | Cause / fix |
+|---|---|
+| `Address already in use` on start | A daemon is already running. `lsof -iTCP:8080` to find it, then kill or reuse it. |
+| Cloud model returns `401 Unauthorized` | You didn't send the provider key in the `Authorization` header. The proxy forwards it; it doesn't store keys. |
+| Local model returns connection refused | Ollama isn't running. `ollama serve` or start the app. |
+| Thoughts show as `tentative` forever | No `llm:` block configured, so nothing classifies/promotes them. Add a key (Option B). |
+| First `noesis start` is slow | Downloading the embedding model (~80 MB, one-time). |
 
 ---
 
@@ -84,14 +235,17 @@ All AI tools
               │   Cloud LLM (optional)  │  thought extraction
               │   ConfidenceScorer      │  tentative→provisional→settled
               │   ConsolidationPipeline │  async, never blocks add()
+              │   Supersession detector │  retires stale stances automatically
               └────────────┬────────────┘
                            │
               ┌────────────┴────────────┐
               │  Hot store (sqlite-vec) │  <10ms retrieval
               │  Cold store (Obsidian)  │  human-readable, human-editable
+              │  LLM Wiki (wiki/*.md)   │  compiled document knowledge
               └────────────┬────────────┘
                            │
               ContextBuilder → system prompt injection
+              (thoughts + wiki knowledge, ranked, budgeted)
 ```
 
 ---
@@ -137,6 +291,13 @@ noesis sync                           # force sync vault edits → hot store
 noesis import  --source chatgpt FILE  # batch import existing conversations
 noesis eval                           # run injection accuracy benchmark
 noesis mcp                            # start MCP server (stdio)
+
+# LLM Wiki (compiled document knowledge)
+noesis wiki ingest <file|url>         # compile a document into wiki pages
+noesis wiki query <text> [-k N]       # search compiled wiki knowledge
+noesis wiki answer <hash> <page_id>   # mark a question answered by a page
+noesis wiki lint                      # audit: open questions, orphans, gaps
+noesis wiki status                    # wiki page counts + recent activity
 ```
 
 ---
@@ -218,6 +379,7 @@ pytest tests/test_retrieval.py  -v  # Week 3 — hybrid retrieval
 pytest tests/test_injection.py  -v  # Week 3 — context injection ★
 pytest tests/test_proxy.py      -v  # Week 4 — API proxy + MCP
 pytest tests/test_cross_tool.py -v  # Week 5 — cross-tool + clusters
+pytest tests/test_wiki.py     -v   # LLM Wiki — ingest, lint, query, writer
 pytest tests/test_benchmark.py  -v -m slow  # Week 6 — formal benchmark
 ```
 

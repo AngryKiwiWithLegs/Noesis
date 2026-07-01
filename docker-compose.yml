@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: noesis_postgres
+    environment:
+      POSTGRES_DB: noesis
+      POSTGRES_USER: ns
+      POSTGRES_PASSWORD: ns_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - noesis_pgdata:/var/lib/postgresql/data
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ns -d noesis"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  noesis_pgdata:
