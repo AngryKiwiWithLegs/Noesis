@@ -33,6 +33,8 @@ _STRONG_ZH = [
     (r"我决定|我确定|我确信|明确|一定要|绝对", 0.9),
     (r"我叫|我是|我是一名|我是名", 0.85),
     (r"我认为|我觉得|我判断|我倾向于|我在评估|我倾向|我偏好|我喜欢用|我选择", 0.8),
+    # 替换/改变想法的动词 — 用户说"我换成了X"是强断言, 应达到 provisional
+    (r"切换到|迁移到|改为|换成|改用|弃用|不再用|换到|升级到|转用|我换|我改", 0.8),
     (r"应该|需要|必须|值得", 0.6),
 ]
 _WEAK_ZH = [
@@ -41,7 +43,14 @@ _WEAK_ZH = [
 ]
 _STRONG_EN = [
     (r"\b(I decided|I'm certain|I'm sure|definitely|absolutely)\b", 0.9),
-    (r"\b(I think|I believe|I feel|I judge)\b", 0.7),
+    (r"\b(my name is|I am a|I'm a|I am an|I'm an)\b", 0.85),
+    # Stance declarations (preferences/opinions) — 0.8
+    (r"\b(I think|I believe|I feel|I judge|I prefer|I like|I chose|I tend to|I'm evaluating|I lean)\b", 0.8),
+    # Replacement / mind-change verbs — a user declaring "I switched to X" is
+    # making a strong, current assertion that should reach provisional so it
+    # can supersede the prior stance. Without this, the new stance stays
+    # tentative and _maybe_supersede never fires (it guards on provisional+).
+    (r"\b(I switched to|I moved to|I migrated to|I now use|I now using|switched to|moved to|migrated to|now use|now using|I replaced|changed to|upgraded to|transitioned to|shifted to|converted to|I adopted|I have moved|I have switched)\b", 0.8),
     (r"\b(should|must|need to|worth)\b", 0.6),
 ]
 _WEAK_EN = [
@@ -228,3 +237,28 @@ def _is_negation(candidate: str, reference: str) -> bool:
     has_overlap  = bool(ref_kws & _keywords(candidate))
 
     return has_negation and has_overlap
+
+
+# Replacement / mind-change vocabulary.
+# A new stance containing one of these verbs signals that the user is moving
+# AWAY from a prior choice toward a new one (e.g. "I switched to PostgreSQL").
+# This is distinct from corroboration ("I prefer PostgreSQL" said twice, which
+# has no replacement verb) and from explicit negation (handled by _is_negation).
+# Used by ConsolidationPipeline._maybe_supersede to detect supersession.
+_REPLACEMENT_VERBS_EN = [
+    "switched to", "moved to", "migrated to", "now use", "now using",
+    "replaced", "changed to", "upgraded to", "switched from", "moved from",
+    "migrated from", "dropped", "abandoned", "no longer use", "no longer using",
+    "transitioned to", "shifted to", "converted to", "adopted",
+]
+_REPLACEMENT_VERBS_ZH = [
+    "切换", "迁移", "改为", "换成", "改用", "弃用", "不再用",
+    "换到", "升级到", "转用", "改用", "迁移到", "换成",
+]
+
+
+def has_replacement_verb(text: str) -> bool:
+    """Return True if the text signals a stance replacement (mind-change).
+    This is the key gate that distinguishes supersession from corroboration."""
+    t = text.lower()
+    return any(v in text for v in _REPLACEMENT_VERBS_ZH) or any(v in t for v in _REPLACEMENT_VERBS_EN)

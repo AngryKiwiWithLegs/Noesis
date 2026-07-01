@@ -60,6 +60,7 @@ class Memory:
         self._pipeline    = pipeline
         self._retriever   = retriever
         self._ctx_builder = context_builder
+        self._linker:     Any = None
         self._synced:    set[str]         = set()
         self._last_sync: dict[str, float] = {}
 
@@ -84,6 +85,12 @@ class Memory:
                    embedding_model=embedding,
                    cold_store=cold_store)
 
+        # Build the linker once and share it with both the pipeline and the
+        # retriever. Previously the linker was only attached in
+        # _attach_retriever, so the pipeline's self.linker stayed None and
+        # graph linking (including the wiki cross-link step) never fired.
+        inst._build_linker(config)
+
         if llm_cfg := config.get("llm"):
             inst._attach_pipeline(llm_cfg)
 
@@ -97,6 +104,29 @@ class Memory:
         import yaml
         with open(Path(path).expanduser()) as f:
             return cls.from_config(yaml.safe_load(f))
+
+    def _build_linker(self, config: dict):
+        """Build the ObsidianLinker once, store it on self._linker.
+
+        Shared by the consolidation pipeline (write-side: links nodes after
+        they're confirmed) and the retriever (read-side: graph expansion).
+        """
+        vault_path = None
+        if cs := config.get("cold_store"):
+            vault_path = cs.get("config", {}).get("vault_path")
+        if not vault_path:
+            self._linker = None
+            return
+        try:
+            from ..graphs.obsidian_linker import ObsidianLinker
+            self._linker = ObsidianLinker(
+                vault_path=vault_path,
+                vector_store=self.vector_store,
+                embedding_model=self.embedding,
+            )
+        except Exception as le:
+            logger.debug(f"Linker not attached: {le}")
+            self._linker = None
 
     def _attach_pipeline(self, llm_cfg: dict):
         try:
@@ -135,6 +165,7 @@ class Memory:
                 cold_store  =self.cold_store,
                 extractor   =extractor,
                 scorer      =ConfidenceScorer(),
+                linker      =self._linker,   # ← was missing; graph/wiki links never fired
             )
         except Exception as e:
             logger.warning(f"Pipeline attach failed: {e}")
@@ -145,21 +176,7 @@ class Memory:
             from ..retrieval.hybrid import HybridRetriever
             from ..context.builder import ContextBuilder
 
-            vault_path = None
-            if cs := config.get("cold_store"):
-                vault_path = cs.get("config", {}).get("vault_path")
-
-            linker = None
-            if vault_path:
-                try:
-                    from ..graphs.obsidian_linker import ObsidianLinker
-                    linker = ObsidianLinker(
-                        vault_path=vault_path,
-                        vector_store=self.vector_store,
-                        embedding_model=self.embedding,
-                    )
-                except Exception as le:
-                    logger.debug(f"Linker not attached: {le}")
+            linker = self._linker   # built once in _build_linker
 
             retriever = HybridRetriever(
                 vector_store=self.vector_store,
@@ -167,11 +184,18 @@ class Memory:
                 linker=linker,
             )
             self._retriever   = retriever
+
+            # Resolve vault_path for the wiki signal (knowledge grounding)
+            vault_path = None
+            if cs := config.get("cold_store"):
+                vault_path = cs.get("config", {}).get("vault_path")
+
             self._ctx_builder = ContextBuilder(
                 vector_store=self.vector_store,
                 embedding_model=self.embedding,
                 retriever=retriever,
                 linker=linker,
+                vault_path=vault_path,
             )
             logger.info("HybridRetriever + ContextBuilder attached")
         except Exception as e:

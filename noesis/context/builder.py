@@ -1,12 +1,14 @@
 """
 noesis/context/builder.py
 
-Coordinates three retrieval signals into a single system-prompt string.
+Coordinates four retrieval signals into a single system-prompt string.
 
 Design:
   - semantic_signal  (graph-expanded hybrid search)  →  topically relevant
   - recency_signal   (recent non-tentative nodes)     →  temporally relevant
   - core_fact_signal (identity + preference)          →  always relevant
+  - wiki_signal      (compiled wiki/ pages)           →  grounds positions
+                                                         with documented knowledge
 
 Deduplication is by hash_id.
 Trimming is by token budget (rough CJK-aware estimate).
@@ -18,7 +20,12 @@ from __future__ import annotations
 import logging
 from typing import Optional
 
-from .signals import semantic_signal, recency_signal, core_fact_signal
+from .signals import (
+    semantic_signal,
+    recency_signal,
+    core_fact_signal,
+    wiki_signal,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +54,9 @@ class ContextBuilder:
         recency_n:       int   = 3,
         core_top_k:      int   = 3,
         semantic_top_k:  int   = 8,
+        vault_path:      Optional[str] = None,
+        wiki_top_k:      int   = 3,
+        wiki_budget_pct: float = 0.25,
     ):
         self.vs           = vector_store
         self.emb          = embedding_model
@@ -55,6 +65,9 @@ class ContextBuilder:
         self.recency_n    = recency_n
         self.core_top_k   = core_top_k
         self.semantic_k   = semantic_top_k
+        self.vault_path   = vault_path
+        self.wiki_k       = wiki_top_k
+        self.wiki_pct     = wiki_budget_pct
 
     # ── Public ────────────────────────────────────────────────────────────────
 
@@ -90,10 +103,28 @@ class ContextBuilder:
         except Exception as e:
             logger.warning(f"core_fact_signal failed: {e}")
 
-        if not candidates:
+        # Split the budget: wiki gets its own slice so documented knowledge
+        # doesn't crowd out live thoughts (and vice versa).
+        wiki_budget = int(budget_tokens * self.wiki_pct)
+        thought_budget = budget_tokens - wiki_budget
+
+        thoughts = self._dedup_trim(candidates, thought_budget)
+
+        # Signal 4: wiki knowledge (compiled documents)
+        wiki_nodes: list[dict] = []
+        if self.vault_path:
+            try:
+                wiki_nodes = wiki_signal(
+                    query, self.vault_path, self.emb, top_k=self.wiki_k
+                )
+            except Exception as e:
+                logger.warning(f"wiki_signal failed: {e}")
+        wiki_trimmed = self._dedup_trim(wiki_nodes, wiki_budget)
+
+        if not thoughts and not wiki_trimmed:
             return ""
 
-        return self._format(self._dedup_trim(candidates, budget_tokens))
+        return self._format(thoughts, wiki_trimmed)
 
     # ── Internals ─────────────────────────────────────────────────────────────
 
@@ -127,13 +158,23 @@ class ContextBuilder:
         return out
 
     @staticmethod
-    def _format(nodes: list[dict]) -> str:
-        if not nodes:
-            return ""
-        lines = []
-        for m in nodes:
-            t    = m.get("type",   "?")
-            s    = m.get("status", "?")
-            text = m.get("text",   "").strip()
-            lines.append(f"- [{t}·{s}] {text}")
-        return "以下是关于用户的已知信息：\n" + "\n".join(lines)
+    def _format(thoughts: list[dict], wiki: list[dict] | None = None) -> str:
+        sections = []
+        if thoughts:
+            lines = []
+            for m in thoughts:
+                t    = m.get("type",   "?")
+                s    = m.get("status", "?")
+                text = m.get("text",   "").strip()
+                lines.append(f"- [{t}·{s}] {text}")
+            sections.append("以下是关于用户的已知信息：\n" + "\n".join(lines))
+
+        if wiki:
+            lines = []
+            for m in wiki:
+                cite = m.get("source", "")
+                text = m.get("text", "").strip()
+                lines.append(f"- {text} {cite}".rstrip())
+            sections.append("相关文档知识（wiki）：\n" + "\n".join(lines))
+
+        return "\n\n".join(sections)

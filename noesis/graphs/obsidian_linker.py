@@ -3,9 +3,10 @@ noesis/graphs/obsidian_linker.py
 
 After a node is written to the vault, link it to its neighbours.
 
-Two-tier graph:
+Three-tier graph:
   Tier 1 → clusters/ nodes (always linked, the visible graph)
   Tier 2 → top-3 similar nodes within the same cluster (detail layer)
+  Tier 3 → matching wiki/ nodes by topic_cluster (cross-layer links)
 
 Dedup detection:
   similarity > DEDUP_THRESHOLD → flag as potential duplicate,
@@ -13,6 +14,11 @@ Dedup detection:
 
 Tentative nodes never receive any [[]] links — they stay invisible
 in the Obsidian graph until they earn provisional status.
+
+Wiki cross-linking (NOESIS_SCHEMA.md rule #1):
+  For a confirmed thought, find wiki/ pages sharing the same topic_cluster
+  and append [[wiki/xxx]] refs to the thought's Related field. This is the
+  contract that ties LLM Wiki knowledge to live thoughts.
 """
 from __future__ import annotations
 
@@ -89,6 +95,10 @@ class ObsidianLinker:
         if cluster:
             self._link_to_cluster(hash_id, cluster, node)
 
+        # 3. Cross-link to matching wiki/ pages (tier 3, schema rule #1)
+        if cluster:
+            self._link_to_wiki(hash_id, cluster)
+
     # ── Cluster tier ──────────────────────────────────────────────────────────
 
     def _link_to_cluster(self, hash_id: str, cluster: str, node: dict):
@@ -128,6 +138,71 @@ class ObsidianLinker:
             )
             path.write_text(content, encoding="utf-8")
 
+    # ── Wiki tier (cross-layer, schema rule #1) ────────────────────────────────
+
+    def _link_to_wiki(self, hash_id: str, cluster: str):
+        """Find wiki/ pages in the same topic_cluster and append their
+        [[wiki/xxx]] refs to the thought's Related field.
+
+        Implements NOESIS_SCHEMA.md rule #1:
+          "graph_linker finds matching wiki/ nodes by topic_cluster,
+           writes [[wiki/xxx]] into thoughts/ Related field."
+        """
+        wiki_pages = self._wiki_pages_in_cluster(cluster)
+        if not wiki_pages:
+            return
+
+        path = self.vault / "thoughts" / f"{hash_id}.md"
+        if not path.exists():
+            return
+        content = path.read_text(encoding="utf-8")
+
+        changed = False
+        for pid in wiki_pages:
+            ref = f"[[wiki/{pid}]]"
+            if ref not in content:
+                # Append to the Related: line
+                content = re.sub(
+                    r"^Related:(.*?)$",
+                    lambda m, r=ref: f"Related:{m.group(1)} {r}",
+                    content,
+                    flags=re.MULTILINE,
+                )
+                changed = True
+        if changed:
+            path.write_text(content, encoding="utf-8")
+
+    def _wiki_pages_in_cluster(self, cluster: str) -> list[str]:
+        """Return page_ids of wiki/*.md pages whose topic_cluster matches.
+
+        Parses each wiki page's frontmatter with pyyaml. Excludes the
+        reserved index.md / log.md files.
+        """
+        wiki_dir = self.vault / "wiki"
+        if not wiki_dir.exists():
+            return []
+        out = []
+        for p in sorted(wiki_dir.glob("*.md")):
+            stem = p.stem
+            if stem in ("index", "log"):
+                continue
+            fm = self._read_wiki_frontmatter(p)
+            if fm.get("topic_cluster", "general") == cluster:
+                out.append(stem)
+        return out
+
+    @staticmethod
+    def _read_wiki_frontmatter(path) -> dict:
+        try:
+            import yaml
+            raw = path.read_text(encoding="utf-8")
+            parts = raw.split("---", 2)
+            if len(parts) < 3:
+                return {}
+            return yaml.safe_load(parts[1]) or {}
+        except Exception:
+            return {}
+
     # ── Node md update ────────────────────────────────────────────────────────
 
     def _update_md(
@@ -166,8 +241,15 @@ class ObsidianLinker:
 
     def get_related_hashes(self, hash_id: str) -> list[str]:
         """
-        Parse the Related: line of a node's md file,
-        return list of hash IDs that are in the hot store.
+        Parse the Related: line of a node's md file, return refs that resolve
+        to content in the hot store OR the wiki layer.
+
+        Captures three ref kinds (the old [a-f0-9]{6,12}-only regex silently
+        dropped wiki/ and _topic_ refs):
+          [[a1b2c3d4]]      → hex thought hash (resolved via hot store)
+          [[wiki/slug]]     → wiki page (resolved via the wiki/ directory)
+          [[_topic_cluster]]→ cluster node (resolved via clusters/ dir)
+
         Used by HybridRetriever for 1-hop graph expansion.
         """
         path = self.vault / "thoughts" / f"{hash_id}.md"
@@ -177,5 +259,19 @@ class ObsidianLinker:
         m = re.search(r"^Related:(.*?)$", content, re.MULTILINE)
         if not m:
             return []
-        refs = re.findall(r"\[\[([a-f0-9]{6,12})\]\]", m.group(1))
-        return [r for r in refs if self.vs.exists(r)]
+        out: list[str] = []
+        for ref in re.findall(r"\[\[([^\]]+)\]\]", m.group(1)):
+            if ref.startswith("wiki/"):
+                # Wiki page ref — resolve via filesystem
+                pid = ref[len("wiki/"):]
+                if (self.vault / "wiki" / f"{pid}.md").exists():
+                    out.append(ref)
+            elif ref.startswith("_topic_"):
+                # Cluster node ref — resolve via filesystem
+                if (self.vault / "clusters" / f"{ref}.md").exists():
+                    out.append(ref)
+            else:
+                # Hex thought hash — resolve via hot store
+                if re.fullmatch(r"[a-f0-9]{6,12}", ref) and self.vs.exists(ref):
+                    out.append(ref)
+        return out

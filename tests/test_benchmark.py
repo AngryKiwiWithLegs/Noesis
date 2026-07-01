@@ -24,14 +24,31 @@ from noesis.eval.benchmark import run_benchmark, print_report, EVAL_DATASET
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
-@pytest.fixture(scope="module")
-def bench_mem(tmp_path_factory):
-    """Single Memory instance for the whole benchmark module (faster)."""
-    tmp = tmp_path_factory.mktemp("bench")
+def _make_memory(tmp_path):
+    """Create a fresh Memory on an isolated temp DB.
+
+    NOTE: intentionally built WITHOUT the consolidation pipeline
+    (from_config, not from_config_file). The benchmark tests retrieval
+    and injection behaviour by manually setting node status via
+    vector_store.update(), so a background pipeline would race with
+    those manual updates. Each test gets its own isolated store, so no
+    cross-test pollution.
+    """
     return Memory.from_config({
-        "vector_store": {"config": {"db_path": str(tmp / "hot.db")}},
+        "vector_store": {"config": {"db_path": str(tmp_path / "hot.db")}},
         "embedder":     {"config": {"model": "all-MiniLM-L6-v2"}},
     })
+
+
+@pytest.fixture
+def bench_mem(tmp_path):
+    """Per-test isolated Memory instance (no shared state between tests).
+
+    Previously this was scope='module', which let earlier category tests
+    pollute the shared store and made test_full_benchmark_accuracy flaky
+    (36% under pytest vs 92% standalone). Isolating per test fixes that.
+    """
+    return _make_memory(tmp_path)
 
 
 # ── Dataset sanity ────────────────────────────────────────────────────────────
