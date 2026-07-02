@@ -239,7 +239,7 @@ All AI tools
               └────────────┬────────────┘
                            │
               ┌────────────┴────────────┐
-              │  Hot store (sqlite-vec) │  <10ms retrieval
+              │  Hot store (sqlite-vec) │  <1ms retrieval · ~30ms embedding
               │  Cold store (Obsidian)  │  human-readable, human-editable
               │  LLM Wiki (wiki/*.md)   │  compiled document knowledge
               └────────────┬────────────┘
