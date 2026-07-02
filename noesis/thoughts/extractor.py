@@ -314,16 +314,97 @@ def _normalise_thought(user_text: str) -> str:
 
 
 def _infer_cluster(text: str) -> str:
-    """Cheap topic-cluster guess from keywords. Lets repetition/cross-tool
-    signals fire for related statements in mock mode."""
-    t = text.lower()
-    if any(k in t for k in ["sqlite-vec", "sqlite", "faiss", "向量", "检索", "embedding"]):
-        return "vector-store"
-    if any(k in t for k in ["python", "rust", "java", "后端", "前端", "工程师"]):
-        return "tech-stack"
-    if any(k in t for k in ["模型", "llm", "gemini", "gpt", "claude", "deepseek"]):
-        return "llm-choice"
+    """Topic-cluster guess from keywords. Fast (no embedding call) — the
+    default for the hot write path. Bilingual EN+ZH domain map.
+
+    The map is intentionally broad: ~12 domains covering the technology /
+    engineering / career space the experiment corpus actually occupies.
+    The first match wins, so more specific domains are listed first.
+    """
+    t = (text or "").lower()
+    for cluster, keywords in _DOMAIN_KEYWORDS:
+        if any(k in t for k in keywords):
+            return cluster
     return "general"
+
+
+# Bilingual keyword map. (cluster, [keywords]) — order matters: first match
+# wins, so specific/overlapping domains go before general ones.
+_DOMAIN_KEYWORDS: list[tuple[str, list[str]]] = [
+    ("vector-store",  ["sqlite-vec", "faiss", "milvus", "qdrant", "向量",
+                       "vector", "embedding", "嵌入", "retrieval", "检索"]),
+    ("database",      ["postgres", "mysql", "redis", "mongo", "sqlite",
+                       "数据库", "关系型", "rdb", "aof"]),
+    ("languages",     ["python", "rust", "java", "golang", "typescript",
+                       "javascript", "swift", "kotlin", "c++", "编程",
+                       "语言", "技术栈"]),
+    ("frontend",      ["react", "vue", "svelte", "tailwind", "css", "前端",
+                       "typescript", "javascript"]),
+    ("api-design",    ["graphql", "rest", "grpc", "endpoint", "openapi",
+                       "接口"]),
+    ("cloud-infra",   ["kubernetes", "docker", "serverless", "lambda", "aws",
+                       "azure", "gcp", "微服务", "monorepo", "ci/cd", "argocd",
+                       "架构", "分布式", "基础设施"]),
+    ("messaging",     ["kafka", "rabbitmq", "队列", "queue", "消息"]),
+    ("devtools",      ["git", "rebase", "vim", "neovim", "linux", "macos",
+                       "hugo", "wordpress", "gitbook", "obsidian", "工具",
+                       "编辑器"]),
+    ("llm-choice",    ["llm", "gemini", "gpt", "claude", "deepseek", "模型",
+                       "transformer", "fine-tune", "finetune", "微调"]),
+    ("data-science",  ["pandas", "numpy", "scikit", "machine learning",
+                       "机器学习", "数据科学", "scientist", "数据分析"]),
+    ("engineering",   ["code review", "unit test", "refactor", "测试驱动",
+                       "重构", "性能优化", "ci pipeline", "tech debt"]),
+    ("career",        ["工作", "团队", "工程师", "developer", "engineer",
+                       "硕士", "毕业", "面试", "职业", "公司", "项目经验",
+                       "i am", "my name", "我叫", "我是", "经验"]),
+]
+
+
+def _infer_cluster_embedding(
+    text: str,
+    embedding_model,
+    existing: list[tuple[str, list[float]]],
+    threshold: float = 0.55,
+) -> str:
+    """Embedding-aware cluster assignment. Slower (one embed call) but far
+    more accurate than keywords — used by the `recluster` command.
+
+    `existing` is a list of (cluster_label, embedding_vector) for already-
+    classified nodes. We assign `text` to the cluster of its most similar
+    existing neighbor, IF that similarity >= threshold. Otherwise we fall
+    back to keyword inference, and only return "general" if that also fails.
+
+    This makes clusters self-organizing: as the corpus grows, new nodes
+    join the cluster their content most resembles, without any pre-set
+    keyword list needing to anticipate every topic.
+    """
+    # Keyword first-pass: if it clearly matches a domain, trust it (fast + exact)
+    kw = _infer_cluster(text)
+    if kw != "general":
+        return kw
+
+    if embedding_model is None or not existing:
+        return "general"
+
+    import math
+    vec = embedding_model.embed(text)
+    if not any(vec):
+        return "general"
+
+    def _cos(a, b):
+        dot = sum(x * y for x, y in zip(a, b))
+        na = math.sqrt(sum(x * x for x in a))
+        nb = math.sqrt(sum(y * y for y in b))
+        return dot / (na * nb) if na and nb else 0.0
+
+    best_cluster, best_sim = "general", 0.0
+    for cluster, evec in existing:
+        sim = _cos(vec, evec)
+        if sim > best_sim:
+            best_sim, best_cluster = sim, cluster
+
+    return best_cluster if best_sim >= threshold else "general"
 
 
 def _parse_response(raw: str) -> list[dict]:

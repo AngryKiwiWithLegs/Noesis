@@ -8,6 +8,7 @@ Commands:
   noesis status  [--user USER]                Memory stats
   noesis inspect <hash_id>                    Show a memory node
   noesis sync    [--user USER]                Force sync vault → hot store
+  noesis recluster [--dry-run] [--embedding]  Recompute topic clusters
   noesis import  --source chatgpt FILE        Batch import conversations
   noesis eval    [--user USER]                Run injection accuracy test
   noesis mcp                                  Start MCP server (stdio)
@@ -151,6 +152,98 @@ def sync(user, config):
     memory._sync_if_needed(user)
 
     click.echo(f"Synced vault changes for user: {user}")
+
+
+# ── recluster ─────────────────────────────────────────────────────────────────
+
+@cli.command()
+@click.option("--user", "-u", default=None,
+              help="Recluster one user (default: all users)")
+@click.option("--config", "-c", default=None)
+@click.option("--dry-run", is_flag=True,
+              help="Show the distribution change without writing")
+@click.option("--embedding", is_flag=True,
+              help="Use embedding-based inference (slower, more accurate)")
+def recluster(user, config, dry_run, embedding):
+    """Recompute topic_cluster for all nodes using improved inference.
+
+    Fixes nodes stuck in the 'general' bucket from the old 3-keyword inferer.
+    By default uses the expanded bilingual keyword map (fast). With
+    --embedding, also uses nearest-neighbor similarity against already-
+    classified nodes (slower, catches keyword misses).
+
+    \b
+    Examples:
+      noesis recluster --dry-run          # preview the change
+      noesis recluster                    # apply keyword reclassification
+      noesis recluster --embedding        # apply keyword + embedding
+    """
+    memory = _get_memory(config)
+    from noesis.thoughts.extractor import (
+        _infer_cluster, _infer_cluster_embedding,
+    )
+    from collections import Counter
+
+    # Determine which users to process
+    vs = memory.vector_store
+    try:
+        users = [r[0] for r in vs._con.execute(
+            "SELECT DISTINCT user_id FROM items WHERE user_id != ''"
+        ).fetchall()] if user is None else [user]
+    except Exception:
+        users = [user or "default"]
+
+    # Build the embedding reference set once (nodes already keyword-classified)
+    ref_nodes: list[tuple[str, list[float]]] = []
+    if embedding:
+        for uid in users:
+            for n in vs.get_all(uid):
+                kw = _infer_cluster(n.get("text", ""))
+                if kw != "general":
+                    v = vs.get_vector(n["id"]) if "id" in n else vs.get_vector(n.get("hash_id",""))
+                    if v:
+                        ref_nodes.append((kw, v))
+
+    changed = 0
+    before = Counter()
+    after = Counter()
+
+    for uid in users:
+        nodes = vs.get_all(uid)
+        for n in nodes:
+            text = n.get("text", "")
+            old = n.get("topic_cluster", "general")
+            before[old] += 1
+
+            if embedding and ref_nodes:
+                new = _infer_cluster_embedding(text, memory.embedding, ref_nodes)
+            else:
+                new = _infer_cluster(text)
+            after[new] += 1
+
+            if new != old:
+                changed += 1
+                if not dry_run:
+                    hid = n.get("hash_id") or n.get("id")
+                    vs.update(hid, {"topic_cluster": new})
+                    if memory.cold_store and hasattr(memory.cold_store, "_patch_frontmatter"):
+                        try:
+                            memory.cold_store._patch_frontmatter(hid, {"topic_cluster": new})
+                        except Exception:
+                            pass
+
+    total = sum(before.values())
+    action = "DRY RUN — " if dry_run else ""
+    click.echo(f"\n  {action}Reclustered {total} node(s) across {len(users)} user(s)")
+    click.echo(f"  Changed: {changed}   ({'would write' if dry_run else 'written'} to hot + cold store)")
+    click.echo(f"\n  {'cluster':20s} {'before':>7s} {'after':>7s}")
+    click.echo(f"  {'-'*20} {'-'*7} {'-'*7}")
+    for c in sorted(set(before) | set(after), key=lambda k: -after.get(k, 0)):
+        click.echo(f"  {c:20s} {before.get(c,0):7d} {after.get(c,0):7d}")
+    g_before = before.get("general", 0)
+    g_after = after.get("general", 0)
+    click.echo(f"\n  general: {g_before} ({g_before/max(total,1)*100:.0f}%) → "
+               f"{g_after} ({g_after/max(total,1)*100:.0f}%)\n")
 
 
 # ── import ────────────────────────────────────────────────────────────────────
