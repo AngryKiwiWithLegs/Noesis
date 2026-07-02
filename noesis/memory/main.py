@@ -238,6 +238,14 @@ class Memory:
             "topic_cluster": topic_cluster, "created_at": time.time(),
         })
 
+        # fact_ref dual-store link (README design principle #3):
+        # If a wiki page semantically documents this thought's fact, point
+        # fact_ref at it so the thought carries a pointer instead of duplicating
+        # the fact. Done synchronously on the main thread (not in the async
+        # pipeline worker) because sentence-transformers/PyTorch is not
+        # thread-safe across the GIL, and we already have `vec` computed here.
+        self._maybe_link_fact_ref(h, text, vec)
+
         # Phase 2: async
         if self._pipeline is not None:
             task = ConsolidationTask(
@@ -377,6 +385,61 @@ class Memory:
             for m in out
         ]
         return "以下是关于用户的已知信息：\n" + "\n".join(lines)
+
+    # ── fact_ref dual-store linking ────────────────────────────────────────────
+
+    FACT_REF_SIM_THRESHOLD = 0.72
+
+    def _maybe_link_fact_ref(self, hash_id: str, text: str, tvec: list) -> None:
+        """If a wiki page semantically documents this thought's fact, set
+        fact_ref → [[wiki/page]] so the thought carries a pointer instead of
+        duplicating the fact.
+
+        Runs on the main thread (not the async pipeline worker) because the
+        embedding model is not thread-safe across the GIL. `tvec` is the
+        already-computed embedding of `text`, reused to avoid a second embed.
+        """
+        if self.cold_store is None:
+            return
+        vault = getattr(self.cold_store, "root", None)
+        if vault is None:
+            return
+        wiki_dir = vault / "wiki"
+        if not wiki_dir.exists():
+            return
+
+        try:
+            from ..wiki.writer import WikiWriter
+            import math
+            writer = WikiWriter(str(vault))
+            pages = [writer.read_page(pid) for pid in writer.list_pages()]
+            pages = [p for p in pages if p and p.body.strip()]
+            if not pages:
+                return
+
+            def _cos(a, b):
+                dot = sum(x * y for x, y in zip(a, b))
+                na = math.sqrt(sum(x * x for x in a))
+                nb = math.sqrt(sum(y * y for y in b))
+                return dot / (na * nb) if na and nb else 0.0
+
+            best_pid, best_sim = None, 0.0
+            for p in pages:
+                pvec = self.embedding.embed(p.title + " " + p.body[:500])
+                sim = _cos(tvec, pvec)
+                if sim > best_sim:
+                    best_sim, best_pid = sim, p.page_id
+
+            if best_pid is None or best_sim < self.FACT_REF_SIM_THRESHOLD:
+                return
+
+            ref = f"[[wiki/{best_pid}]]"
+            self.vector_store.update(hash_id, {"fact_ref": ref})
+            if hasattr(self.cold_store, "_patch_frontmatter"):
+                self.cold_store._patch_frontmatter(hash_id, {"fact_ref": f'"{ref}"'})
+            logger.info("fact_ref link %s → %s (sim %.2f)", hash_id[:8], best_pid, best_sim)
+        except Exception as e:
+            logger.warning(f"fact_ref link failed [{hash_id[:8]}]: {e}")
 
     @staticmethod
     def _to_text(messages) -> str:

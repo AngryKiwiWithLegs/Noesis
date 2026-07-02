@@ -328,3 +328,70 @@ class TestHelpers:
         assert _slugify("SQLite-Vec") == "sqlite-vec"
         assert _slugify("PostgreSQL 16.x") == "postgresql-16x"
         assert _slugify("") == "untitled"
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# fact_ref dual-store linking (README design principle #3)
+# ══════════════════════════════════════════════════════════════════════════════
+
+class TestFactRef:
+    """When a thought restates a fact documented in a wiki page, the pipeline
+    should set fact_ref → [[wiki/page]] instead of leaving the fact duplicated.
+    Distinct from the linker's cluster-broad Related refs."""
+
+    @pytest.fixture
+    def mem_with_pipeline(self, tmp_path):
+        """Memory + Mock consolidation pipeline + cold store, like test_two_phase."""
+        from noesis.memory.main import Memory
+        from noesis.memory.pipeline import ConsolidationPipeline
+        from noesis.thoughts.extractor import MockExtractor
+        from noesis.thoughts.confidence import ConfidenceScorer
+        m = Memory.from_config({
+            "vector_store": {"config": {"db_path": str(tmp_path / "hot.db")}},
+            "embedder":     {"config": {"model": "all-MiniLM-L6-v2"}},
+            "cold_store":   {"config": {"vault_path": str(tmp_path / "vault")}},
+        })
+        m.embedding.embed("warmup")
+        pipeline = ConsolidationPipeline(
+            vector_store=m.vector_store,
+            embedding   =m.embedding,
+            cold_store  =m.cold_store,
+            extractor   =MockExtractor(),
+            scorer      =ConfidenceScorer(),
+        )
+        m.attach_pipeline(pipeline)
+        return m
+
+    def test_thought_links_to_matching_wiki_page(self, mem_with_pipeline, tmp_path):
+        """A thought restating a wiki-documented fact gets a fact_ref pointer."""
+        import time
+        m = mem_with_pipeline
+        vault = str(tmp_path / "vault")
+
+        # Ingest a wiki page documenting sqlite-vec
+        from noesis.wiki import WikiIngestor, MockWikiExtractor
+        doc = tmp_path / "notes.md"
+        doc.write_text("# SQLite-Vec\n\nSQLite-Vec is a vector search "
+                       "extension for SQLite. It runs ANN queries.", encoding="utf-8")
+        WikiIngestor(vault, MockWikiExtractor()).ingest(str(doc))
+
+        # Add a thought that restates this fact (same language: the embedder
+        # is English-primary, so cross-lingual restatements score below the
+        # linking threshold — a known limitation documented in the README).
+        res = m.add("I decided to use sqlite-vec for vector search, a SQLite extension",
+                    user_id="u1", type="event", topic_cluster="vector-store")
+
+        # fact_ref is set synchronously at add() time (on the main thread, not
+        # the async pipeline worker) so no drain is needed to check it.
+        node = m.vector_store.get(res["results"][0]["id"])
+        assert node is not None
+        assert node.get("fact_ref"), "expected the thought to gain a fact_ref link"
+        assert "[[wiki/sqlite-vec]]" in node["fact_ref"]
+
+    def test_no_link_when_wiki_empty(self, mem_with_pipeline):
+        """With no wiki pages, no thought should get a fact_ref."""
+        m = mem_with_pipeline
+        m.add("Some unrelated preference about tea", user_id="u2",
+              type="preference", topic_cluster="general")
+        nodes = m.vector_store.get_all("u2")
+        assert not any(n.get("fact_ref") for n in nodes)
