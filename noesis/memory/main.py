@@ -216,6 +216,7 @@ class Memory:
         source_tool:   str = "",
         session_id:    str = "",
         topic_cluster: str = "",
+        created_at:    float | None = None,
         **kwargs,
     ) -> dict:
         text = self._to_text(messages)
@@ -235,7 +236,7 @@ class Memory:
             "text": text, "type": type, "status": "tentative",
             "confidence": 0.0, "user_id": user_id,
             "source_tool": source_tool, "source_session": session_id,
-            "topic_cluster": topic_cluster, "created_at": time.time(),
+            "topic_cluster": topic_cluster, "created_at": created_at or time.time(),
         })
 
         # fact_ref dual-store link (README design principle #3):

@@ -251,85 +251,133 @@ def recluster(user, config, dry_run, embedding):
 @cli.command("import")
 @click.argument("file", type=click.Path(exists=True))
 @click.option("--source", "-s",
-              type=click.Choice(["chatgpt", "claude", "text", "json"]),
+              type=click.Choice(["auto", "chatgpt", "claude", "gemini", "meta", "text", "json"]),
               required=True, help="Source format")
 @click.option("--user",   "-u", default="default")
 @click.option("--config", "-c", default=None)
-def import_cmd(file, source, user, config):
+@click.option("--dry-run", is_flag=True, default=False,
+              help="Parse and report counts without writing to DB")
+def import_cmd(file, source, user, config, dry_run):
     """
     Batch import existing conversations into memory.
 
-    Examples:
-      noesis import --source chatgpt conversations.json
-      noesis import --source text    notes.txt
-    """
-    memory = _get_memory(config)
-    path   = Path(file)
-    count  = 0
+    Supports ChatGPT, Claude, Gemini, and Meta AI exports.
+    Use --source auto to detect the format automatically.
 
-    if source == "chatgpt":
-        count = _import_chatgpt(memory, path, user)
-    elif source == "text":
-        count = _import_text(memory, path, user)
-    elif source == "json":
-        count = _import_json(memory, path, user)
-    elif source == "claude":
-        click.echo("Claude import requires the API. "
-                   "Use `noesis import --source json exported.json` instead.")
-        sys.exit(1)
+    \b
+    Examples:
+      noesis import --source auto    conversations.json
+      noesis import --source chatgpt conversations.json
+      noesis import --source claude  conversations.json
+      noesis import --source gemini  gemini_export.html
+      noesis import --source meta    message_1.json
+      noesis import --source text    notes.txt
+      noesis import --source auto    export.json --dry-run
+    """
+    from noesis.importers import normalize, detect_source
+
+    path = Path(file)
+
+    # Resolve auto before parsing
+    effective_source = source
+    if source == "auto":
+        effective_source = detect_source(path)
+        click.echo(f"Auto-detected source: {effective_source}")
+
+    convos = normalize(effective_source, path)
+    if not convos:
+        click.echo("No conversations found to import.")
+        return
+
+    total_turns = sum(len(msgs) for _, msgs, _ in convos)
+    click.echo(f"Found {len(convos)} conversation(s), {total_turns} turn(s) total.")
+
+    if dry_run:
+        for conv_id, msgs, ts in convos:
+            preview = (msgs[0]["content"][:60] + "...") if msgs and msgs[0]["content"] else ""
+            click.echo(f"  [{conv_id}] {len(msgs)} turns  ts={ts}  {preview}")
+        click.echo("Dry run — nothing written to DB.")
+        return
+
+    memory = _get_memory(config)
+    count  = 0
+    for conv_id, msgs, ts in convos:
+        result = memory.add(
+            msgs,
+            user_id=user,
+            source_tool=f"{effective_source}-export",
+            session_id=conv_id,
+            created_at=ts,
+        )
+        count += len(result.get("results", []))
 
     click.echo(f"Imported {count} conversation turn(s) for user: {user}")
     click.echo("All imported nodes start as 'tentative' — "
                "they will be promoted as you use Noesis normally.")
 
 
-def _import_chatgpt(memory, path: Path, user: str) -> int:
-    """Parse ChatGPT conversation export (conversations.json)."""
-    data  = json.loads(path.read_text())
-    count = 0
-    if isinstance(data, list):
-        convos = data
-    elif isinstance(data, dict):
-        convos = data.get("conversations", [data])
-    else:
-        return 0
+# ── export ───────────────────────────────────────────────────────────────────
 
-    for convo in convos:
-        msgs = []
-        mapping = convo.get("mapping", {})
-        for node in mapping.values():
-            m = node.get("message")
-            if not m:
-                continue
-            role = m.get("author", {}).get("role", "")
-            parts = m.get("content", {}).get("parts", [])
-            text  = " ".join(str(p) for p in parts if isinstance(p, str))
-            if role in ("user", "assistant") and text.strip():
-                msgs.append({"role": role, "content": text})
+@cli.command("export")
+@click.argument("output", type=click.Path())
+@click.option("--format", "-f",
+              type=click.Choice(["json", "markdown", "finetune"]),
+              required=True, help="Output format")
+@click.option("--user",   "-u", default="default")
+@click.option("--config", "-c", default=None)
+@click.option("--include-wiki", is_flag=True, default=False,
+              help="Also export wiki pages (json/markdown only)")
+@click.option("--include-superseded", is_flag=True, default=False,
+              help="Include superseded/retired thoughts")
+@click.option("--dry-run", is_flag=True, default=False,
+              help="Show counts without writing files")
+def export_cmd(output, format, user, config, include_wiki, include_superseded, dry_run):
+    """
+    Export your memory store to JSON, Markdown, or fine-tuning format.
 
-        if msgs:
-            memory.add(msgs, user_id=user, source_tool="chatgpt-export")
-            count += len(msgs)
+    \b
+    Examples:
+      noesis export --format json     memory_backup.json
+      noesis export --format markdown ./my_thoughts/ --include-wiki
+      noesis export --format finetune training_data.jsonl
+      noesis export --format json     out.json --dry-run
+    """
+    from noesis.exporters import export, count_exportable
 
-    return count
+    memory = _get_memory(config)
 
+    if dry_run:
+        counts = count_exportable(
+            memory, user,
+            include_superseded=include_superseded,
+            include_wiki=include_wiki,
+        )
+        click.echo(f"Dry run — exportable items for user '{user}':")
+        click.echo(f"  Total thoughts:   {counts['total']}")
+        click.echo(f"  Confirmed:        {counts['confirmed']}  (settled + provisional)")
+        click.echo(f"  Tentative:        {counts['tentative']}")
+        if include_superseded:
+            click.echo(f"  Superseded:       {counts['superseded']}")
+        if include_wiki:
+            click.echo(f"  Wiki pages:       {counts['wiki']}")
+        if format == "finetune":
+            click.echo(f"\n  Finetune export would produce {counts['confirmed']} entries")
+        else:
+            total = counts["total"] - (0 if include_superseded else counts["superseded"])
+            click.echo(f"\n  {format.capitalize()} export would produce {total} thought(s)")
+        click.echo("Dry run — nothing written.")
+        return
 
-def _import_text(memory, path: Path, user: str) -> int:
-    """Import plain text as a single thought."""
-    text = path.read_text(encoding="utf-8").strip()
-    if text:
-        memory.add(text, user_id=user, source_tool="text-import")
-        return 1
-    return 0
+    result = export(
+        format, memory, user, output,
+        include_wiki=include_wiki,
+        include_superseded=include_superseded,
+    )
 
-
-def _import_json(memory, path: Path, user: str) -> int:
-    """Import a JSON array of {role, content} messages."""
-    data = json.loads(path.read_text())
-    if isinstance(data, list):
-        memory.add(data, user_id=user, source_tool="json-import")
-        return len(data)
-    return 0
+    click.echo(f"Exported {result['thoughts_exported']} thought(s) "
+               f"to {result['output_path']} ({format})")
+    if include_wiki:
+        click.echo(f"Including {result['wiki_exported']} wiki page(s)")
 
 
 # ── eval ──────────────────────────────────────────────────────────────────────
