@@ -195,3 +195,107 @@ class TestInjectionGating:
         })
         ctx = mem_no_pipeline.build_context("检索方案选择", user_id="u1")
         assert "BM25" in ctx
+
+
+# ── Vector re-embedding after pipeline consolidation ──────────────────────────
+
+class TestVectorReEmbed:
+
+    def test_vector_updated_after_consolidation(self, mem_with_pipeline):
+        """After the pipeline rewrites text, the embedding must also update.
+
+        The extractor produces a cleaned form (e.g. strips role labels and
+        assistant turns), which differs from the raw text that was originally
+        embedded in Phase 1. Without re-embedding, vec_items keeps the stale
+        raw-text vector while items.text has the cleaned form — vector search
+        returns results based on text the user never typed.
+        """
+        msgs = [
+            {"role": "user",      "content": "我偏好 PostgreSQL 数据库"},
+            {"role": "assistant", "content": "好的，记下了"},
+        ]
+        result = mem_with_pipeline.add(msgs, user_id="u1")
+        hash_id = result["results"][0]["id"]
+
+        # Capture the original vector (Phase 1, embedded from raw text)
+        vec_before = mem_with_pipeline.vector_store.get_vector(hash_id)
+        assert vec_before is not None, "Vector must exist after Phase 1 insert"
+
+        # Let the pipeline process it (re-extracts + re-embeds)
+        drained = mem_with_pipeline._pipeline.drain(timeout=10.0)
+        assert drained, "Pipeline drain timed out"
+        assert len(mem_with_pipeline._pipeline._errors) == 0, (
+            f"Pipeline errors: {mem_with_pipeline._pipeline._errors}"
+        )
+
+        # Vector should now reflect the cleaned text, not the raw text
+        vec_after = mem_with_pipeline.vector_store.get_vector(hash_id)
+        assert vec_after is not None, "Vector must still exist after re-embed"
+
+        # The vectors should differ — the cleaned text ("我偏好 PostgreSQL")
+        # has a different embedding than the raw ("user: ...\nassistant: ...")
+        assert vec_before != vec_after, (
+            "Vector was not updated after pipeline consolidation — "
+            "vec_items still holds the stale raw-text embedding"
+        )
+
+    def test_vector_matches_cleaned_text(self, mem_with_pipeline):
+        """After re-embedding, the stored vector should match a fresh embed
+        of the cleaned text (the extractor's output), not the raw input."""
+        msgs = [
+            {"role": "user",      "content": "我决定用 Go 语言做后端开发"},
+            {"role": "assistant", "content": "明白了"},
+        ]
+        result = mem_with_pipeline.add(msgs, user_id="u1")
+        hash_id = result["results"][0]["id"]
+
+        mem_with_pipeline._pipeline.drain(timeout=10.0)
+
+        node = mem_with_pipeline.vector_store.get(hash_id)
+        assert node is not None
+
+        vec_stored = mem_with_pipeline.vector_store.get_vector(hash_id)
+        assert vec_stored is not None
+
+        # Re-embed the cleaned text directly
+        vec_expected = mem_with_pipeline.embedding.embed(node["text"])
+
+        # Vectors should be very close (cosine similarity ~1.0)
+        dot = sum(a * b for a, b in zip(vec_stored, vec_expected))
+        assert dot > 0.999, (
+            f"Stored vector doesn't match cleaned text embedding "
+            f"(cosine={dot:.6f}). The re-embed may not have run."
+        )
+
+    def test_pipeline_no_deadlock_with_concurrent_add(self, mem_with_pipeline):
+        """The embedding lock must prevent PyTorch deadlock when the pipeline
+        thread re-embeds while the main thread embeds a new add()."""
+        import threading
+
+        errors = []
+
+        def adder():
+            try:
+                for i in range(10):
+                    mem_with_pipeline.add(
+                        f"并发测试条目 {i}", user_id="u1"
+                    )
+            except Exception as e:
+                errors.append(e)
+
+        # Start adding from another thread while pipeline processes
+        t = threading.Thread(target=adder)
+        t.start()
+        # Meanwhile, add from main thread too
+        for i in range(10):
+            mem_with_pipeline.add(f"主线程条目 {i}", user_id="u1")
+
+        t.join(timeout=30)
+        assert not errors, f"Concurrent add errors: {errors}"
+
+        # Drain and verify no pipeline errors
+        mem_with_pipeline._pipeline.drain(timeout=10.0)
+        assert len(mem_with_pipeline._pipeline._errors) == 0, (
+            f"Pipeline errors during concurrent operation: "
+            f"{mem_with_pipeline._pipeline._errors}"
+        )

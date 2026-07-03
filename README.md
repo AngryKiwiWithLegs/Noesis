@@ -186,14 +186,72 @@ pytest tests/ -v -k "not slow"
 
 ### 8. (Optional) Seed memory from past chats
 
+Noesis can import conversation history from all major AI platforms:
+
 ```bash
-noesis import --source chatgpt conversations.json
+# Auto-detect the format
+noesis import --source auto  export.json --dry-run   # preview first
+noesis import --source auto  export.json             # then import
+
+# Or specify explicitly
+noesis import --source chatgpt conversations.json     # ChatGPT export
+noesis import --source claude   conversations.json     # Claude privacy export
+noesis import --source gemini   gemini_export.html     # Google Takeout
+noesis import --source meta     message_1.json         # Facebook/Meta AI download
+
+# Plain text or generic JSON
 noesis import --source text    notes.txt
+noesis import --source json    messages.json
 ```
+
+**Where to get your exports:**
+
+| Platform | How to export | Format |
+|----------|--------------|--------|
+| ChatGPT | Settings → Data Controls → Export | JSON |
+| Claude | Settings → Privacy → Export | JSON |
+| Gemini | Google Takeout → Gemini | HTML |
+| Meta AI | Facebook → Download Your Information | JSON |
+
+Use `--dry-run` to preview what would be imported without writing to the
+database. Historical timestamps are preserved — imported memories appear
+on the timeline at their original conversation time.
 
 Imported nodes start `tentative` and promote as you keep using Noesis.
 
-### 9. (Optional) Build your LLM Wiki
+### 9. (Optional) Export your memories
+
+Noesis can export your stored thoughts in three formats:
+
+```bash
+# Preview what would be exported
+noesis export -f json output.json --dry-run
+
+# Full structured JSON (round-trippable — re-importable via --source json)
+noesis export -f json      memories.json
+
+# Obsidian-compatible Markdown (one .md per thought)
+noesis export -f markdown  ./vault-export/
+
+# OpenAI fine-tuning format (.jsonl, settled/provisional only)
+noesis export -f finetune  finetune_data.jsonl
+
+# Options
+noesis export -f json output.json --include-wiki        # also export wiki pages
+noesis export -f json output.json --include-superseded   # include retired thoughts
+```
+
+| Format | Output | Best for |
+|--------|--------|----------|
+| `json` | Single `.json` file with `_meta` wrapper | Backups, migration, round-trip |
+| `markdown` | `thoughts/*.md` directory with frontmatter | Human review, Obsidian vaults |
+| `finetune` | `.jsonl` with OpenAI chat format | Fine-tuning a model on your knowledge |
+
+The JSON export is **round-trippable**: you can export and then re-import with
+`noesis import --source json` and all thought metadata (hash, timestamps,
+confidence, status) is preserved.
+
+### 10. (Optional) Build your LLM Wiki
 
 The wiki layer compiles documents (papers, notes, manuals) into cited,
 searchable knowledge pages that cross-link with your thoughts:
@@ -288,7 +346,8 @@ noesis start   [--port 8080] [--ws]   # start daemon
 noesis status  [--user me]            # memory stats
 noesis inspect <hash_id>              # show a memory node
 noesis sync                           # force sync vault edits → hot store
-noesis import  --source chatgpt FILE  # batch import existing conversations
+noesis import  --source auto FILE     # batch import conversations (multi-source)
+noesis export  -f json FILE          # export memories (json/markdown/finetune)
 noesis eval                           # run injection accuracy benchmark
 noesis mcp                            # start MCP server (stdio)
 
@@ -379,6 +438,8 @@ pytest tests/test_retrieval.py  -v  # Week 3 — hybrid retrieval
 pytest tests/test_injection.py  -v  # Week 3 — context injection ★
 pytest tests/test_proxy.py      -v  # Week 4 — API proxy + MCP
 pytest tests/test_cross_tool.py -v  # Week 5 — cross-tool + clusters
+pytest tests/test_importers.py  -v  # Multi-source conversation importers
+pytest tests/test_exporters.py  -v  # Export: JSON, Markdown, fine-tuning
 pytest tests/test_wiki.py     -v   # LLM Wiki — ingest, lint, query, writer
 pytest tests/test_benchmark.py  -v -m slow  # Week 6 — formal benchmark
 ```

@@ -9,6 +9,7 @@ Model downloaded once (~80MB), cached in ~/.cache/torch/sentence_transformers.
 from __future__ import annotations
 
 import logging
+import threading
 from typing import Optional
 
 logger = logging.getLogger(__name__)
@@ -22,6 +23,12 @@ class LocalEmbedding:
         self.model_name = model_name
         self._model     = None
         self._dim       = _MODEL_DIMS.get(model_name, 384)
+        # PyTorch / sentence-transformers is not thread-safe across the GIL.
+        # The consolidation pipeline calls embed() from a background thread,
+        # while add() calls it on the main thread. Without serialisation this
+        # deadlocks intermittently. This lock ensures only one thread enters
+        # the model at a time.
+        self._lock      = threading.Lock()
 
     # ── Lazy load ────────────────────────────────────────────────────────────
 
@@ -50,8 +57,9 @@ class LocalEmbedding:
         # inference_mode disables autograd graph construction → faster + less
         # memory. This is the single cheap win on CPU; the dominant cost
         # remains the forward pass itself (~20-35ms/sentence on M-series).
+        # The lock prevents concurrent access from the pipeline worker thread.
         import torch
-        with torch.inference_mode():
+        with self._lock, torch.inference_mode():
             return self.model.encode(
                 text,
                 normalize_embeddings=True,
@@ -62,12 +70,13 @@ class LocalEmbedding:
         """Embed multiple strings efficiently."""
         if not texts:
             return []
-        return self.model.encode(
-            texts,
-            normalize_embeddings=True,
-            show_progress_bar=False,
-            batch_size=32,
-        ).tolist()
+        with self._lock:
+            return self.model.encode(
+                texts,
+                normalize_embeddings=True,
+                show_progress_bar=False,
+                batch_size=32,
+            ).tolist()
 
     @property
     def dim(self) -> int:

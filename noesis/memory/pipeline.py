@@ -258,8 +258,16 @@ class ConsolidationPipeline:
             except Exception as e:
                 logger.warning(f"Supersession check failed [{hash_id[:8]}]: {e}")
 
-        # Re-embed with cleaned text (might differ from raw)
-        # TODO Week 3: update vector in vec_items too
+        # Re-embed with cleaned text (might differ from raw) and update the
+        # vector index. Without this, vec_items keeps the original raw-text
+        # embedding while items.text has the cleaned/extracted form, causing
+        # vector search to return stale results.
+        if candidate.text and candidate.text.strip():
+            try:
+                new_vec = self.embedding.embed(candidate.text)
+                self.vector_store.update_vector(hash_id, new_vec)
+            except Exception as e:
+                logger.warning(f"Re-embed failed [{hash_id[:8]}]: {e}")
 
         # Update cold store
         if self.cold_store:

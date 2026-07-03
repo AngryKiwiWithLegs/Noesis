@@ -152,6 +152,27 @@ class SqliteVecStore:
         self._con.execute(sql, [payload[c] for c in cols] + [hash_id])
         self._con.commit()
 
+    def update_vector(self, hash_id: str, vector: list[float]):
+        """Update the embedding vector for an existing item.
+
+        Called by the consolidation pipeline after it rewrites an item's
+        text (cleaned/extracted form). Without this, vec_items keeps the
+        original raw-text embedding while items.text has the cleaned text,
+        so vector search returns stale results.
+        """
+        if not _HAS_VEC:
+            return
+        row = self._con.execute(
+            "SELECT id FROM items WHERE hash_id=?", [hash_id]
+        ).fetchone()
+        if not row:
+            return
+        self._con.execute(
+            "UPDATE vec_items SET embedding=? WHERE rowid=?",
+            [_pack(vector), row["id"]],
+        )
+        self._con.commit()
+
     def soft_delete(self, hash_id: str):
         self.update(hash_id, {"status": "superseded"})
 
