@@ -138,20 +138,46 @@ def inspect(hash_id, config):
 @cli.command()
 @click.option("--user", "-u", default="default")
 @click.option("--config", "-c", default=None)
-def sync(user, config):
-    """Force sync human edits from Obsidian vault to hot store."""
+@click.option("--verbose", "-v", is_flag=True,
+              help="Show per-file sync details")
+def sync(user, config, verbose):
+    """Force sync human edits from Obsidian vault to hot store.
+
+    Bidirectional: updates text + metadata from vault edits, detects
+    deleted vault files (soft-deletes in hot store), and imports
+    new vault-only .md files.
+    """
     memory = _get_memory(config)
 
     if not memory.cold_store:
         click.echo("No cold store configured.", err=True)
         sys.exit(1)
 
-    # Force re-sync by resetting session state
+    # Force full sync (phases A + B + C)
     memory._synced.discard(user)
     memory._last_sync[user] = 0.0
-    memory._sync_if_needed(user)
+    report = memory.sync_full(user)
 
-    click.echo(f"Synced vault changes for user: {user}")
+    parts = []
+    if report["text_edits"]:
+        parts.append(f"{report['text_edits']} text edit(s)")
+    if report["metadata_edits"]:
+        parts.append(f"{report['metadata_edits']} metadata change(s)")
+    if report["deletions"]:
+        parts.append(f"{report['deletions']} deletion(s)")
+    if report["additions"]:
+        parts.append(f"{report['additions']} addition(s)")
+
+    if parts:
+        click.echo(f"Synced for {user}: " + ", ".join(parts))
+    else:
+        click.echo(f"Everything up-to-date for {user}.")
+
+    if verbose and report:
+        click.echo(f"\n  text_edits:     {report['text_edits']}")
+        click.echo(f"  metadata_edits: {report['metadata_edits']}")
+        click.echo(f"  deletions:      {report['deletions']}")
+        click.echo(f"  additions:      {report['additions']}")
 
 
 # ── recluster ─────────────────────────────────────────────────────────────────

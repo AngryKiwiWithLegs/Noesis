@@ -125,6 +125,18 @@ class ObsidianStore(ColdStoreBase):
             if p.stat().st_mtime > since
         ]
 
+    def list_all(self) -> list[str]:
+        """Return all hash IDs currently in the vault's thoughts/ directory.
+
+        Used by the sync process to detect deletions (file gone from vault
+        but still in hot store) and additions (file in vault but not in
+        hot store).
+        """
+        td = self.root / "thoughts"
+        if not td.exists():
+            return []
+        return [p.stem for p in td.glob("*.md")]
+
     def mark_superseded(self, old_hash: str, new_hash: str):
         self._patch_frontmatter(old_hash, {
             "status":        "superseded",

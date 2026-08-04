@@ -251,7 +251,45 @@ The JSON export is **round-trippable**: you can export and then re-import with
 `noesis import --source json` and all thought metadata (hash, timestamps,
 confidence, status) is preserved.
 
-### 10. (Optional) Build your LLM Wiki
+### 10. (Optional) Bidirectional vault sync
+
+Noesis writes thoughts to your Obsidian vault automatically. But you can also
+**edit them directly in Obsidian** — change the text, fix a typo, adjust a
+status — and those edits flow back to the hot store.
+
+#### Automatic sync (transparent)
+
+Every time Noesis retrieves context (`build_context`, `search`), it checks
+for vault edits made since the last sync and applies them automatically:
+- Text edits → re-embedded for vector search consistency
+- Frontmatter changes (status, confidence, type, topic_cluster) → synced
+
+This is one-way (vault → hot store) and **never regresses** the confidence
+lifecycle — if your hot store has `settled` but the vault says `tentative`
+(because of Phase 1's lagging write), the settled status wins.
+
+#### Manual full sync (explicit)
+
+For the full three-phase reconciliation — including deletions and additions —
+run the `sync` command deliberately:
+
+```bash
+noesis sync                          # show summary counts
+noesis sync --verbose                 # per-category breakdown
+```
+
+This runs three phases:
+1. **Modified files** — text + frontmatter edits synced, vectors re-embedded
+2. **Deleted files** — vault files you removed soft-delete the hot store row
+3. **New files** — `.md` files you created directly in the vault get imported
+
+Deletion detection only runs on the explicit `noesis sync` command because
+the vault is a lagging replica — thoughts haven't been written to the vault
+yet during the gap between Phase 1 (hot store insert) and Phase 2 (async
+vault write).  Running deletion detection automatically would falsely flag
+brand-new thoughts as "deleted".
+
+### 11. (Optional) Build your LLM Wiki
 
 The wiki layer compiles documents (papers, notes, manuals) into cited,
 searchable knowledge pages that cross-link with your thoughts:
@@ -345,7 +383,7 @@ Knowledge in `wiki/` grounds the positions stored in `thoughts/`.
 noesis start   [--port 8080] [--ws]   # start daemon
 noesis status  [--user me]            # memory stats
 noesis inspect <hash_id>              # show a memory node
-noesis sync                           # force sync vault edits → hot store
+noesis sync    [-v]                   # bidirectional vault ↔ hot store sync
 noesis import  --source auto FILE     # batch import conversations (multi-source)
 noesis export  -f json FILE          # export memories (json/markdown/finetune)
 noesis eval                           # run injection accuracy benchmark
@@ -440,6 +478,7 @@ pytest tests/test_proxy.py      -v  # Week 4 — API proxy + MCP
 pytest tests/test_cross_tool.py -v  # Week 5 — cross-tool + clusters
 pytest tests/test_importers.py  -v  # Multi-source conversation importers
 pytest tests/test_exporters.py  -v  # Export: JSON, Markdown, fine-tuning
+pytest tests/test_sync.py       -v  # Bidirectional vault ↔ hot store sync
 pytest tests/test_wiki.py     -v   # LLM Wiki — ingest, lint, query, writer
 pytest tests/test_benchmark.py  -v -m slow  # Week 6 — formal benchmark
 ```
