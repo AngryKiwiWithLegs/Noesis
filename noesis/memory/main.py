@@ -351,20 +351,167 @@ class Memory:
 
     # ── Internals ─────────────────────────────────────────────────────────────
 
-    def _sync_if_needed(self, user_id: str):
+    def _sync_if_needed(self, user_id: str) -> dict:
+        """Automatic sync: vault edits → hot store (Phase A only).
+
+        Runs at most once per user per session (gated by _synced).
+        Only syncs *modified* vault files — does NOT detect deletions or
+        additions because the vault is a lagging replica (Phase 2 writes
+        asynchronously).  Deletion/addition detection is too dangerous
+        without a record of what was previously synced.
+
+        Use ``sync_full()`` (via ``noesis sync`` CLI) for the full
+        three-phase bidirectional sync.
+        """
         if user_id in self._synced:
-            return
+            return {"text_edits": 0, "metadata_edits": 0,
+                    "deletions": 0, "additions": 0}
+
+        report = self._sync_vault_edits(user_id)
+
         if self.cold_store:
-            since = self._last_sync.get(user_id, 0.0)
-            for hid in self.cold_store.scan_modified(since):
-                try:
-                    text = self.cold_store.read(hid)
-                    if self.vector_store.exists(hid):
-                        self.vector_store.update(hid, {"text": text})
-                except Exception as e:
-                    logger.warning(f"Sync [{hid[:8]}]: {e}")
             self._last_sync[user_id] = time.time()
         self._synced.add(user_id)
+        return report
+
+    def sync_full(self, user_id: str) -> dict:
+        """Full bidirectional vault ↔ hot store sync.
+
+        Three phases:
+          A) Modified files — sync text + frontmatter fields, re-embed if text changed
+          B) Deleted files — soft-delete hot store rows whose vault .md is gone
+          C) New files    — insert vault-only .md files as tentative thoughts
+
+        Intended for the ``noesis sync`` CLI command, not for automatic use.
+        Returns a dict with sync counts.
+        """
+        report = {"text_edits": 0, "metadata_edits": 0,
+                  "deletions": 0, "additions": 0}
+
+        if not self.cold_store:
+            return report
+
+        vault_hashes = set(self.cold_store.list_all())
+
+        # Phase A: Modified files
+        a = self._sync_vault_edits(user_id)
+        report["text_edits"] += a["text_edits"]
+        report["metadata_edits"] += a["metadata_edits"]
+
+        # Phase B: Deleted files — vault .md removed by user
+        hot_items = self.vector_store.get_all(user_id)
+        for item in hot_items:
+            hid = item.get("hash_id", "")
+            if hid and hid not in vault_hashes:
+                self.vector_store.soft_delete(hid)
+                report["deletions"] += 1
+                logger.info("Sync delete [%s]: vault file removed", hid[:8])
+
+        # Phase C: New files — manually created in vault, not yet in hot store
+        if vault_hashes:
+            for hid in vault_hashes:
+                if not self.vector_store.exists(hid):
+                    try:
+                        text = self.cold_store.read(hid)
+                        if not text.strip():
+                            continue
+                        fm = self.cold_store.read_frontmatter(hid) or {}
+                        vec = self.embedding.embed(text)
+                        self.vector_store.insert(hid, vec, {
+                            "text": text,
+                            "type": fm.get("type", "position"),
+                            "status": fm.get("status", "tentative"),
+                            "confidence": float(fm.get("confidence", 0.0)),
+                            "user_id": user_id,
+                            "topic_cluster": fm.get("topic_cluster", ""),
+                            "created_at": time.time(),
+                        })
+                        report["additions"] += 1
+                    except Exception as e:
+                        logger.warning(f"Sync add [{hid[:8]}]: {e}")
+
+        self._last_sync[user_id] = time.time()
+        self._synced.add(user_id)
+        return report
+
+    def _sync_vault_edits(self, user_id: str) -> dict:
+        """Phase A: sync modified vault files → hot store.
+
+        Reads frontmatter (status, confidence, type, topic_cluster) and
+        body text.  If text changed, re-embeds the vector.
+        """
+        report = {"text_edits": 0, "metadata_edits": 0,
+                  "deletions": 0, "additions": 0}
+
+        if not self.cold_store:
+            return report
+
+        since = self._last_sync.get(user_id, 0.0)
+        for hid in self.cold_store.scan_modified(since):
+            try:
+                if not self.vector_store.exists(hid):
+                    continue
+                existing = self.vector_store.get(hid)
+                if not existing:
+                    continue
+
+                updates: dict[str, Any] = {}
+
+                # Sync frontmatter fields
+                fm = self.cold_store.read_frontmatter(hid)
+                if fm:
+                    for fm_key, col_key in (
+                        ("status",        "status"),
+                        ("confidence",    "confidence"),
+                        ("type",          "type"),
+                        ("topic_cluster", "topic_cluster"),
+                    ):
+                        fm_val = fm.get(fm_key)
+                        if fm_val is not None:
+                            if col_key == "confidence":
+                                try:
+                                    fm_val = float(fm_val)
+                                except (TypeError, ValueError):
+                                    fm_val = None
+                            if fm_val is not None and fm_val != existing.get(col_key):
+                                # Guard: never regress the confidence lifecycle.
+                                # The vault is a lagging replica — Phase 1 writes
+                                # tentative/0.0 immediately, but Phase 2 may
+                                # have already promoted the hot store to
+                                # provisional or settled.  Only sync status
+                                # when the vault's status is equal or higher.
+                                if col_key == "status":
+                                    _STATUS_RANK = {"tentative": 0,
+                                                    "provisional": 1,
+                                                    "settled": 2}
+                                    vault_rank = _STATUS_RANK.get(str(fm_val), -1)
+                                    hot_rank   = _STATUS_RANK.get(
+                                        str(existing.get(col_key, "")), -1)
+                                    if vault_rank < hot_rank:
+                                        continue
+                                updates[col_key] = fm_val
+
+                # Sync body text
+                text = self.cold_store.read(hid)
+                if text != existing.get("text", ""):
+                    updates["text"] = text
+                    report["text_edits"] += 1
+                    try:
+                        new_vec = self.embedding.embed(text)
+                        self.vector_store.update_vector(hid, new_vec)
+                    except Exception as e:
+                        logger.warning(f"Sync re-embed [{hid[:8]}]: {e}")
+
+                if updates:
+                    self.vector_store.update(hid, updates)
+                    metadata_keys = set(updates.keys()) - {"text"}
+                    if metadata_keys:
+                        report["metadata_edits"] += 1
+
+            except Exception as e:
+                logger.warning(f"Sync modified [{hid[:8]}]: {e}")
+
+        return report
 
     def _fmt(self, candidates: list[dict], budget: int) -> str:
         seen, out, used = set(), [], 0
