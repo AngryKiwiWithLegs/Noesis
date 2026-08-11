@@ -1,0 +1,1515 @@
+{
+  "experiment": "ab_ollama_en",
+  "model": "gemma3:4b",
+  "timestamp": "20260811_010709",
+  "n_profiles": 30,
+  "n_questions": 150,
+  "summary": {
+    "with_hit": 127,
+    "without_hit": 48,
+    "total": 150,
+    "errors": 0
+  },
+  "details": [
+    {
+      "profile": "prof_1",
+      "model": "gemma3:4b",
+      "question": "Recommend a database for me",
+      "expect": "postgres",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Okay, based on the information you’ve provided about yourself and your preferences, here's my recommendation for a database, broken down with reasonin",
+      "without_mem_ans": "Okay, let's figure out the best database for you! To give you a really good recommendation, I need a little more information about your project.  Let’"
+    },
+    {
+      "profile": "prof_1",
+      "model": "gemma3:4b",
+      "question": "What do I use for vector search?",
+      "expect": "sqlite",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information you’ve provided, you've decided to use **sqlite-vec** for vector search. It was chosen as being lighter than FAISS. \n\nDo you ",
+      "without_mem_ans": "Okay, let's break down what you can use for vector search. It's a fantastic area with a lot of great options depending on your needs and technical exp"
+    },
+    {
+      "profile": "prof_1",
+      "model": "gemma3:4b",
+      "question": "How do I feel about Python vs Java?",
+      "expect": "python",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "You prefer Python for backend. You find it cleaner than Java.",
+      "without_mem_ans": "Okay, let's break down how you might generally feel about Python versus Java. It’s a hugely common comparison, and your feelings will likely be shaped"
+    },
+    {
+      "profile": "prof_1",
+      "model": "gemma3:4b",
+      "question": "What is my view on microservices?",
+      "expect": "microservice",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, your provisional view on microservices is that you **think they are better than monoliths for fast iteration.** You",
+      "without_mem_ans": "Okay, let's explore what your likely views are on microservices. As an AI, I can't *know* your personal opinion – that’s based on experience and under"
+    },
+    {
+      "profile": "prof_1",
+      "model": "gemma3:4b",
+      "question": "What is my job title?",
+      "expect": "backend",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Your job title is a backend engineer.",
+      "without_mem_ans": "As a large language model, I don't have a job title in the traditional sense. \n\nI could describe my role as an **AI assistant** or a **conversational "
+    },
+    {
+      "profile": "prof_2",
+      "model": "gemma3:4b",
+      "question": "What do I use to process data?",
+      "expect": "pandas",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your preferences, you should use **pandas**. You stated a preference for pandas over Excel for data processing. \n\nYou also indicated a strong",
+      "without_mem_ans": "Okay, let's break down what you can use to process data. The best tool depends *heavily* on the type of data you have, the complexity of your processi"
+    },
+    {
+      "profile": "prof_2",
+      "model": "gemma3:4b",
+      "question": "What programming language am I learning?",
+      "expect": "rust",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "This information doesn't tell us what programming language you are learning. It focuses on your preferences for development environments (Docker) and ",
+      "without_mem_ans": "Okay, let's figure this out! 😊\n\nBased on our conversation so far, you are currently learning **Python**. \n\nI can tell because:\n\n*   You asked me about"
+    },
+    {
+      "profile": "prof_2",
+      "model": "gemma3:4b",
+      "question": "What do I use for notes?",
+      "expect": "obsidian",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your preferences, you primarily use **Obsidian** for notes. You find it more flexible than Notion.\n\nYou also seem to have some considerations",
+      "without_mem_ans": "Okay, let's break down the best note-taking options! There’s a huge range of choices available, and the \"best\" really depends on your personal style, "
+    },
+    {
+      "profile": "prof_2",
+      "model": "gemma3:4b",
+      "question": "How do I feel about local dependency installs?",
+      "expect": "docker",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You dislike local installs. You prefer to use Docker for development environments.",
+      "without_mem_ans": "Okay, let's dive into how you likely feel about local dependency installs – it’s a surprisingly complex and nuanced topic within the developer communi"
+    },
+    {
+      "profile": "prof_2",
+      "model": "gemma3:4b",
+      "question": "What is my profession?",
+      "expect": "data",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "This information doesn't directly state your profession. However, based on your preferences – particularly the use of Docker and Obsidian – you likely",
+      "without_mem_ans": "I have no way of knowing your profession! As an AI, I don't have access to your personal information. 😊 \n\nTo tell you what your profession is, you wou"
+    },
+    {
+      "profile": "prof_3",
+      "model": "gemma3:4b",
+      "question": "What frontend framework am I expert in?",
+      "expect": "react",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "You are an expert in React.",
+      "without_mem_ans": "Please provide me with some information so I can determine which frontend framework you might be an expert in! 😊\n\nI need clues like:\n\n*   **What langu"
+    },
+    {
+      "profile": "prof_3",
+      "model": "gemma3:4b",
+      "question": "What do I use for styling?",
+      "expect": "tailwind",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You decided to use **Tailwind CSS** for styling. 😊",
+      "without_mem_ans": "Okay, let's break down what you might need for styling your hair! It really depends on *what* you want to achieve: the type of hairstyle and your hair"
+    },
+    {
+      "profile": "prof_3",
+      "model": "gemma3:4b",
+      "question": "What is my preference on TypeScript?",
+      "expect": "typescript",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, your preference is **TypeScript over JavaScript**. You’ve explicitly stated this in a provisional preference.",
+      "without_mem_ans": "Okay, let's figure out your likely preference regarding TypeScript. I can't *know* for sure, but based on what you've told me and common trends, here’"
+    },
+    {
+      "profile": "prof_3",
+      "model": "gemma3:4b",
+      "question": "What is my view on GraphQL vs REST?",
+      "expect": "graphql",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, your view on GraphQL vs. REST is that **GraphQL is better than REST for complex frontends.**",
+      "without_mem_ans": "Okay, let's delve into your likely view on GraphQL versus REST. Based on the trends in modern web development and conversations around API design, her"
+    },
+    {
+      "profile": "prof_3",
+      "model": "gemma3:4b",
+      "question": "What kind of engineer am I?",
+      "expect": "frontend",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information you’ve provided, you are a **frontend engineer** specializing in **React**.",
+      "without_mem_ans": "Okay, let's figure out what kind of engineer you might be! To do this effectively, I need a little information from you. Please answer the following q"
+    },
+    {
+      "profile": "prof_4",
+      "model": "gemma3:4b",
+      "question": "What is my monitoring tool of choice?",
+      "expect": "grafana",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, your monitoring tool of choice is **Grafana**. You prefer it over Prometheus UI alone.",
+      "without_mem_ans": "Okay, let's figure out your monitoring tool of choice! To give you the *best* recommendation, I need a little more information about your needs. Howev"
+    },
+    {
+      "profile": "prof_4",
+      "model": "gemma3:4b",
+      "question": "What do I use for infrastructure?",
+      "expect": "terraform",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you’ve decided to use **Terraform** for infrastructure as code. \n\nYou're also considering package management and ha",
+      "without_mem_ans": "Okay, let's break down what you can use for your infrastructure. This is a huge topic, so we’ll cover the key areas and options to help you figure out"
+    },
+    {
+      "profile": "prof_4",
+      "model": "gemma3:4b",
+      "question": "What is my view on ArgoCD vs Flux?",
+      "expect": "argocd",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, your provisional view is that **ArgoCD is better than Flux for GitOps.** \n\nYou’ve explicitly stated a preference fo",
+      "without_mem_ans": "Okay, let's break down what likely your (or a typical user's) viewpoint would be regarding Argo CD versus Flux. It’s a really common and important com"
+    },
+    {
+      "profile": "prof_4",
+      "model": "gemma3:4b",
+      "question": "What do I use for package management?",
+      "expect": "helm",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your stated preferences, you should use **Helm charts** for package management. You indicated a preference for Helm and believe it's better t",
+      "without_mem_ans": "Okay, let's break down your options for package management. It’s a really important part of using most operating systems (especially Linux and macOS) "
+    },
+    {
+      "profile": "prof_4",
+      "model": "gemma3:4b",
+      "question": "What kind of engineer am I?",
+      "expect": "devops",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you appear to be an **Infrastructure Engineer** with a strong focus on **GitOps**.\n\nHere's a breakdown of why:\n\n*  ",
+      "without_mem_ans": "Okay, let's figure out what kind of engineer you might be! To do that, I need a little information from you. Please answer these questions as thorough"
+    },
+    {
+      "profile": "prof_5",
+      "model": "gemma3:4b",
+      "question": "What language do I prefer for iOS?",
+      "expect": "swift",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, you prefer **Swift** over Objective-C for iOS development.",
+      "without_mem_ans": "Okay, let's break down the languages you can use to develop for iOS and help you decide which might be best for you. There isn’t one single “best” ans"
+    },
+    {
+      "profile": "prof_5",
+      "model": "gemma3:4b",
+      "question": "What UI framework do I use for new projects?",
+      "expect": "swiftui",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You decided to use SwiftUI over UIKit for new projects.",
+      "without_mem_ans": "Okay, let's break down the best UI frameworks to use for new projects. There isn’t a single “best” – it really depends on your specific needs, experie"
+    },
+    {
+      "profile": "prof_5",
+      "model": "gemma3:4b",
+      "question": "What is my view on Combine vs RxSwift?",
+      "expect": "combine",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on your provisional information, you believe **Combine is better than RxSwift for reactive programming.**",
+      "without_mem_ans": "Okay, let's dive into what your likely views and opinions might be regarding Combine versus RxSwift. This isn’t a guess – I’ll base this on the trends"
+    },
+    {
+      "profile": "prof_5",
+      "model": "gemma3:4b",
+      "question": "What do I use for mobile CI/CD?",
+      "expect": "fastlane",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your provided information, you're looking to know what tools to use for mobile CI/CD.\n\nGiven your preference for Fastlane, it seems like **Fa",
+      "without_mem_ans": "Okay, let's break down the options for mobile CI/CD (Continuous Integration and Continuous Delivery). It’s a more complex landscape than web developme"
+    },
+    {
+      "profile": "prof_5",
+      "model": "gemma3:4b",
+      "question": "What kind of developer am I?",
+      "expect": "mobile",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you appear to be a **mobile developer specializing in Swift**, with an emphasis on modern reactive programming and ",
+      "without_mem_ans": "Okay, let's figure out what kind of developer you are! To do this effectively, I need some information about your skills, interests, and typical work."
+    },
+    {
+      "profile": "prof_6",
+      "model": "gemma3:4b",
+      "question": "What deep learning framework do I prefer?",
+      "expect": "pytorch",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on your provided information, you prefer **PyTorch** over TensorFlow. You specifically stated: “I prefer PyTorch over TensorFlow for research fl",
+      "without_mem_ans": "Okay, let's talk about choosing a deep learning framework! There isn’t a single “best” – it really depends on your experience level, the type of proje"
+    },
+    {
+      "profile": "prof_6",
+      "model": "gemma3:4b",
+      "question": "What do I use for model deployment?",
+      "expect": "hugging",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You decided to use Hugging Face Transformers for model deployment.",
+      "without_mem_ans": "Okay, let's break down the options for deploying your machine learning models. The best choice depends a lot on factors like:\n\n*   **The type of model"
+    },
+    {
+      "profile": "prof_6",
+      "model": "gemma3:4b",
+      "question": "What is my view on LoRA vs full fine-tuning?",
+      "expect": "lora",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information you’ve provided, your view is that **LoRA fine-tuning is better than full fine-tuning for cost.** You stated this as a “posit",
+      "without_mem_ans": "Okay, let's delve into your potential views on LoRA (Low-Rank Adaptation) versus Full Fine-Tuning for large language models. Based on what I’ve observ"
+    },
+    {
+      "profile": "prof_6",
+      "model": "gemma3:4b",
+      "question": "What do I use for experiment tracking?",
+      "expect": "weights",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your previous responses, you’d like to use **Weights & Biases** for experiment tracking. \n\nDo you want me to elaborate on why Weights & Biase",
+      "without_mem_ans": "Okay, let's break down options for experiment tracking. The best choice depends heavily on your needs – the complexity of your experiments, team size,"
+    },
+    {
+      "profile": "prof_6",
+      "model": "gemma3:4b",
+      "question": "What kind of engineer am I?",
+      "expect": "ml",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You are an ML Engineer working on NLP models. 😊",
+      "without_mem_ans": "Okay, let's figure out what kind of engineer you might be! To do this, I need a little information from you.  Please answer these questions as thoroug"
+    },
+    {
+      "profile": "prof_7",
+      "model": "gemma3:4b",
+      "question": "What game engine do I use?",
+      "expect": "unity",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "You use Unity. You stated: “My name is Alex, I am a game developer using Unity”.",
+      "without_mem_ans": "Okay, let's figure out what game engine is right for you! There isn't a single \"best\" one – it really depends on your goals, experience level, and the"
+    },
+    {
+      "profile": "prof_7",
+      "model": "gemma3:4b",
+      "question": "What language do I prefer for scripting?",
+      "expect": "c#",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you haven’t explicitly stated a preferred scripting language. This is noted as a “preference · provisional” – meani",
+      "without_mem_ans": "Okay, let's break down what language you might prefer for scripting! There’s no single “best” answer – it heavily depends on your goals, experience le"
+    },
+    {
+      "profile": "prof_7",
+      "model": "gemma3:4b",
+      "question": "What do I use for 3D modeling?",
+      "expect": "blender",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You’ve decided to use **Blender** for 3D modeling. It's open-source and powerful!",
+      "without_mem_ans": "Okay, let's break down the options for 3D modeling software. It’s a HUGE field with tons of choices depending on your experience level, budget, and wh"
+    },
+    {
+      "profile": "prof_7",
+      "model": "gemma3:4b",
+      "question": "What is my view on game architecture?",
+      "expect": "ecs",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You think ECS (Entity Component System) architecture is better than OOP (Object Oriented Programming) for game entities.",
+      "without_mem_ans": "Okay, let's delve into what I can infer about your views on game architecture based on our conversations so far. This is a fascinating and complex top"
+    },
+    {
+      "profile": "prof_7",
+      "model": "gemma3:4b",
+      "question": "What kind of developer am I?",
+      "expect": "game",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you appear to be a **3D Game Developer** with a focus on scripting. Here's a breakdown of why:\n\n*   **Game Architec",
+      "without_mem_ans": "Okay, let's figure out what kind of developer you are! To do this effectively, I need some information from you.  Don’t worry – there aren't “right” o"
+    },
+    {
+      "profile": "prof_8",
+      "model": "gemma3:4b",
+      "question": "What endpoint tool do I prefer?",
+      "expect": "sentinelone",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "SentinelOne.",
+      "without_mem_ans": "Okay, let's talk about Endpoint Management tools! There's no single \"best\" – it *really* depends on your specific needs, budget, technical expertise, "
+    },
+    {
+      "profile": "prof_8",
+      "model": "gemma3:4b",
+      "question": "What do I use for secrets management?",
+      "expect": "vault",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You decided to use Vault for secrets management.",
+      "without_mem_ans": "Okay, let's break down your options for secrets management. It's a *critical* area of security – you don’t want to be storing passwords and API keys d"
+    },
+    {
+      "profile": "prof_8",
+      "model": "gemma3:4b",
+      "question": "What is my security philosophy?",
+      "expect": "zero-trust",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information you’ve provided, your security philosophy appears to be centered around **zero-trust architecture**. You explicitly stated th",
+      "without_mem_ans": "Okay, let's explore what your likely security philosophy might be. Since I don’t know you personally, I’ll base this on common trends and attitudes to"
+    },
+    {
+      "profile": "prof_8",
+      "model": "gemma3:4b",
+      "question": "What do I use for runtime threat detection?",
+      "expect": "falco",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You like using Falco for runtime threat detection in Kubernetes.",
+      "without_mem_ans": "Okay, let's break down the options for runtime threat detection – meaning systems that actively monitor your environment *while* applications and proc"
+    },
+    {
+      "profile": "prof_8",
+      "model": "gemma3:4b",
+      "question": "What kind of engineer am I?",
+      "expect": "security",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provisional queries you've submitted – focusing on runtime threat detection, secrets management, and endpoint tooling preferences – you’r",
+      "without_mem_ans": "Okay, let's figure out what kind of engineer you might be! To do this, I need some information about you. Please answer the following questions as hon"
+    },
+    {
+      "profile": "prof_9",
+      "model": "gemma3:4b",
+      "question": "What language do I use for smart contracts?",
+      "expect": "solidity",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on your preferences and the information provided, it’s highly likely you use **Solidity**.\n\nHere's the reasoning:\n\n*   **The Graph & Layer-2 Rol",
+      "without_mem_ans": "Okay, let's break down the languages you can use to write smart contracts. It's a surprisingly nuanced topic! Here's a breakdown of the most popular a"
+    },
+    {
+      "profile": "prof_9",
+      "model": "gemma3:4b",
+      "question": "What development tool do I prefer?",
+      "expect": "hardhat",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your previous preferences, you likely prefer **Remix**. \n\nYou've indicated a preference for Solidity over Vyper and are asking about tools fo",
+      "without_mem_ans": "Okay, let's figure out what development tool you might prefer! To give you the best recommendation, I need a little information about **what kind of d"
+    },
+    {
+      "profile": "prof_9",
+      "model": "gemma3:4b",
+      "question": "What is my view on Ethereum scaling?",
+      "expect": "rollup",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, your view is that **layer-2 rollups are the future of Ethereum scaling.** You consider this a provisional preferenc",
+      "without_mem_ans": "Okay, let's dive into what likely constitutes your view on Ethereum scaling. As an AI, I don't *have* a personal opinion, but I can synthesize the pre"
+    },
+    {
+      "profile": "prof_9",
+      "model": "gemma3:4b",
+      "question": "What do I use for data indexing?",
+      "expect": "graph",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Okay, let's explore your preferences for data indexing. To give you the most relevant recommendations, I need a little more information about *what ki",
+      "without_mem_ans": "Okay, let's break down the options for data indexing – it's a crucial aspect of making your data searchable and efficient. The best choice depends hea"
+    },
+    {
+      "profile": "prof_9",
+      "model": "gemma3:4b",
+      "question": "What kind of developer am I?",
+      "expect": "blockchain",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Okay, based on the provisional preferences you’ve provided, here's a breakdown of what kind of developer you likely are:\n\n**You appear to be a technic",
+      "without_mem_ans": "Okay, let's figure out what kind of developer you are! To do that, I need some information about your background and work.  I’ll ask a series of quest"
+    },
+    {
+      "profile": "prof_10",
+      "model": "gemma3:4b",
+      "question": "What orchestration tool do I prefer?",
+      "expect": "airflow",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you prefer **Apache Airflow** over Luigi for workflow orchestration.",
+      "without_mem_ans": "Okay, let's figure out which orchestration tool might be best for you! To give you the most tailored recommendation, I need a little more information "
+    },
+    {
+      "profile": "prof_10",
+      "model": "gemma3:4b",
+      "question": "What do I use for transformations?",
+      "expect": "dbt",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your provided information, you haven't explicitly stated what you use for transformations. However, we can infer some possibilities given you",
+      "without_mem_ans": "Okay, let's break down what you can use for transformations, depending on *what* kind of transformation you're talking about and the context (e.g., im"
+    },
+    {
+      "profile": "prof_10",
+      "model": "gemma3:4b",
+      "question": "What is my view on Snowflake vs BigQuery?",
+      "expect": "snowflake",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, your view is that **Snowflake is better than BigQuery for data warehousing.** You've stated this preference explici",
+      "without_mem_ans": "Okay, let's dive into your likely perspective on Snowflake and BigQuery. Based on the general trends and conversations within the data community, here"
+    },
+    {
+      "profile": "prof_10",
+      "model": "gemma3:4b",
+      "question": "What do I use for streaming?",
+      "expect": "kafka",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your stated preferences, you should be using **Apache Kafka** for streaming. You indicated a preference for it for real-time data streaming. ",
+      "without_mem_ans": "Okay, let's break down what you need to stream, considering different budgets and levels of quality. Here’s a breakdown categorized by your needs:\n\n**"
+    },
+    {
+      "profile": "prof_10",
+      "model": "gemma3:4b",
+      "question": "What kind of engineer am I?",
+      "expect": "data",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information you've provided, you seem to be a **Data Engineering** or **Streaming Data Engineering** Engineer. Here’s why:\n\n*   **“What d",
+      "without_mem_ans": "Okay, let's figure out what kind of engineer you might be! To help me narrow it down, I need some information about your interests, skills, and the ki"
+    },
+    {
+      "profile": "prof_11",
+      "model": "gemma3:4b",
+      "question": "What language do I prefer for firmware?",
+      "expect": "c",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "You prefer C over C++ for firmware, simpler toolchain.",
+      "without_mem_ans": "Okay, let's break down the best languages to use for firmware development. There isn’t a single \"best\" answer – it depends heavily on your project, ex"
+    },
+    {
+      "profile": "prof_11",
+      "model": "gemma3:4b",
+      "question": "Which RTOS do I use?",
+      "expect": "zephyr",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you decided to use **Zephyr RTOS** over FreeRTOS. \n\nLet's recap: “[event·provisional] I decided to use Zephyr RTOS ",
+      "without_mem_ans": "Okay, let's tackle the daunting question of choosing an RTOS (Real-Time Operating System). There isn’t a single “best” answer – it depends *heavily* o"
+    },
+    {
+      "profile": "prof_11",
+      "model": "gemma3:4b",
+      "question": "What IDE do I prefer for embedded?",
+      "expect": "platformio",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you prefer **PlatformIO** over the Arduino IDE for embedded development. \n\nYou stated: “[preference·provisional] I ",
+      "without_mem_ans": "Okay, let's break down the best IDE options for embedded development. There isn't a *single* \"best,\" as it depends on your specific needs, platform(s)"
+    },
+    {
+      "profile": "prof_11",
+      "model": "gemma3:4b",
+      "question": "What debugger do I use?",
+      "expect": "j-link",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You like using Segger J-Link for debugging microcontrollers.",
+      "without_mem_ans": "Okay, let's figure out what debugger you should be using! It really depends on a few key things:\n\n**1. What are you developing with? (The most importa"
+    },
+    {
+      "profile": "prof_11",
+      "model": "gemma3:4b",
+      "question": "What kind of engineer am I?",
+      "expect": "embedded",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you are likely an **Embedded Systems Engineer**.\n\nHere's why:\n\n*   **Debugger & IDE Questions:** The repeated quest",
+      "without_mem_ans": "Okay, let's figure out what kind of engineer you might be! To do this effectively, I need some information from you. Please answer these questions as "
+    },
+    {
+      "profile": "prof_12",
+      "model": "gemma3:4b",
+      "question": "What metrics tool do I prefer?",
+      "expect": "prometheus",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you haven’t yet specified a preferred metrics tool. You've indicated that this is a provisional preference and are ",
+      "without_mem_ans": "Okay, let's figure out what metrics tool you should prefer! To give you the best recommendation, I need a little more information about your needs. He"
+    },
+    {
+      "profile": "prof_12",
+      "model": "gemma3:4b",
+      "question": "What on-call tool do I use?",
+      "expect": "pagerduty",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Okay, based on the provided information – that you’ve indicated preferences for metrics, service meshes, and chaos engineering tools – it's likely you",
+      "without_mem_ans": "Okay, let's figure out what on-call tools you should be using. There isn’t one single “best” answer – it depends heavily on your team's size, complexi"
+    },
+    {
+      "profile": "prof_12",
+      "model": "gemma3:4b",
+      "question": "What chaos engineering tool do I prefer?",
+      "expect": "chaos",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on your previous preferences, you seem to favor **Chaos Mesh** over Litmus for chaos engineering. \n\nTherefore, my answer is: **Chaos Mesh**. \n\nD",
+      "without_mem_ans": "Okay, let's tackle the question of which Chaos Engineering tools you might prefer. There isn’t a single “best” - it really depends on your team's need"
+    },
+    {
+      "profile": "prof_12",
+      "model": "gemma3:4b",
+      "question": "Which service mesh do I prefer?",
+      "expect": "linkerd",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your previous responses, you prefer **Linkerd** over Istio for its simplicity.",
+      "without_mem_ans": "Okay, let's tackle the thorny question of choosing a service mesh! There's no single \"best\" – it heavily depends on your specific needs, team expertis"
+    },
+    {
+      "profile": "prof_12",
+      "model": "gemma3:4b",
+      "question": "What is my SRE role?",
+      "expect": "sre",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Your SRE role is focused on **reliability**.",
+      "without_mem_ans": "Okay, let's break down what your SRE (Site Reliability Engineering) role typically entails. It’s a fascinating and increasingly important field! Here'"
+    },
+    {
+      "profile": "prof_13",
+      "model": "gemma3:4b",
+      "question": "What E2E testing tool do I prefer?",
+      "expect": "playwright",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, you prefer **Playwright** for E2E testing. \n\nYou’ve stated: “I prefer Playwright over Cypress for E2E testing”.",
+      "without_mem_ans": "Okay, let's break down the best E2E (End-to-End) testing tools. There isn’t a single \"best\" – it *really* depends on your project's specifics: your te"
+    },
+    {
+      "profile": "prof_13",
+      "model": "gemma3:4b",
+      "question": "What test management tool do I use?",
+      "expect": "testrail",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, you are currently using **TestRail**. You previously considered Zephyr but have decided to move to TestRail.",
+      "without_mem_ans": "Okay, let's figure out what test management tool might be a good fit for you. To recommend the best one, I need a little more information about your n"
+    },
+    {
+      "profile": "prof_13",
+      "model": "gemma3:4b",
+      "question": "What Python testing framework do I prefer?",
+      "expect": "pytest",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on your previous responses, you prefer **Pytest**. You stated: “I think Pytest is better than Unittest for Python testing.”",
+      "without_mem_ans": "Okay, let's break down the popular Python testing frameworks and help you figure out which one might be best for you. There isn’t a *single* “best” - "
+    },
+    {
+      "profile": "prof_13",
+      "model": "gemma3:4b",
+      "question": "What reporting tool do I use?",
+      "expect": "allure",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You like using Allure for test reporting dashboards.",
+      "without_mem_ans": "Okay, let's figure out what reporting tool is right for you! To give you the best recommendation, I need a little more information about your needs.  "
+    },
+    {
+      "profile": "prof_13",
+      "model": "gemma3:4b",
+      "question": "What is my QA role?",
+      "expect": "qa",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, your QA role likely involves a combination of activities related to:\n\n*   **Test Management:** You use a test manag",
+      "without_mem_ans": "Okay, let's figure out your QA (Quality Assurance) role. To give you a truly helpful answer, I need some information from you! \"QA\" stands for Quality"
+    },
+    {
+      "profile": "prof_14",
+      "model": "gemma3:4b",
+      "question": "What markup language do I prefer?",
+      "expect": "markdown",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information you’ve provided, you prefer **Markdown** over reStructuredText for documentation.",
+      "without_mem_ans": "Okay, let's tackle the big question: \"What markup language do I prefer?\" There isn’t a single “best” answer – it truly depends on *what you're trying "
+    },
+    {
+      "profile": "prof_14",
+      "model": "gemma3:4b",
+      "question": "What docs framework do I use?",
+      "expect": "docusaurus",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided, you currently use **Docusaurus**. \n\nThe first item explicitly states: “I decided to use Docusaurus over MkDocs for ",
+      "without_mem_ans": "Okay, let's break down the \"what docs framework\" question. There isn't one single \"best\" answer – it really depends on your needs and technical expert"
+    },
+    {
+      "profile": "prof_14",
+      "model": "gemma3:4b",
+      "question": "What do I think of GitBook vs Confluence?",
+      "expect": "gitbook",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Okay, based on your other preferences and provisional event selections, here's a likely assessment of how you’d feel about GitBook versus Confluence:\n",
+      "without_mem_ans": "Okay, let's break down your thought process comparing GitBook and Confluence. To give you the *best* response, I’m going to assume you're considering "
+    },
+    {
+      "profile": "prof_14",
+      "model": "gemma3:4b",
+      "question": "What diagram tool do I use?",
+      "expect": "mermaid",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your previous interactions, you're trying to figure out what diagram tool you should be using. You’ve asked about this before and are still s",
+      "without_mem_ans": "Okay, let's figure out what diagram tool is best for you! Here's a breakdown of popular options, categorized by their strengths and target users:\n\n**1"
+    },
+    {
+      "profile": "prof_14",
+      "model": "gemma3:4b",
+      "question": "What is my profession?",
+      "expect": "writer",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, it's impossible to definitively determine your profession. However, the repeated inquiries about \"diagram tools,\" \"",
+      "without_mem_ans": "I have no way of knowing your profession! I'm an AI, and I don’t have access to personal information. \n\nTo tell me what your profession is, you just n"
+    },
+    {
+      "profile": "prof_15",
+      "model": "gemma3:4b",
+      "question": "What engine do I prefer for AR?",
+      "expect": "unity",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on your provided information, you prefer **Unity** over Unreal for AR development.",
+      "without_mem_ans": "Okay, let's break down the best engines for Augmented Reality (AR) development. There isn't a single \"best\" – it really depends on your project's spec"
+    },
+    {
+      "profile": "prof_15",
+      "model": "gemma3:4b",
+      "question": "What AR framework do I use?",
+      "expect": "ar foundation",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your provided information, you are currently using **AR Foundation** over ARCore directly.",
+      "without_mem_ans": "Okay, let's break down which Augmented Reality (AR) frameworks you should consider. There isn’t one “best” – it depends *heavily* on your project goal"
+    },
+    {
+      "profile": "prof_15",
+      "model": "gemma3:4b",
+      "question": "What is my view on immersive web?",
+      "expect": "webxr",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, your provisional view is that **WebXR is the future of immersive web.** You see it as a promising and important tec",
+      "without_mem_ans": "Okay, let's delve into what my understanding of your perspective on immersive web experiences is. Based on our past conversations and the data I’ve pr"
+    },
+    {
+      "profile": "prof_15",
+      "model": "gemma3:4b",
+      "question": "What 3D tool do I use?",
+      "expect": "blender",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your existing information, it seems you’re looking for guidance on which 3D tool to use. Given that you've expressed interest in AR and WebXR",
+      "without_mem_ans": "Okay, let's find you a good 3D tool! It really depends on your experience level, what you want to create, and your budget. Here’s a breakdown of some "
+    },
+    {
+      "profile": "prof_15",
+      "model": "gemma3:4b",
+      "question": "What kind of developer am I?",
+      "expect": "ar",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information you’ve provided, you appear to be a **3D and Immersive Web Developer**, with a strong leaning towards Augmented Reality (AR).",
+      "without_mem_ans": "Okay, let's figure out what kind of developer you are! To do this accurately, I need some information from you. Please answer the following questions "
+    },
+    {
+      "profile": "prof_16",
+      "model": "gemma3:4b",
+      "question": "What IaC tool do I prefer?",
+      "expect": "terraform",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, you prefer **Terraform** over CloudFormation for Infrastructure as Code (IaC).",
+      "without_mem_ans": "Okay, let's tackle the \"what IaC tool do I prefer?\" question. There’s no single “best” answer – it *heavily* depends on your specific situation.  Here"
+    },
+    {
+      "profile": "prof_16",
+      "model": "gemma3:4b",
+      "question": "What multi-cloud tool do I use?",
+      "expect": "pulumi",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your expressed preferences and decisions, you are currently using **Pulumi** as your multi-cloud tool. You also indicated a preference for Te",
+      "without_mem_ans": "Okay, let's tackle finding the right multi-cloud management tool for you. There are *many* options available, each with strengths and weaknesses. Here"
+    },
+    {
+      "profile": "prof_16",
+      "model": "gemma3:4b",
+      "question": "What is my view on AWS CDK?",
+      "expect": "cdk",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, your view on AWS CDK is that you **think it’s better than Serverless Framework**. You stated this as a “preference ",
+      "without_mem_ans": "Okay, let's dive into a breakdown of what your likely view on AWS Cloud Development Kit (CDK) would be, based on common experiences and perspectives. "
+    },
+    {
+      "profile": "prof_16",
+      "model": "gemma3:4b",
+      "question": "What Terraform orchestration tool do I use?",
+      "expect": "terragrunt",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information you've provided, you currently use **Terragrunt** for Terraform orchestration. \n\nYou’ve explicitly stated you like Terragrunt",
+      "without_mem_ans": "Okay, let's break down the orchestration tools you can use with Terraform. The best choice depends on your specific needs and scale of operations. Her"
+    },
+    {
+      "profile": "prof_16",
+      "model": "gemma3:4b",
+      "question": "What is my role?",
+      "expect": "architect",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, your primary focus appears to be around **Infrastructure as Code (IaC) and Terraform**. \n\nSpecifically, you're expl",
+      "without_mem_ans": "Okay, let's figure out your role! As a large language model, I don’t have a traditional “role” in the way a person does. Instead, **my purpose is to a"
+    },
+    {
+      "profile": "prof_17",
+      "model": "gemma3:4b",
+      "question": "What enterprise database do I prefer?",
+      "expect": "postgresql",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "You prefer PostgreSQL over Oracle for enterprise databases.",
+      "without_mem_ans": "Okay, let's tackle the big question: \"What enterprise database should *I* prefer?\". There isn’t a single “best” answer – it depends entirely on your *"
+    },
+    {
+      "profile": "prof_17",
+      "model": "gemma3:4b",
+      "question": "What admin tool do I use?",
+      "expect": "pgadmin",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "This information doesn't provide any details about the admin tools Jack uses. It focuses solely on his preferences and technical roles (database admin",
+      "without_mem_ans": "Okay, let's figure out what \"admin tool\" you need. To give you the best recommendation, I need a little more information about *what* kind of administ"
+    },
+    {
+      "profile": "prof_17",
+      "model": "gemma3:4b",
+      "question": "What HA solution do I prefer?",
+      "expect": "patroni",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your previous responses, you prefer **Patroni** for a HA PostgreSQL solution. \n\nYou also indicated liking PgBouncer for connection pooling, b",
+      "without_mem_ans": "Okay, let's tackle this. Choosing a High Availability (HA) solution is a *huge* decision, and the \"best\" one depends entirely on your specific needs a"
+    },
+    {
+      "profile": "prof_17",
+      "model": "gemma3:4b",
+      "question": "What connection pooler do I use?",
+      "expect": "pgbouncer",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information, you **like using PgBouncer** for connection pooling.",
+      "without_mem_ans": "Okay, let's break down the world of connection poolers. There isn't *one* definitive \"best\" connection pooler; the right choice depends heavily on you"
+    },
+    {
+      "profile": "prof_17",
+      "model": "gemma3:4b",
+      "question": "What is my DBA role?",
+      "expect": "database",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, your DBA role is a **database administrator**. You specifically state: “My name is Jack, I am a database administra",
+      "without_mem_ans": "Okay, let's break down the DBA (Database Administrator) role. It's a surprisingly diverse one, and the specifics can vary *a lot* depending on the com"
+    },
+    {
+      "profile": "prof_18",
+      "model": "gemma3:4b",
+      "question": "What design tool do I prefer?",
+      "expect": "figma",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your preferences, you prefer to use **Optimal Workshop** for card sorting.",
+      "without_mem_ans": "Okay, let's figure out what design tool you might prefer! To give you the best recommendation, I need a little more information about *you* and your d"
+    },
+    {
+      "profile": "prof_18",
+      "model": "gemma3:4b",
+      "question": "What usability testing tool do I use?",
+      "expect": "maze",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "You decided to use Maze for prototype usability testing.",
+      "without_mem_ans": "Okay, let's break down usability testing tools! There isn’t a single “best” – it really depends on your budget, team size, needs, and the type of test"
+    },
+    {
+      "profile": "prof_18",
+      "model": "gemma3:4b",
+      "question": "What research synthesis tool do I prefer?",
+      "expect": "dovetail",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information you’ve provided, you prefer **Dovetail** for research synthesis.",
+      "without_mem_ans": "Okay, let's figure out which research synthesis tool you might prefer! There isn’t a single “best” tool – it really depends on your research question,"
+    },
+    {
+      "profile": "prof_18",
+      "model": "gemma3:4b",
+      "question": "What card sorting tool do I use?",
+      "expect": "optimal",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on your provided information, you currently use **Optimal Workshop** for card sorting. \n\nYou’ve indicated a preference for it and are looking fo",
+      "without_mem_ans": "Okay, let's break down the best card sorting tools depending on your needs and budget. There are a *lot* of options out there! Here's a breakdown cate"
+    },
+    {
+      "profile": "prof_18",
+      "model": "gemma3:4b",
+      "question": "What is my UX role?",
+      "expect": "ux",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information you’ve provided, your UX role is a **UX Researcher**. You specifically stated: “My name is Kate, I am a UX researcher”.",
+      "without_mem_ans": "Okay, let's figure out your UX role! I can’t *know* your exact role without more information, but I can help you define it based on the answers to som"
+    },
+    {
+      "profile": "prof_19",
+      "model": "gemma3:4b",
+      "question": "What network OS do I prefer?",
+      "expect": "cisco",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on your provided information, you prefer **Cisco IOS-XE** over Junos for network OS.",
+      "without_mem_ans": "Okay, let's break down the best network operating systems (NOS) for you. The \"best\" really depends on *what* you're trying to achieve – your technical"
+    },
+    {
+      "profile": "prof_19",
+      "model": "gemma3:4b",
+      "question": "What automation tool do I use?",
+      "expect": "ansible",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Okay, let's figure out what automation tool you should use. To give you the best recommendation, I need a little more information about your needs and",
+      "without_mem_ans": "Okay, let's figure out what automation tool is right for you! To give you the best recommendation, I need a little more information about **what you w"
+    },
+    {
+      "profile": "prof_19",
+      "model": "gemma3:4b",
+      "question": "What VPN solution do I prefer?",
+      "expect": "wireguard",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your previous statements, you prefer **WireGuard** over OpenVPN for a VPN solution. \n\nDo you want me to elaborate further or perhaps explore ",
+      "without_mem_ans": "Okay, let's tackle this! Choosing a VPN is *very* personal and depends on your specific needs and priorities. There isn’t one “best” option for everyo"
+    },
+    {
+      "profile": "prof_19",
+      "model": "gemma3:4b",
+      "question": "What scripting framework do I use?",
+      "expect": "nornir",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Okay, let's figure out what scripting framework you should use. To give you the best recommendation, I need a little more information about *what* you",
+      "without_mem_ans": "Okay, let's figure out what scripting framework might be right for you! To give you the best recommendation, I need a little more information about *w"
+    },
+    {
+      "profile": "prof_19",
+      "model": "gemma3:4b",
+      "question": "What kind of engineer am I?",
+      "expect": "network",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provisional information you've provided – focusing on scripting frameworks, automation tools, network OS preferences and VPN solutions – ",
+      "without_mem_ans": "Okay, let's figure out what kind of engineer you are! To do this, I need a little information about you. Please answer the following questions as hone"
+    },
+    {
+      "profile": "prof_20",
+      "model": "gemma3:4b",
+      "question": "What dashboard tool do I prefer?",
+      "expect": "tableau",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, you prefer **Tableau** over Power BI for dashboards.",
+      "without_mem_ans": "Okay, let's tackle this question - \"What dashboard tool do *I* prefer?\" As an AI, I don’t have personal preferences like humans do. However, I can ana"
+    },
+    {
+      "profile": "prof_20",
+      "model": "gemma3:4b",
+      "question": "What analytics platform do I use?",
+      "expect": "looker",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "This question is already stated in one of your provisional information points:\n\n“[position·provisional] What analytics platform do I use?”\n\nTo help yo",
+      "without_mem_ans": "Okay, let's figure out which analytics platform is right for you. To give you the best recommendation, I need a little more information about your nee"
+    },
+    {
+      "profile": "prof_20",
+      "model": "gemma3:4b",
+      "question": "What is my view on SQL vs Python?",
+      "expect": "sql",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, your provisional view is that **SQL is more important than Python for analysis.** You’ve explicitly stated this pre",
+      "without_mem_ans": "Okay, let's explore what someone with your background (as you haven't provided specifics about it) likely views SQL versus Python. This will be a brea"
+    },
+    {
+      "profile": "prof_20",
+      "model": "gemma3:4b",
+      "question": "What metric tool do I use?",
+      "expect": "dbt",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information provided, you likely use **dbt for metric definitions**. \n\nWhile you’re asking about *a* metric tool and also have questions ",
+      "without_mem_ans": "Okay, let's figure out what \"metric tool\" you need! To give you the best recommendation, I need a little more information.  “Metric Tool” is pretty br"
+    },
+    {
+      "profile": "prof_20",
+      "model": "gemma3:4b",
+      "question": "What is my analyst role?",
+      "expect": "analyst",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, your analyst role is a **data analyst**. This is explicitly stated in the “[identity·provisional]” section: “My nam",
+      "without_mem_ans": "Okay, let's figure out your analyst role. Since I don’t know you personally, I need you to tell me about it! To understand what your analyst role is, "
+    },
+    {
+      "profile": "prof_21",
+      "model": "gemma3:4b",
+      "question": "What web framework do I prefer?",
+      "expect": "phoenix",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You prefer Phoenix over Rails for web frameworks.",
+      "without_mem_ans": "Okay, let's figure out which web framework you might prefer! There's no single \"best\" answer – it depends *heavily* on your project goals, experience "
+    },
+    {
+      "profile": "prof_21",
+      "model": "gemma3:4b",
+      "question": "What real-time UI approach do I use?",
+      "expect": "liveview",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your stated preference for Phoenix and the information that you prefer it over Rails, a strong inference can be made:\n\nYou likely utilize **W",
+      "without_mem_ans": "Okay, let's break down real-time UI approaches. The \"best\" one depends *heavily* on your project’s requirements, complexity, and team skills. Here’s a"
+    },
+    {
+      "profile": "prof_21",
+      "model": "gemma3:4b",
+      "question": "What is my concurrency philosophy?",
+      "expect": "otp",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, it’s difficult to definitively state your concurrency philosophy. However, we can infer some leanings:\n\n*   **Prefe",
+      "without_mem_ans": "Okay, let's explore your likely concurrency philosophy. This isn't a definitive answer, of course - it’s based on observing your interactions and the "
+    },
+    {
+      "profile": "prof_21",
+      "model": "gemma3:4b",
+      "question": "What database query tool do I use?",
+      "expect": "ecto",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Okay, based on the existing preferences and your new question, here’s a reasonable approach to answering:\n\nGiven your expressed interest in UI approac",
+      "without_mem_ans": "Okay, let's break down the options for database query tools. The best choice really depends on what kind of database you're working with and your tech"
+    },
+    {
+      "profile": "prof_21",
+      "model": "gemma3:4b",
+      "question": "What language do I use?",
+      "expect": "elixir",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you're exploring your preferences for building applications. The fact that you’ve listed queries, UI approaches, an",
+      "without_mem_ans": "Okay, let's figure out what language you should use! To help me recommend the best option, could you tell me a little more about **what you want to do"
+    },
+    {
+      "profile": "prof_22",
+      "model": "gemma3:4b",
+      "question": "What UI framework do I prefer for complex apps?",
+      "expect": "uikit",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Okay, let's break down UI frameworks suitable for complex apps. There isn’t a single “best” answer – it really depends on your priorities (performance",
+      "without_mem_ans": "Okay, let's break down the best UI frameworks for complex applications. There isn’t a single “best,” as it heavily depends on your team's expertise, p"
+    },
+    {
+      "profile": "prof_22",
+      "model": "gemma3:4b",
+      "question": "What constraints tool do I use?",
+      "expect": "snapkit",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Okay, based on your preference for complex apps and your existing UI framework question, it sounds like you likely favor **Flutter**.\n\nFlutter is a ve",
+      "without_mem_ans": "Okay, let's figure out what constraint tool you need! To recommend the best one for *you*, I need a little more information about **what kind of const"
+    },
+    {
+      "profile": "prof_22",
+      "model": "gemma3:4b",
+      "question": "What reactive framework do I prefer?",
+      "expect": "combine",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Okay, based on your previous preferences indicating a focus on complex apps and using a constraints tool, and now adding the question about a reactive",
+      "without_mem_ans": "Okay, let's break down some popular reactive frameworks and figure out which might be a good fit for you. There’s no single “best” – it depends *entir"
+    },
+    {
+      "profile": "prof_22",
+      "model": "gemma3:4b",
+      "question": "What beta distribution tool do I use?",
+      "expect": "fastlane",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Okay, based on your existing preferences, it seems you're interested in specifying technical choices. To answer \"What beta distribution tool do I use?",
+      "without_mem_ans": "Okay, let's break down the options for using a Beta distribution tool. The best choice depends on your needs - whether you need to calculate probabili"
+    },
+    {
+      "profile": "prof_22",
+      "model": "gemma3:4b",
+      "question": "What platform do I develop for?",
+      "expect": "ios",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "This information isn't currently available from the provided user profile. To answer that question, I need more data about your preferences and develo",
+      "without_mem_ans": "Okay, let's figure out what platform you should develop for. This is a hugely important question and the answer depends *entirely* on your goals and t"
+    },
+    {
+      "profile": "prof_23",
+      "model": "gemma3:4b",
+      "question": "What language do I prefer for Android?",
+      "expect": "kotlin",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on your preference, you appear to favor **Hilt** over Dagger for Dependency Injection in Android.\n\nTherefore, based solely on this single piece ",
+      "without_mem_ans": "Okay, let's break down the best languages for developing Android apps. There isn’t one *single* \"best\" – it depends on your experience level and what "
+    },
+    {
+      "profile": "prof_23",
+      "model": "gemma3:4b",
+      "question": "What UI toolkit do I use?",
+      "expect": "compose",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your preferences for Hilt and a focus on Android, it’s likely you lean towards **Jetpack Compose**.\n\nHere's the reasoning:\n\n*   **Hilt:** Hil",
+      "without_mem_ans": "Okay, let's figure out which UI toolkit is right for you. To give you the best recommendation, I need a little more information about your project. He"
+    },
+    {
+      "profile": "prof_23",
+      "model": "gemma3:4b",
+      "question": "What DI framework do I prefer?",
+      "expect": "hilt",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You prefer Hilt over Dagger for Dependency Injection.",
+      "without_mem_ans": "Okay, let's tackle this! Choosing a Dependency Injection (DI) framework is a *big* decision, and there’s no single \"best\" one. It really depends on yo"
+    },
+    {
+      "profile": "prof_23",
+      "model": "gemma3:4b",
+      "question": "What local storage do I use?",
+      "expect": "room",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your preferences, you seem to lean towards modern dependency injection frameworks. Considering you find Hilt better than Dagger, and haven't ",
+      "without_mem_ans": "Okay, let's break down the different types of local storage you can use, depending on your needs. \"Local Storage\" generally refers to a way to store d"
+    },
+    {
+      "profile": "prof_23",
+      "model": "gemma3:4b",
+      "question": "What platform do I develop for?",
+      "expect": "android",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Okay, based on the existing preferences, it seems you're primarily interested in mobile development. To answer your question:\n\n**You develop for Andro",
+      "without_mem_ans": "Okay, let's figure out the best platform to develop *for*. This is a hugely important first step and depends entirely on what you want to build and wh"
+    },
+    {
+      "profile": "prof_24",
+      "model": "gemma3:4b",
+      "question": "What async runtime do I prefer?",
+      "expect": "tokio",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your provided information, you prefer **Tokio** over async-std for an async runtime.",
+      "without_mem_ans": "Okay, let's break down the best asynchronous runtimes for Python. There isn't one single \"best\" – it depends heavily on your project's specific needs "
+    },
+    {
+      "profile": "prof_24",
+      "model": "gemma3:4b",
+      "question": "What web framework do I use?",
+      "expect": "axum",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Okay, based on your preferences and identity as Quinn, a Rust developer who likes Cargo workspaces and Serde for serialization, here’s my best guess a",
+      "without_mem_ans": "Okay, let's figure out what web framework might be right for you. To give you the best recommendation, I need a little more information about your pro"
+    },
+    {
+      "profile": "prof_24",
+      "model": "gemma3:4b",
+      "question": "What serialization library do I like?",
+      "expect": "serde",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you think **Serde** is the best serialization library.",
+      "without_mem_ans": "Okay, let's tackle this! As a large language model, I don’t *personally* \"like\" things in the way a human does. However, based on my analysis of devel"
+    },
+    {
+      "profile": "prof_24",
+      "model": "gemma3:4b",
+      "question": "What monorepo approach do I use?",
+      "expect": "cargo",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you like using **Cargo workspaces** for your monorepos.",
+      "without_mem_ans": "Okay, let's break down the world of monorepos and figure out which approach is right for you. The best choice depends heavily on your team size, proje"
+    },
+    {
+      "profile": "prof_24",
+      "model": "gemma3:4b",
+      "question": "What language do I use?",
+      "expect": "rust",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you are a **Rust** developer.",
+      "without_mem_ans": "That's a fantastic question! To help you figure out what language to use, let's break it down. There isn’t one single “right” answer – it depends enti"
+    },
+    {
+      "profile": "prof_25",
+      "model": "gemma3:4b",
+      "question": "What HTTP router do I prefer?",
+      "expect": "gin",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, you prefer **Gin** over Echo for HTTP routing.",
+      "without_mem_ans": "Okay, let’s break down the world of HTTP routers and help you figure out which one might be best for you. There isn't a single \"best\" – it *heavily* d"
+    },
+    {
+      "profile": "prof_25",
+      "model": "gemma3:4b",
+      "question": "What ORM do I use?",
+      "expect": "gorm",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information you've provided, you’ve decided to use **GORM** as your ORM.",
+      "without_mem_ans": "Okay, let's figure out the best ORM for you. Choosing an ORM is a big decision that can significantly impact your project's development speed, maintai"
+    },
+    {
+      "profile": "prof_25",
+      "model": "gemma3:4b",
+      "question": "What concurrency primitive do I value?",
+      "expect": "context",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your stated preferences, you value **context packages** for Go concurrency. You believe they are essential.",
+      "without_mem_ans": "Okay, let's talk about concurrency primitives and which ones you might value most. The \"best\" one *really* depends on what you’re trying to achieve wi"
+    },
+    {
+      "profile": "prof_25",
+      "model": "gemma3:4b",
+      "question": "What CLI framework do I use?",
+      "expect": "cobra",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your previous preferences, you likely use **Cobra** for CLI applications. You’ve explicitly stated you “like using Cobra” in a provisional pr",
+      "without_mem_ans": "Okay, let's break down the world of CLI (Command Line Interface) frameworks and help you figure out what might be a good fit for your needs. There isn"
+    },
+    {
+      "profile": "prof_25",
+      "model": "gemma3:4b",
+      "question": "What language do I use?",
+      "expect": "go",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided context, you're asking about an ORM and CLI framework. This strongly suggests you’re likely using **Python**.\n\nHere's why:\n\n*   ",
+      "without_mem_ans": "Please tell me what you're trying to achieve! To recommend the best language for you, I need a little more information. 😊\n\nHere are some questions to "
+    },
+    {
+      "profile": "prof_26",
+      "model": "gemma3:4b",
+      "question": "What web framework do I prefer?",
+      "expect": "rails",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information you’ve provided, you prefer **Rails** over Sinatra for web apps. \n\nYou've explicitly stated: “[preference·provisional] I pref",
+      "without_mem_ans": "Okay, let's tackle the big question: \"What web framework should *you* prefer?\" There’s no single right answer – it heavily depends on your needs, expe"
+    },
+    {
+      "profile": "prof_26",
+      "model": "gemma3:4b",
+      "question": "What background job system do I use?",
+      "expect": "sidekiq",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "You decided to use Sidekiq over Resque for background jobs.",
+      "without_mem_ans": "Okay, let's break down the background job systems available and help you figure out which one might be best for your needs. There isn't a *single* \"be"
+    },
+    {
+      "profile": "prof_26",
+      "model": "gemma3:4b",
+      "question": "What testing framework do I prefer?",
+      "expect": "rspec",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information you’ve provided, you prefer **RSpec** over Minitest for testing.",
+      "without_mem_ans": "Okay, let's figure out what testing framework you should prefer! This is a fantastic question because the right choice can drastically improve your pr"
+    },
+    {
+      "profile": "prof_26",
+      "model": "gemma3:4b",
+      "question": "What type checker do I use?",
+      "expect": "sorbet",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you like using **Sorbet** for type checking Ruby.",
+      "without_mem_ans": "Okay, let's figure out what type checker you might be using. To give you the best answer, I need a little more information about *your* situation. Her"
+    },
+    {
+      "profile": "prof_26",
+      "model": "gemma3:4b",
+      "question": "What language do I use?",
+      "expect": "ruby",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information you provided – that you are Sam and identify as a Ruby developer – you primarily use **Ruby**.",
+      "without_mem_ans": "That's a fantastic question! To help you figure out what language to use, I need a little more information. 😊\n\nHere’s a breakdown of the questions I h"
+    },
+    {
+      "profile": "prof_27",
+      "model": "gemma3:4b",
+      "question": "What API framework do I prefer?",
+      "expect": "fastapi",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on your preferences and choices – favoring Pydantic for data validation, advocating for Celery over RQ, and selecting SQLAlchemy over Django ORM",
+      "without_mem_ans": "Okay, let's break down API frameworks and figure out what you might prefer. There isn’t a single \"best\" – it depends *heavily* on your needs, technica"
+    },
+    {
+      "profile": "prof_27",
+      "model": "gemma3:4b",
+      "question": "What ORM do I use?",
+      "expect": "sqlalchemy",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on your provisional information, you decided to use **SQLAlchemy** over Django ORM.",
+      "without_mem_ans": "Okay, let's figure out what ORM (Object-Relational Mapper) is right for you.  There isn’t a single “best” answer – it depends heavily on your project'"
+    },
+    {
+      "profile": "prof_27",
+      "model": "gemma3:4b",
+      "question": "What task queue do I prefer?",
+      "expect": "celery",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information you’ve provided, you think **Celery** is better than RQ for task queues. \n\nYou haven't explicitly stated your preference yet,",
+      "without_mem_ans": "Okay, let's break down some popular task queues and help you figure out which one might be best for *you*. There isn’t a single “best” – it depends he"
+    },
+    {
+      "profile": "prof_27",
+      "model": "gemma3:4b",
+      "question": "What validation library do I use?",
+      "expect": "pydantic",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your stated preference: “I like using Pydantic for data validation”, you use **Pydantic** as your validation library.",
+      "without_mem_ans": "Okay, let's break down validation libraries and help you choose the right one for your project. There isn't a *single* \"best\" validator – it depends h"
+    },
+    {
+      "profile": "prof_27",
+      "model": "gemma3:4b",
+      "question": "What language do I use?",
+      "expect": "python",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information – you’re a Python backend developer – you would primarily use **Python**. \n\nThe other prompts indicate you're explor",
+      "without_mem_ans": "That's a fantastic question, and it’s great you're thinking about it! The best language to use depends entirely on **what you want to achieve**. Let's"
+    },
+    {
+      "profile": "prof_28",
+      "model": "gemma3:4b",
+      "question": "What UI library do I prefer?",
+      "expect": "react",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the provided information, you prefer **React** for your UI. You stated:\n\n*   “[preference·provisional] I prefer React over Vue for UI”",
+      "without_mem_ans": "Okay, let's tackle the question of which UI library you should prefer. There isn't a single \"best\" answer – it *heavily* depends on your project's nee"
+    },
+    {
+      "profile": "prof_28",
+      "model": "gemma3:4b",
+      "question": "What state manager do I use?",
+      "expect": "zustand",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information you’ve provided, you decided to use **Zustand** as your state manager. You stated: \"[event·provisional] I decided to use Zust",
+      "without_mem_ans": "Okay, let's talk about state management in modern web development. There isn’t a single \"best\" answer – it really depends on the complexity of your ap"
+    },
+    {
+      "profile": "prof_28",
+      "model": "gemma3:4b",
+      "question": "What data fetching library do I prefer?",
+      "expect": "tanstack",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information you’ve provided, you prefer **TanStack Query** over SWR for data fetching.",
+      "without_mem_ans": "Okay, let's break down the best data fetching libraries for different scenarios. There isn't a single \"best\" – it depends heavily on your project's ne"
+    },
+    {
+      "profile": "prof_28",
+      "model": "gemma3:4b",
+      "question": "What bundler do I use?",
+      "expect": "vite",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your previous preferences, you likely use **Vite** for bundling. \n\nYou indicated a preference for Vite over Webpack.",
+      "without_mem_ans": "Okay, let's break down which Bundler you should be using and why. The short answer is: **Webpack** is generally the most recommended and widely used o"
+    },
+    {
+      "profile": "prof_28",
+      "model": "gemma3:4b",
+      "question": "What language do I use?",
+      "expect": "javascript",
+      "with_mem_hit": false,
+      "without_mem_hit": true,
+      "with_mem_ans": "This query doesn't have any provisional or event information associated with it. Therefore, I can’t determine what language you use based on the provi",
+      "without_mem_ans": "Okay, let's figure out what language you should use! To help me determine that, I need a little more information about **what you want to achieve**.\n\n"
+    },
+    {
+      "profile": "prof_29",
+      "model": "gemma3:4b",
+      "question": "What effect system do I prefer?",
+      "expect": "cats",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you prefer **Cats Effect** over ZIO for functional effects.",
+      "without_mem_ans": "Okay, let's tackle the question of \"what operating system do you prefer?\" This is a fantastic question that really comes down to your individual needs"
+    },
+    {
+      "profile": "prof_29",
+      "model": "gemma3:4b",
+      "question": "What actor framework do I use?",
+      "expect": "akka",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, you decided to use **Akka** over Pekko for your actor systems.",
+      "without_mem_ans": "Okay, let's break down actor frameworks and figure out which one might be a good fit for you. Here's a breakdown of popular choices, categorized to he"
+    },
+    {
+      "profile": "prof_29",
+      "model": "gemma3:4b",
+      "question": "What build tool do I prefer?",
+      "expect": "sbt",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you prefer **SBT** over Mill for builds.",
+      "without_mem_ans": "Okay, let's figure out what build tool you might prefer. This is a great question because the right choice can massively impact your workflow and proj"
+    },
+    {
+      "profile": "prof_29",
+      "model": "gemma3:4b",
+      "question": "What API library do I use?",
+      "expect": "tapir",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you prefer **Tapir** for API definitions. \n\nYou've indicated this preference explicitly as a `[preference·provision",
+      "without_mem_ans": "Okay, let's figure out the best API library for you! To recommend the right one, I need a little more information.  Please tell me:\n\n**1. What are you"
+    },
+    {
+      "profile": "prof_29",
+      "model": "gemma3:4b",
+      "question": "What language do I use?",
+      "expect": "scala",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "This question doesn't have a direct answer based on the provided information. The listed preferences and events are all related to *how* you build and",
+      "without_mem_ans": "That's a fantastic question, and it really depends on what you're trying to achieve! Here's a breakdown of popular languages and when they’re typicall"
+    },
+    {
+      "profile": "prof_30",
+      "model": "gemma3:4b",
+      "question": "What PHP framework do I prefer?",
+      "expect": "laravel",
+      "with_mem_hit": true,
+      "without_mem_hit": true,
+      "with_mem_ans": "Based on the information provided, you seem to favor **PHPUnit** over PHP itself for testing. While this doesn't explicitly state a preferred framewor",
+      "without_mem_ans": "Okay, let's tackle the question of which PHP framework you should prefer! There's no single \"best\" answer – it depends entirely on your project needs,"
+    },
+    {
+      "profile": "prof_30",
+      "model": "gemma3:4b",
+      "question": "What admin panel do I use?",
+      "expect": "filament",
+      "with_mem_hit": false,
+      "without_mem_hit": false,
+      "with_mem_ans": "Okay, based on your preferences and experience, it's likely you'd prefer an admin panel that integrates well with Octane and Pest for testing.\n\nGiven ",
+      "without_mem_ans": "Okay, let's break down choosing an admin panel. The \"best\" one really depends *heavily* on what you're trying to manage and your technical skills. Her"
+    },
+    {
+      "profile": "prof_30",
+      "model": "gemma3:4b",
+      "question": "What testing framework do I prefer?",
+      "expect": "pest",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on your provided information, you prefer **Pest** over PHPUnit for testing.",
+      "without_mem_ans": "Okay, let's figure out what testing framework you should prefer. There’s no single \"best\" – it really depends on your specific needs and the technolog"
+    },
+    {
+      "profile": "prof_30",
+      "model": "gemma3:4b",
+      "question": "What performance tool do I use?",
+      "expect": "octane",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the provided information, you use **Octane** for performance testing. The event indicates a preference for Octane over Horizon.",
+      "without_mem_ans": "Okay, let's figure out what \"performance tool\" you need. To give you the *best* recommendation, I need a little more information!  \"Performance tool\" "
+    },
+    {
+      "profile": "prof_30",
+      "model": "gemma3:4b",
+      "question": "What language do I use?",
+      "expect": "php",
+      "with_mem_hit": true,
+      "without_mem_hit": false,
+      "with_mem_ans": "Based on the information you’ve provided – that you are a PHP developer – you primarily use **PHP**. \n\nDo you want me to elaborate on any specific asp",
+      "without_mem_ans": "Okay, let's figure out what language you should use! To help me determine that, I need a little more information.  Please tell me:\n\n1. **What are you "
+    }
+  ]
+}

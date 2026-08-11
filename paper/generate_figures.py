@@ -15,7 +15,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-RESULTS = Path("/Users/mac27ssd/ZCodeProject/noesis_experiment/results")
+RESULTS = Path("/Users/mac27ssd/Noesis/experiments/results")
 OUT = Path("/Users/mac27ssd/Noesis/paper/figures")
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -63,74 +63,68 @@ def save(fig, name):
 
 def fig3_ab_comparison():
     """Bar chart: with-memory vs without-memory hit rates for 3 models."""
-    # Load the consolidated data
-    # Gemini (n=111 from the scaled run)
-    gemini_file = RESULTS / "ab_comparison_en_150_20260630.json"
-    gemma_file = RESULTS / "ab_ollama_gemma3_4b_20260629_151448.json"
-    qwen_file = RESULTS / "ab_ollama_qwen2.5_3b_20260629_151736.json"
+    import math
 
-    def extract_hits(path):
+    # Load from result JSONs — all now at n≥111
+    files = [
+        ("Gemini\nFlash", RESULTS / "ab_comparison_en_150_20260630.json"),
+        ("Gemma3\n4B", RESULTS / "ab_ollama_en_gemma3_4b_20260811_010709.json"),
+        ("Qwen2.5\n3B", RESULTS / "ab_ollama_en_qwen2.5_3b_20260811_014114.json"),
+    ]
+
+    def load_hits(path):
         data = json.loads(Path(path).read_text())
-        # Try different JSON structures
-        if "results" in data:
-            pairs = data["results"]
-        elif "questions" in data:
-            pairs = data["questions"]
-        else:
-            pairs = data.get("pairs", data if isinstance(data, list) else [])
-
-        with_hit = 0
-        without_hit = 0
-        total = 0
-        for p in pairs:
-            if not isinstance(p, dict):
-                continue
-            total += 1
-            # Check various key names
-            w = p.get("with_memory_hit", p.get("treatment_hit", p.get("noesis_hit", False)))
-            wo = p.get("without_memory_hit", p.get("control_hit", p.get("direct_hit", False)))
-            if w: with_hit += 1
-            if wo: without_hit += 1
-        return with_hit, without_hit, total
+        details = data.get("details", data.get("results", []))
+        pairs = []
+        for d in details:
+            w = d.get("with_mem_hit", d.get("with_memory_hit", False))
+            wo = d.get("without_mem_hit", d.get("without_memory_hit", False))
+            pairs.append((bool(w), bool(wo)))
+        with_hit = sum(1 for w, _ in pairs if w)
+        without_hit = sum(1 for _, wo in pairs if wo)
+        n = len(pairs)
+        # McNemar
+        b = sum(1 for w, wo in pairs if w and not wo)
+        c = sum(1 for w, wo in pairs if not w and wo)
+        chi2 = (abs(b - c) - 1) ** 2 / max(1, b + c) if (b + c) > 0 else 0
+        return with_hit, without_hit, n, chi2
 
     models = []
     with_rates = []
     without_rates = []
     ns = []
+    p_stars = []
 
-    for label, path in [("Gemini\nFlash", gemini_file), ("Gemma3\n4B", gemma_file), ("Qwen2.5\n3B", qwen_file)]:
+    for label, path in files:
         if not path.exists():
             print(f"  ⚠ {path.name} not found, skipping")
             continue
-        wh, woh, n = extract_hits(path)
-        if n == 0:
-            # Fallback to known numbers from reports
-            print(f"  ⚠ Could not parse {path.name}, using report numbers")
-            if "150" in path.name:
-                wh, woh, n = 94, 46, 111
-            elif "gemma" in path.name:
-                wh, woh, n = 12, 4, 15
-            elif "qwen" in path.name:
-                wh, woh, n = 10, 6, 15
+        wh, woh, n, chi2 = load_hits(path)
         models.append(label)
         with_rates.append(wh / n * 100)
         without_rates.append(woh / n * 100)
         ns.append(n)
+        # Significance stars
+        if chi2 > 10.83: p_stars.append("***")
+        elif chi2 > 6.63: p_stars.append("**")
+        elif chi2 > 3.84: p_stars.append("*")
+        else: p_stars.append("")
 
     x = np.arange(len(models))
     width = 0.35
 
-    fig, ax = plt.subplots(figsize=(7, 4.5))
+    fig, ax = plt.subplots(figsize=(8, 5))
     bars1 = ax.bar(x - width/2, without_rates, width, label="Without memory", color=COLORS["without"], alpha=0.8)
     bars2 = ax.bar(x + width/2, with_rates, width, label="With Noesis", color=COLORS["noesis"], alpha=0.9)
 
-    # Add value labels
-    for bar, rate, n in zip(bars1, without_rates, ns):
+    # Add value labels with significance stars
+    for bar, rate, star in zip(bars1, without_rates, p_stars):
         ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 2,
                 f"{rate:.0f}%", ha="center", va="bottom", fontsize=11, color=COLORS["without"])
-    for bar, rate, n in zip(bars2, with_rates, ns):
+    for bar, rate, star, n in zip(bars2, with_rates, p_stars, ns):
+        label = f"{rate:.0f}%{star}"
         ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 2,
-                f"{rate:.0f}%", ha="center", va="bottom", fontsize=11, fontweight="bold", color=COLORS["noesis"])
+                label, ha="center", va="bottom", fontsize=11, fontweight="bold", color=COLORS["noesis"])
 
     ax.set_ylabel("Hit Rate (%)")
     ax.set_title("Memory Injection Improves Answer Accuracy Across Models")
@@ -139,6 +133,10 @@ def fig3_ab_comparison():
     ax.legend(loc="upper right")
     ax.set_ylim(0, 105)
     ax.axhline(y=50, color="gray", linestyle="--", alpha=0.3)
+
+    # Add footnote for significance
+    ax.text(0.02, -0.12, "*** p < 0.001  (McNemar's test)", transform=ax.transAxes,
+            fontsize=9, color="gray")
 
     plt.tight_layout()
     save(fig, "fig3_ab_comparison")
