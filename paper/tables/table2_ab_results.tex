@@ -1,0 +1,17 @@
+\begin{table}[ht]
+\centering
+\caption{A/B comparison: memory injection improves answer accuracy across all models. All results statistically significant by McNemar's test ($p < 0.001$).}
+\label{tab:ab_results}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Model} & \textbf{$n$} & \textbf{With memory} & \textbf{Without memory} & \textbf{Improvement} & \textbf{McNemar $\chi^2$} \\
+\midrule
+Gemini Flash  & 111 & 84.7\% & 41.4\% & \textbf{+43.2pp} & 42.48 \\
+gemma3:4b     & 150 & 84.7\% & 32.0\% & \textbf{+52.7pp} & 75.11 \\
+qwen2.5:3b    & 150 & 65.3\% & 32.7\% & \textbf{+32.7pp} & 35.45 \\
+\bottomrule
+\end{tabular}
+\\[4pt]
+\footnotesize All $p < 0.001$. $b$ = discordant pairs where memory helped; $c$ = pairs where memory hurt. \\
+Gemini: $b{=}50, c{=}2$. gemma3: $b{=}80, c{=}1$. qwen2.5: $b{=}57, c{=}8$.
+\end{table}
