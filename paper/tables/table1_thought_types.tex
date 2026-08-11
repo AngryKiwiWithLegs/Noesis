@@ -1,0 +1,18 @@
+\begin{table}[ht]
+\centering
+\caption{Thought taxonomy: seven types with type-specific half-lives and injection priorities.}
+\label{tab:thought_types}
+\begin{tabular}{llcc}
+\toprule
+\textbf{Type} & \textbf{Definition} & \textbf{Half-life (days)} & \textbf{Injection priority} \\
+\midrule
+identity       & Who the user is               & $\infty$ & Highest (always injected) \\
+preference     & Explicit preference           & 90       & High \\
+position       & Stance on a topic             & 90       & High \\
+question       & Open question being explored   & 30       & Medium (triggers knowledge ingestion) \\
+synthesis      & Insight from merging ideas    & 180      & Medium \\
+event          & Something that happened/decided & 7        & Low (recent priority) \\
+contradiction  & Self-contradictory judgment   & $\infty$ & Flagged for resolution \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,20 @@
+\begin{table}[ht]
+\centering
+\caption{Ablation study: retrieval-layer evaluation (50 queries, English). Removing each component shows its contribution.}
+\label{tab:ablation}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Configuration} & \textbf{Recall@5} & \textbf{MRR} & \textbf{Prec@5} & \textbf{Tentative Leak} \\
+\midrule
+\textbf{Noesis (full)}  & \textbf{100\%} & \textbf{1.000} & \textbf{96\%} & \textbf{10} \\
+Noesis w/o core-fact    & 100\% & 1.000 & 96\% & 10 \\
+Noesis w/o recency      & 100\% & 1.000 & 96\% & 10 \\
+Noesis w/o gating        & 100\% & 1.000 & 88\% & 29 \\
+Noesis w/o semantic     & 49\%  & 0.160 & 100\% & 0 \\
+\midrule
+Naive-RAG               & 100\% & 1.000 & 88\% & 29 \\
+Recent-window           & 22\%  & 0.099 & 100\% & 0 \\
+Random                  & 45\%  & 0.206 & 94\% & 15 \\
+\bottomrule
+\end{tabular}
+\end{table}

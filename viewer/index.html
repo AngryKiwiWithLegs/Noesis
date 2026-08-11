@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noesis · 3D Memory</title>
+<style>
+  :root {
+    --bg: #050511;
+    --panel: rgba(18, 20, 45, 0.85);
+    --border: rgba(120, 130, 220, 0.25);
+    --text: #e8e8ff;
+    --muted: #8a8ab5;
+    --accent: #7b6cff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+    background: #050511; color: var(--text); user-select: none;
+  }
+  #canvas3d { position: absolute; inset: 0; z-index: 1; cursor: grab; }
+  #canvas3d:active { cursor: grabbing; }
+
+  /* Top bar */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 18px;
+    background: linear-gradient(180deg, rgba(5,5,17,0.9) 0%, rgba(5,5,17,0) 100%);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand .logo { font-size: 22px; }
+  .brand h1 { font-size: 16px; font-weight: 600; }
+  .brand .sub { font-size: 11px; color: var(--muted); }
+
+  /* Legend */
+  .legend {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    background: var(--panel); backdrop-filter: blur(12px);
+    border: 1px solid var(--border); border-radius: 12px; padding: 8px 14px;
+  }
+  .legend .item { display: flex; align-items: center; gap: 5px; font-size: 11px; }
+  .legend .dot { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 0 6px currentColor; }
+
+  /* Bottom control bar */
+  .controls {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 10;
+    display: flex; gap: 8px; align-items: center;
+    background: var(--panel); backdrop-filter: blur(14px);
+    border: 1px solid var(--border); border-radius: 16px; padding: 8px 12px;
+  }
+  .controls button {
+    background: rgba(123,108,255,0.12); border: 1px solid rgba(123,108,255,0.2);
+    color: var(--text); padding: 8px 16px; font-size: 12px; border-radius: 10px;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+  .controls button:hover { background: rgba(123,108,255,0.3); border-color: var(--accent); }
+  .controls button.active { background: var(--accent); color: #fff; }
+  .controls .sep { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
+  .controls .zoom-btn { padding: 8px 12px; font-size: 16px; }
+
+  /* Axis hint */
+  .axis-info {
+    position: fixed; bottom: 16px; left: 16px; z-index: 10;
+    background: var(--panel); backdrop-filter: blur(12px);
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 10px 14px; font-size: 11px; color: var(--muted); line-height: 1.7;
+  }
+  .axis-info b { color: var(--text); font-weight: 600; }
+
+  /* Tooltip */
+  #tooltip {
+    position: fixed; z-index: 20; pointer-events: none;
+    background: var(--panel); backdrop-filter: blur(8px);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 10px 14px; font-size: 12px; max-width: 300px;
+    display: none; transform: translate(14px, 14px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  #tooltip .tt-type { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  #tooltip .tt-text { line-height: 1.4; color: var(--text); }
+
+  /* Detail panel */
+  #detail {
+    position: fixed; top: 70px; right: 16px; z-index: 15;
+    width: 380px; max-height: calc(100vh - 100px); overflow-y: auto;
+    background: var(--panel); backdrop-filter: blur(16px);
+    border: 1px solid var(--border); border-radius: 16px;
+    padding: 22px; transform: translateX(420px); opacity: 0;
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  #detail.open { transform: translateX(0); opacity: 1; }
+  #detail h2 { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  #detail .tag { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 12px; margin-bottom: 14px; font-weight: 600; }
+  #detail .body { font-size: 15px; line-height: 1.6; margin-bottom: 18px; }
+  #detail .meta { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; font-size: 12px; }
+  #detail .meta .k { color: var(--muted); }
+  #detail .close {
+    position: absolute; top: 14px; right: 14px;
+    background: none; border: none; color: var(--muted);
+    font-size: 22px; cursor: pointer; line-height: 1;
+  }
+  #detail .close:hover { color: var(--text); }
+
+  #empty { position: fixed; inset: 0; z-index: 5; display: none; align-items: center; justify-content: center; text-align: center; color: var(--muted); }
+  #empty.show { display: flex; }
+  #empty .big { font-size: 48px; margin-bottom: 12px; }
+  #loading { position: fixed; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; background: #050511; color: var(--accent); font-size: 15px; }
+  #loading.hide { display: none; }
+</style>
+</head>
+<body>
+
+<div id="canvas3d"></div>
+<div id="loading">Loading 3D memory space…</div>
+<div id="empty"><div><div class="big">🌌</div><p>No memories yet.</p></div></div>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="logo">🧠</span>
+    <div>
+      <h1>Noesis · 3D Memory</h1>
+      <div class="sub" id="counter">…</div>
+    </div>
+  </div>
+  <div class="legend" id="legend"></div>
+</div>
+
+<div class="axis-info">
+  <b>X</b> = time (old→new) &nbsp; <b>Y</b> = confidence &nbsp; <b>Z</b> = topic depth<br>
+  <b>Drag</b> to rotate · <b>Scroll</b> to zoom · <b>Click</b> a sphere
+</div>
+
+<div class="controls">
+  <button id="btn-overview" class="active" onclick="setView('overview')">Overview</button>
+  <button id="btn-top" onclick="setView('top')">Top View</button>
+  <button id="btn-side" onclick="setView('side')">Timeline</button>
+  <div class="sep"></div>
+  <button id="btn-rotate" onclick="toggleAutoRotate()">Auto-Rotate</button>
+  <div class="sep"></div>
+  <button class="zoom-btn" onclick="zoomBy(0.7)">+</button>
+  <button class="zoom-btn" onclick="zoomBy(1.4)">−</button>
+</div>
+
+<div id="tooltip"><div class="tt-type" id="tt-type"></div><div class="tt-text" id="tt-text"></div></div>
+
+<div id="detail">
+  <button class="close" onclick="closeDetail()">×</button>
+  <h2>Memory</h2>
+  <div class="tag" id="d-tag"></div>
+  <div class="body" id="d-body"></div>
+  <div class="meta" id="d-meta"></div>
+</div>
+
+<script type="importmap">
+{ "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+} }
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const TYPE_COLORS = {
+  identity: 0x22d3ee, preference: 0xf472b6, position: 0xa78bfa,
+  event: 0xfbbf24, fact: 0x34d399, question: 0xfb923c,
+};
+const TYPE_LABELS = { identity:'Identity', preference:'Preference', position:'Position', event:'Event', fact:'Fact', question:'Question' };
+const STATUS_SCALE = { settled: 1.8, provisional: 1.3, tentative: 0.7, superseded: 0.4 };
+
+// ── Three.js ───────────────────────────────────────────────────────────────────
+const container = document.getElementById('canvas3d');
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x050511, 0.006);
+
+const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 2000);
+camera.position.set(50, 35, 80);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+container.appendChild(renderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.maxDistance = 250;
+controls.minDistance = 10;
+
+// ── Starfield ──────────────────────────────────────────────────────────────────
+const starGeo = new THREE.BufferGeometry();
+const starPos = [];
+for (let i = 0; i < 500; i++)
+  starPos.push((Math.random()-0.5)*600, (Math.random()-0.5)*400, (Math.random()-0.5)*600);
+starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
+scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color:0x444466, size:0.5 })));
+
+// ── Axis lines + labels ────────────────────────────────────────────────────────
+function line(p1, p2, c) { scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([p1,p2]), new THREE.LineBasicMaterial({color:c, transparent:true, opacity:0.25}))); }
+line(new THREE.Vector3(-80,0,0), new THREE.Vector3(80,0,0), 0x3a3a5a);
+line(new THREE.Vector3(0,0,0), new THREE.Vector3(0,50,0), 0x3a3a5a);
+line(new THREE.Vector3(0,0,-50), new THREE.Vector3(0,0,50), 0x3a3a5a);
+
+function label(text, x, y, z, color='#5a5a8a') {
+  const cv = document.createElement('canvas'); cv.width=256; cv.height=64;
+  const ctx = cv.getContext('2d'); ctx.fillStyle=color; ctx.font='bold 26px sans-serif';
+  ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(text,128,32);
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv), transparent:true}));
+  s.position.set(x,y,z); s.scale.set(18,4.5,1); scene.add(s);
+}
+label('TIME →', 75, -3, 0); label('CONFIDENCE', 4, 48, 0); label('TOPIC DEPTH', 0,-3,-48);
+
+// ── State ──────────────────────────────────────────────────────────────────────
+let memories = [], spheres = [], sphereData = [];
+let raycaster, mouse;
+let autoRotate = false;
+const group = new THREE.Group(); scene.add(group);
+
+// ── Load ───────────────────────────────────────────────────────────────────────
+async function load() {
+  const [memRes, statRes] = await Promise.all([fetch('/api/memories'), fetch('/api/stats')]);
+  memories = (await memRes.json()).memories;
+  const stats = await statRes.json();
+  document.getElementById('loading').classList.add('hide');
+  if (!memories.length) { document.getElementById('empty').classList.add('show'); return; }
+
+  // Build legend
+  const lg = document.getElementById('legend');
+  lg.innerHTML = '';
+  for (const [t, c] of Object.entries(TYPE_COLORS)) {
+    const count = stats.by_type[t] || 0; if (!count) continue;
+    const hex = '#' + new THREE.Color(c).getHexString();
+    lg.innerHTML += `<div class="item"><span class="dot" style="background:${hex};color:${hex}"></span>${TYPE_LABELS[t]} <span style="opacity:0.5">${count}</span></div>`;
+  }
+  document.getElementById('counter').innerText = `${stats.total} memories · ${stats.users.length} users`;
+
+  buildScene(stats);
+}
+
+function buildScene(stats) {
+  // Clear
+  while (group.children.length) { const o = group.children[0]; group.remove(o); if (o.geometry) o.geometry.dispose(); }
+  spheres = []; sphereData = [];
+
+  const times = memories.map(m => m.created_at || 0);
+  const minT = Math.min(...times), maxT = Math.max(...times), tRange = (maxT-minT) || 1;
+
+  const clusters = [...new Set(memories.map(m => m.topic_cluster || 'general'))];
+  const clusterZ = {};
+  clusters.forEach((c, i) => { clusterZ[c] = ((i/Math.max(clusters.length-1,1))-0.5)*70; });
+
+  const sphereGeo = new THREE.SphereGeometry(1, 12, 12);
+
+  memories.forEach(m => {
+    const tNorm = ((m.created_at||minT) - minT) / tRange;
+    const x = (tNorm-0.5)*130;
+    const y = (m.confidence||0)*42;
+    const z = clusterZ[m.topic_cluster||'general'];
+
+    const color = TYPE_COLORS[m.type] || 0x94a3b8;
+    const scale = STATUS_SCALE[m.status] || 0.6;
+    const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.5 + scale*0.25 });
+    const sphere = new THREE.Mesh(sphereGeo, mat);
+    sphere.position.set(x, y, z);
+    sphere.scale.setScalar(scale);
+    group.add(sphere);
+    spheres.push(sphere);
+    sphereData.push(m);
+
+    // Glow halo (larger transparent sphere)
+    if (scale > 0.8) {
+      const glow = new THREE.Mesh(sphereGeo, new THREE.MeshBasicMaterial({ color, transparent:true, opacity:0.12 }));
+      glow.position.copy(sphere.position);
+      glow.scale.setScalar(scale * 2.5);
+      group.add(glow);
+    }
+  });
+
+  // ── Connect spheres: same cluster → faint lines ──────────────────────────────
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x4a4a7a, transparent: true, opacity: 0.15 });
+  // Group by cluster, sort by time within cluster
+  const byCluster = {};
+  memories.forEach((m, i) => {
+    const c = m.topic_cluster || 'general';
+    if (!byCluster[c]) byCluster[c] = [];
+    byCluster[c].push({ idx: i, t: m.created_at || 0 });
+  });
+  for (const [c, items] of Object.entries(byCluster)) {
+    items.sort((a,b) => a.t - b.t);
+    for (let i = 0; i < items.length - 1; i++) {
+      const p1 = spheres[items[i].idx].position;
+      const p2 = spheres[items[i+1].idx].position;
+      const geo = new THREE.BufferGeometry().setFromPoints([p1, p2]);
+      group.add(new THREE.Line(geo, lineMat));
+    }
+  }
+
+  // ── Also connect same-type across clusters (thinner) ─────────────────────────
+  // Limit to avoid clutter: only connect temporally adjacent same-type nodes
+  const byType = {};
+  memories.forEach((m, i) => {
+    const t = m.type; if (!byType[t]) byType[t] = [];
+    byType[t].push({ idx: i, t: m.created_at || 0 });
+  });
+  const typeLineMat = new THREE.LineBasicMaterial({ color: 0x3a3a5a, transparent: true, opacity: 0.08 });
+  for (const [t, items] of Object.entries(byType)) {
+    if (items.length < 2) continue;
+    items.sort((a,b) => a.t - b.t);
+    for (let i = 0; i < items.length - 1; i++) {
+      const p1 = spheres[items[i].idx].position;
+      const p2 = spheres[items[i+1].idx].position;
+      const dist = p1.distanceTo(p2);
+      if (dist < 60) { // only connect nearby ones to avoid spaghetti
+        const geo = new THREE.BufferGeometry().setFromPoints([p1, p2]);
+        group.add(new THREE.Line(geo, typeLineMat));
+      }
+    }
+  }
+
+  controls.target.set(0, 15, 0);
+  controls.update();
+
+  raycaster = new THREE.Raycaster();
+  mouse = new THREE.Vector2();
+}
+
+// ── Interaction ────────────────────────────────────────────────────────────────
+const tooltip = document.getElementById('tooltip');
+const ttType = document.getElementById('tt-type');
+const ttText = document.getElementById('tt-text');
+
+renderer.domElement.addEventListener('pointermove', (e) => {
+  mouse.x = (e.clientX/innerWidth)*2-1; mouse.y = -(e.clientY/innerHeight)*2+1;
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(spheres);
+  if (hits.length > 0) {
+    const sphere = hits[0].object;
+    const idx = spheres.indexOf(sphere);
+    const m = sphereData[idx];
+    if (m) {
+      tooltip.style.display = 'block';
+      tooltip.style.left = e.clientX+'px'; tooltip.style.top = e.clientY+'px';
+      const hex = '#' + new THREE.Color(TYPE_COLORS[m.type]||0x94a3b8).getHexString();
+      ttType.textContent = `${TYPE_LABELS[m.type]||m.type} · ${m.status}`;
+      ttType.style.color = hex;
+      ttText.textContent = (m.text||'').slice(0,90) + ((m.text||'').length>90?'…':'');
+      container.style.cursor = 'pointer';
+    }
+  } else { tooltip.style.display='none'; container.style.cursor='grab'; }
+});
+
+renderer.domElement.addEventListener('click', (e) => {
+  mouse.x = (e.clientX/innerWidth)*2-1; mouse.y = -(e.clientY/innerHeight)*2+1;
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(spheres);
+  if (hits.length > 0) {
+    const idx = spheres.indexOf(hits[0].object);
+    showDetail(sphereData[idx]);
+  }
+});
+
+function showDetail(m) {
+  if (!m) return;
+  const hex = '#'+new THREE.Color(TYPE_COLORS[m.type]||0x94a3b8).getHexString();
+  const tag = document.getElementById('d-tag');
+  tag.textContent = `${TYPE_LABELS[m.type]||m.type} · ${m.status}`;
+  tag.style.background = hex+'22'; tag.style.color = hex;
+  document.getElementById('d-body').textContent = m.text || '';
+  const conf = Math.round((m.confidence||0)*100);
+  const date = new Date((m.created_at||0)*1000).toLocaleString('en-US');
+  document.getElementById('d-meta').innerHTML = `
+    <span class="k">Confidence</span><span>${conf}%</span>
+    <span class="k">Status</span><span>${m.status}</span>
+    <span class="k">User</span><span>${m.user_id||'—'}</span>
+    <span class="k">Source</span><span>${m.source_tool||'—'}</span>
+    <span class="k">Cluster</span><span>${m.topic_cluster||'general'}</span>
+    <span class="k">Time</span><span>${date}</span>`;
+  document.getElementById('detail').classList.add('open');
+}
+function closeDetail() { document.getElementById('detail').classList.remove('open'); }
+window.closeDetail = closeDetail;
+
+// ── View presets ───────────────────────────────────────────────────────────────
+function setView(name) {
+  autoRotate = false; controls.autoRotate = false;
+  document.getElementById('btn-rotate').classList.remove('active');
+  ['btn-overview','btn-top','btn-side'].forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById('btn-'+name).classList.add('active');
+  animateCamera(name);
+}
+function animateCamera(name) {
+  const targets = {
+    overview: { pos:[50,35,80], look:[0,15,0] },
+    top:      { pos:[0,120,0.1], look:[0,0,0] },
+    side:     { pos:[0,15,120], look:[0,15,0] },
+  };
+  const t = targets[name]; if (!t) return;
+  const startPos = camera.position.clone();
+  const startLook = controls.target.clone();
+  const endPos = new THREE.Vector3(...t.pos);
+  const endLook = new THREE.Vector3(...t.look);
+  let progress = 0;
+  function step() {
+    progress += 0.04;
+    if (progress >= 1) { camera.position.copy(endPos); controls.target.copy(endLook); controls.update(); return; }
+    const e = 1 - Math.pow(1-progress, 3); // easeOutCubic
+    camera.position.lerpVectors(startPos, endPos, e);
+    controls.target.lerpVectors(startLook, endLook, e);
+    controls.update();
+    requestAnimationFrame(step);
+  }
+  step();
+}
+window.setView = setView;
+
+function toggleAutoRotate() {
+  autoRotate = !autoRotate;
+  controls.autoRotate = autoRotate;
+  controls.autoRotateSpeed = 0.5;
+  document.getElementById('btn-rotate').classList.toggle('active', autoRotate);
+}
+window.toggleAutoRotate = toggleAutoRotate;
+
+function zoomBy(factor) { controls.dollyIn?.(factor); }
+// Fallback: move camera toward/away from target
+window.zoomBy = function(factor) {
+  const dir = camera.position.clone().sub(controls.target);
+  dir.multiplyScalar(factor);
+  camera.position.copy(controls.target).add(dir);
+  controls.update();
+};
+
+// ── Render ─────────────────────────────────────────────────────────────────────
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+addEventListener('resize', () => {
+  camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+load();
+</script>
+</body>
+</html>

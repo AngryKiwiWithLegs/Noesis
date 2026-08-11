@@ -1,0 +1,14 @@
+\begin{table}[ht]
+\centering
+\caption{Supersession fix: before/after stale-stance leak rate (n=30 scenarios).}
+\label{tab:supersession}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Metric} & \textbf{Before fix} & \textbf{After fix} & \textbf{Change} \\
+\midrule
+Old stance leaked into context & 28/30 (93\%) & 2/30 (7\%) & $-86$pp \\
+New stance surfaced            & 12/30 (40\%) & 28/30 (93\%) & $+53$pp \\
+Ideal outcome (new + suppress old) & 1/30 (3\%) & 26/30 (87\%) & $+84$pp \\
+\bottomrule
+\end{tabular}
+\end{table}
