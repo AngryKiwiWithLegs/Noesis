@@ -287,12 +287,14 @@ def fig6_cross_tool():
     ax.legend(loc="upper right", framealpha=0.9)
     ax.set_ylim(0, 65)
 
-    # Annotation moved to the right side so it doesn't overlap bars
-    ax.annotate("0%: structurally\nimpossible for\nper-tool systems",
-                xy=(1 - width/2, 0), xytext=(1.15, 28),
+    # Annotation pointing to the 0% isolated bar in "Cross-tool only" (index 1)
+    # The isolated bar is at x=1-width/2, y=0
+    ax.annotate("0%: structurally impossible\nfor per-tool systems",
+                xy=(1 - width/2, 0.5), xytext=(0.55, 30),
                 fontsize=9, fontstyle="italic", color=COLORS["isolated"],
-                ha="center",
-                arrowprops=dict(arrowstyle="->", color=COLORS["isolated"], lw=1.2))
+                ha="center", va="center",
+                arrowprops=dict(arrowstyle="->", color=COLORS["isolated"], lw=1.5,
+                                connectionstyle="arc3,rad=0.3"))
 
     plt.tight_layout()
     save(fig, "fig6_cross_tool")
