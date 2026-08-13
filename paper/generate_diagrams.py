@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """
-generate_diagrams.py
-
-Creates architecture and pipeline diagrams for the Noesis paper using
-matplotlib patches (boxes, arrows, labels). Clean, publication-quality.
+generate_diagrams.py — Publication-quality architecture diagrams for Noesis paper.
+Redesigned with generous spacing to prevent overlapping text and arrows.
 """
 import matplotlib
 matplotlib.use("Agg")
@@ -23,25 +21,6 @@ plt.rcParams.update({
 })
 
 
-def draw_box(ax, x, y, w, h, text, color="#22d3ee", text_color="white", fontsize=10, alpha=0.9):
-    """Draw a rounded box with centered text."""
-    box = mpatches.FancyBboxPatch(
-        (x, y), w, h, boxstyle="round,pad=0.15",
-        facecolor=color, edgecolor="none", alpha=alpha,
-        transform=ax.transData
-    )
-    ax.add_patch(box)
-    ax.text(x + w/2, y + h/2, text, ha="center", va="center",
-            fontsize=fontsize, color=text_color, fontweight="bold",
-            transform=ax.transData)
-
-
-def draw_arrow(ax, x1, y1, x2, y2, color="#666", style="->", lw=1.5):
-    """Draw an arrow between two points."""
-    ax.annotate("", xy=(x2, y2), xytext=(x1, y1),
-                arrowprops=dict(arrowstyle=style, color=color, lw=lw))
-
-
 def save(fig, name):
     fig.savefig(OUT / f"{name}.png", facecolor="white")
     fig.savefig(OUT / f"{name}.pdf", facecolor="white")
@@ -50,123 +29,154 @@ def save(fig, name):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Figure 1: System Architecture
+# Figure 1: System Architecture — clean vertical flow with generous spacing
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def fig1_architecture():
-    fig, ax = plt.subplots(1, 1, figsize=(12, 7))
-    ax.set_xlim(0, 12)
-    ax.set_ylim(0, 7)
+    fig, ax = plt.subplots(1, 1, figsize=(10, 9))
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 9)
     ax.axis("off")
 
-    # ── Input layer (top) ──
-    ax.text(6, 6.7, "AI Tools (User's daily conversations)", ha="center",
-            fontsize=13, fontweight="bold", color="#333")
+    def box(x, y, w, h, text, color, fontsize=10, text_color="white"):
+        rect = mpatches.FancyBboxPatch(
+            (x, y), w, h, boxstyle="round,pad=0.2",
+            facecolor=color, edgecolor="none", alpha=0.9)
+        ax.add_patch(rect)
+        ax.text(x + w/2, y + h/2, text, ha="center", va="center",
+                fontsize=fontsize, color=text_color, fontweight="bold")
 
-    draw_box(ax, 0.5, 5.5, 3, 0.8, "Claude Desktop\n(MCP Server)", color="#d97706")
-    draw_box(ax, 4.5, 5.5, 3, 0.8, "ChatGPT / Any API\n(Proxy :8080)", color="#2563eb")
-    draw_box(ax, 8.5, 5.5, 3, 0.8, "Browser Extension\n(WebSocket :8082)", color="#7c3aed")
+    def arrow(x1, y1, x2, y2, color="#555"):
+        ax.annotate("", xy=(x2, y2), xytext=(x1, y1),
+                    arrowprops=dict(arrowstyle="->", color=color, lw=1.8,
+                                    connectionstyle="arc3,rad=0"))
 
-    # Arrows from tools to Noesis
-    for x in [2, 6, 10]:
-        draw_arrow(ax, x, 5.5, 6, 4.7, color="#888")
+    # ── Title ──
+    ax.text(5, 8.7, "Noesis System Architecture", ha="center",
+            fontsize=15, fontweight="bold")
 
-    # ── Noesis core (middle) ──
-    draw_box(ax, 2, 3.5, 8, 1.0, "Noesis Daemon", color="#0f172a", fontsize=14)
+    # ── Layer 1: Input tools (y=7.2-8.0) ──
+    ax.text(5, 8.25, "AI Tools", ha="center", fontsize=12, color="#333",
+            fontweight="bold")
+    box(0.5, 7.2, 2.5, 0.7, "Claude Desktop\n(MCP Server)", "#d97706", fontsize=9)
+    box(3.75, 7.2, 2.5, 0.7, "Any API Tool\n(Proxy :8080)", "#2563eb", fontsize=9)
+    box(7.0, 7.2, 2.5, 0.7, "Browser Extension\n(WebSocket :8082)", "#7c3aed", fontsize=9)
 
-    # Two-phase pipeline inside
-    draw_box(ax, 2.3, 2.3, 3.5, 0.9,
-             "Phase 1 (<15ms)\nEmbed → Insert → Tentative",
-             color="#0891b2", fontsize=9)
-    draw_box(ax, 6.2, 2.3, 3.5, 0.9,
-             "Phase 2 (async)\nExtract → Score → Store",
-             color="#0e7490", fontsize=9)
+    # Arrows down to daemon (all converge to center)
+    for x in [1.75, 5.0, 8.25]:
+        arrow(x, 7.2, 5.0, 6.2)
 
-    draw_arrow(ax, 4, 3.5, 4, 3.2, color="#666")
-    draw_arrow(ax, 8, 3.5, 8, 3.2, color="#666")
+    # ── Layer 2: Noesis Daemon (y=5.4-6.2) ──
+    box(1.5, 5.4, 7.0, 0.8, "Noesis Daemon", "#0f172a", fontsize=14)
 
-    # ── Confidence scorer (side) ──
-    draw_box(ax, 0.2, 1.0, 2.5, 0.9,
-             "Confidence Scorer\n4-signal + decay",
-             color="#059669", fontsize=9)
-    draw_arrow(ax, 2.7, 1.4, 4.0, 2.3, color="#059669", style="<->")
+    # Arrows from daemon to two phases
+    arrow(3.0, 5.4, 2.8, 4.7)
+    arrow(7.0, 5.4, 7.2, 4.7)
 
-    # ── Storage layer (bottom) ──
-    draw_box(ax, 3.0, 0.2, 2.8, 0.8,
-             "Hot Store\n(sqlite-vec)\n<1ms retrieval",
-             color="#dc2626", fontsize=9)
-    draw_box(ax, 6.2, 0.2, 2.8, 0.8,
-             "Cold Store\n(Obsidian vault)\nHuman-readable",
-             color="#7c2d12", fontsize=9)
+    # ── Layer 3: Two-phase pipeline (y=3.8-4.6) ──
+    box(0.8, 3.8, 4.0, 0.8, "Phase 1 (<15ms)\nEmbed → Insert → Tentative",
+        "#0891b2", fontsize=9)
+    box(5.2, 3.8, 4.0, 0.8, "Phase 2 (async)\nExtract → Score → Store",
+        "#0e7490", fontsize=9)
 
-    draw_arrow(ax, 4.0, 2.3, 4.4, 1.0, color="#dc2626")
-    draw_arrow(ax, 8.0, 2.3, 7.6, 1.0, color="#7c2d12")
+    # Confidence scorer on the left side
+    arrow(0.8, 4.2, 0.5, 3.0)  # to scorer
+    box(0.2, 2.2, 2.2, 0.7, "Confidence\n4-signal + decay", "#059669", fontsize=9)
+    arrow(1.3, 2.9, 1.3, 3.8, "#059669")  # back up to phase 1
 
-    # Bidirectional sync arrow
-    draw_arrow(ax, 5.8, 0.6, 6.2, 0.6, color="#666", style="<->")
-    ax.text(6.0, 0.9, "sync", ha="center", fontsize=8, color="#666")
+    # ── Layer 4: Storage (y=1.0-1.8) ──
+    # Arrows from phases to storage
+    arrow(2.8, 3.8, 3.2, 1.8, "#dc2626")
+    arrow(7.2, 3.8, 6.8, 1.8, "#7c2d12")
 
-    ax.set_title("Noesis System Architecture", fontsize=15, fontweight="bold", pad=15)
+    box(2.0, 1.0, 2.8, 0.7, "Hot Store\n(sqlite-vec)\n<1ms retrieval",
+        "#dc2626", fontsize=9)
+    box(5.2, 1.0, 2.8, 0.7, "Cold Store\n(Obsidian vault)\nHuman-readable",
+        "#7c2d12", fontsize=9)
+
+    # Bidirectional sync between stores
+    ax.annotate("", xy=(5.2, 1.35), xytext=(4.8, 1.35),
+                arrowprops=dict(arrowstyle="<->", color="#666", lw=1.5))
+    ax.text(5.0, 1.55, "sync", ha="center", fontsize=8, color="#666")
+
+    # ── Labels on the left ──
+    ax.text(0.1, 7.55, "Input", fontsize=9, color="#999", rotation=90,
+            ha="center", va="center")
+    ax.text(0.1, 5.8, "Core", fontsize=9, color="#999", rotation=90,
+            ha="center", va="center")
+    ax.text(0.1, 4.2, "Pipeline", fontsize=9, color="#999", rotation=90,
+            ha="center", va="center")
+    ax.text(0.1, 1.35, "Storage", fontsize=9, color="#999", rotation=90,
+            ha="center", va="center")
+
     save(fig, "fig1_architecture")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Figure 2: Retrieval Pipeline
+# Figure 2: Retrieval Pipeline — horizontal flow with clear spacing
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def fig2_pipeline():
-    fig, ax = plt.subplots(1, 1, figsize=(12, 4))
-    ax.set_xlim(0, 12)
-    ax.set_ylim(0, 4)
+    fig, ax = plt.subplots(1, 1, figsize=(14, 4.5))
+    ax.set_xlim(0, 14)
+    ax.set_ylim(0, 4.5)
     ax.axis("off")
 
-    # Query input
-    draw_box(ax, 0.2, 1.5, 1.8, 1.0, "User\nQuery", color="#2563eb", fontsize=11)
+    def box(x, y, w, h, text, color, fontsize=9, text_color="white"):
+        rect = mpatches.FancyBboxPatch(
+            (x, y), w, h, boxstyle="round,pad=0.2",
+            facecolor=color, edgecolor="none", alpha=0.9)
+        ax.add_patch(rect)
+        ax.text(x + w/2, y + h/2, text, ha="center", va="center",
+                fontsize=fontsize, color=text_color, fontweight="bold")
 
-    # Three parallel retrieval channels
-    draw_box(ax, 2.5, 2.8, 2.2, 0.8, "BM25\n(keyword match)", color="#0891b2", fontsize=9)
-    draw_box(ax, 2.5, 1.5, 2.2, 0.8, "Vector\n(semantic sim.)", color="#0e7490", fontsize=9)
-    draw_box(ax, 2.5, 0.2, 2.2, 0.8, "Signals\n(recency + core)", color="#059669", fontsize=9)
+    def arrow(x1, y1, x2, y2, color="#555"):
+        ax.annotate("", xy=(x2, y2), xytext=(x1, y1),
+                    arrowprops=dict(arrowstyle="->", color=color, lw=1.8))
 
-    # Arrows from query to channels
-    for y in [3.2, 1.9, 0.6]:
-        draw_arrow(ax, 2.0, 2.0, 2.5, y, color="#666")
+    ax.text(7, 4.2, "Retrieval and Injection Pipeline", ha="center",
+            fontsize=14, fontweight="bold")
 
-    # RRF Fusion
-    draw_box(ax, 5.3, 1.5, 2.0, 1.0, "RRR Fusion\n+ Time Decay\nWeighting",
-             color="#7c3aed", fontsize=9)
+    # Query input (left)
+    box(0.3, 1.6, 1.6, 1.0, "User\nQuery", "#2563eb", fontsize=11)
 
-    for y in [3.2, 1.9, 0.6]:
-        draw_arrow(ax, 4.7, y, 5.3, 2.0, color="#666")
+    # Three parallel retrieval channels (middle-left)
+    box(2.6, 3.0, 2.0, 0.7, "BM25\n(keyword)", "#0891b2", fontsize=9)
+    box(2.6, 1.8, 2.0, 0.7, "Vector\n(semantic)", "#0e7490", fontsize=9)
+    box(2.6, 0.6, 2.0, 0.7, "Signals\n(recency + core)", "#059669", fontsize=9)
+
+    # Arrows from query to channels (spread out)
+    arrow(1.9, 2.3, 2.6, 3.35)
+    arrow(1.9, 2.1, 2.6, 2.15)
+    arrow(1.9, 1.9, 2.6, 0.95)
+
+    # RRF Fusion (middle-right)
+    box(5.3, 1.6, 1.8, 1.0, "RRF Fusion\n+ Time Decay", "#7c3aed", fontsize=9)
+
+    # Arrows from channels to RRF (converge)
+    arrow(4.6, 3.35, 5.3, 2.3)
+    arrow(4.6, 2.15, 5.3, 2.1)
+    arrow(4.6, 0.95, 5.3, 1.9)
 
     # Confidence gate
-    draw_box(ax, 7.8, 1.5, 2.0, 1.0, "Confidence\nGate\n(≥ provisional)",
-             color="#dc2626", fontsize=9)
-    draw_arrow(ax, 7.3, 2.0, 7.8, 2.0, color="#666")
+    box(7.7, 1.6, 1.6, 1.0, "Confidence\nGate\n(≥provisional)", "#dc2626", fontsize=9)
+    arrow(7.1, 2.1, 7.7, 2.1)
 
     # Token budget
-    draw_box(ax, 10.2, 1.5, 1.6, 1.0, "Token\nBudget\n(1200 tok)",
-             color="#d97706", fontsize=9)
-    draw_arrow(ax, 9.8, 2.0, 10.2, 2.0, color="#666")
+    box(9.9, 1.6, 1.4, 1.0, "Token\nBudget\n(1200)", "#d97706", fontsize=9)
+    arrow(9.3, 2.1, 9.9, 2.1)
 
     # Output
-    ax.text(11.0, 0.8, "System\nPrompt\nInjection", ha="center",
-            fontsize=10, fontweight="bold", color="#333")
-    draw_arrow(ax, 11.0, 1.5, 11.0, 1.1, color="#333")
+    box(12.0, 1.6, 1.6, 1.0, "System\nPrompt\nInjection", "#0f172a", fontsize=9)
+    arrow(11.3, 2.1, 12.0, 2.1)
 
-    ax.set_title("Retrieval and Injection Pipeline", fontsize=14, fontweight="bold", pad=10)
     save(fig, "fig2_pipeline")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-
 if __name__ == "__main__":
-    print("Generating architecture diagrams...")
-    print()
-    print("Figure 1: System architecture...")
+    print("Generating diagrams...")
+    print("\nFigure 1: Architecture...")
     fig1_architecture()
-    print()
-    print("Figure 2: Retrieval pipeline...")
+    print("\nFigure 2: Pipeline...")
     fig2_pipeline()
-    print()
-    print(f"Done! Figures in: {OUT}")
+    print(f"\nDone! Figures in: {OUT}")

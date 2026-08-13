@@ -110,34 +110,36 @@ def fig3_ab_comparison():
         else: p_stars.append("")
 
     x = np.arange(len(models))
-    width = 0.35
+    width = 0.32
 
-    fig, ax = plt.subplots(figsize=(8, 5))
-    bars1 = ax.bar(x - width/2, without_rates, width, label="Without memory", color=COLORS["without"], alpha=0.8)
-    bars2 = ax.bar(x + width/2, with_rates, width, label="With Noesis", color=COLORS["noesis"], alpha=0.9)
+    fig, ax = plt.subplots(figsize=(8, 5.5))
+    bars1 = ax.bar(x - width/2, without_rates, width, label="Without memory",
+                   color=COLORS["without"], alpha=0.8, edgecolor="white", linewidth=0.5)
+    bars2 = ax.bar(x + width/2, with_rates, width, label="With Noesis",
+                   color=COLORS["noesis"], alpha=0.9, edgecolor="white", linewidth=0.5)
 
-    # Add value labels with significance stars
-    for bar, rate, star in zip(bars1, without_rates, p_stars):
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 2,
-                f"{rate:.0f}%", ha="center", va="bottom", fontsize=11, color=COLORS["without"])
-    for bar, rate, star, n in zip(bars2, with_rates, p_stars, ns):
-        label = f"{rate:.0f}%{star}"
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 2,
-                label, ha="center", va="bottom", fontsize=11, fontweight="bold", color=COLORS["noesis"])
+    # Value labels — placed well above bars, no overlap
+    for bar, rate in zip(bars1, without_rates):
+        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 3,
+                f"{rate:.0f}%", ha="center", va="bottom", fontsize=10, color=COLORS["without"])
+    for bar, rate, star in zip(bars2, with_rates, p_stars):
+        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 3,
+                f"{rate:.0f}%{star}", ha="center", va="bottom",
+                fontsize=10, fontweight="bold", color=COLORS["noesis"])
 
     ax.set_ylabel("Hit Rate (%)")
-    ax.set_title("Memory Injection Improves Answer Accuracy Across Models")
+    ax.set_title("Memory Injection Improves Answer Accuracy", fontsize=13)
     ax.set_xticks(x)
-    ax.set_xticklabels([f"{m}\n(n={n})" for m, n in zip(models, ns)])
-    ax.legend(loc="upper right")
-    ax.set_ylim(0, 105)
-    ax.axhline(y=50, color="gray", linestyle="--", alpha=0.3)
+    ax.set_xticklabels([f"{m}\n(n={n})" for m, n in zip(models, ns)], fontsize=11)
+    ax.legend(loc="upper left", framealpha=0.9)
+    ax.set_ylim(0, 110)
+    ax.axhline(y=50, color="gray", linestyle="--", alpha=0.2)
 
-    # Add footnote for significance
-    ax.text(0.02, -0.12, "*** p < 0.001  (McNemar's test)", transform=ax.transAxes,
-            fontsize=9, color="gray")
+    # Footnote below the figure (using fig.text, not ax.text)
+    fig.text(0.5, 0.01, "*** p < 0.001  (McNemar's test, df=1)",
+             ha="center", fontsize=9, color="gray")
 
-    plt.tight_layout()
+    plt.subplots_adjust(bottom=0.15)
     save(fig, "fig3_ab_comparison")
 
 
@@ -262,31 +264,35 @@ def fig6_cross_tool():
     isolated_rates = [7.5, 0.0]
 
     x = np.arange(len(categories))
-    width = 0.35
+    width = 0.32
 
-    fig, ax = plt.subplots(figsize=(7, 4.5))
-    bars1 = ax.bar(x - width/2, isolated_rates, width, label="Isolated (per-tool)", color=COLORS["isolated"], alpha=0.8)
-    bars2 = ax.bar(x + width/2, noesis_rates, width, label="Noesis (shared)", color=COLORS["noesis"], alpha=0.9)
+    fig, ax = plt.subplots(figsize=(7, 5))
+    bars1 = ax.bar(x - width/2, isolated_rates, width, label="Isolated (per-tool)",
+                   color=COLORS["isolated"], alpha=0.8, edgecolor="white", linewidth=0.5)
+    bars2 = ax.bar(x + width/2, noesis_rates, width, label="Noesis (shared)",
+                   color=COLORS["noesis"], alpha=0.9, edgecolor="white", linewidth=0.5)
 
     for bar, rate in zip(bars1, isolated_rates):
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1.5,
-                f"{rate}%", ha="center", va="bottom", fontsize=12, color=COLORS["isolated"])
+        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 2,
+                f"{rate}%", ha="center", va="bottom", fontsize=11, color=COLORS["isolated"])
     for bar, rate in zip(bars2, noesis_rates):
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1.5,
-                f"{rate}%", ha="center", va="bottom", fontsize=12, fontweight="bold", color=COLORS["noesis"])
+        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 2,
+                f"{rate}%", ha="center", va="bottom", fontsize=11,
+                fontweight="bold", color=COLORS["noesis"])
 
     ax.set_ylabel("Retrieval Hit Rate (%)")
-    ax.set_title("Cross-Tool Memory: Shared vs Isolated Architecture")
+    ax.set_title("Cross-Tool Memory: Shared vs Isolated", fontsize=13)
     ax.set_xticks(x)
-    ax.set_xticklabels(categories)
-    ax.legend(loc="upper right")
+    ax.set_xticklabels(categories, fontsize=11)
+    ax.legend(loc="upper right", framealpha=0.9)
     ax.set_ylim(0, 65)
 
-    # Add annotation for the 0% result
-    ax.annotate("Structurally\nimpossible",
-                xy=(0 - width/2, 0), xytext=(0.3, 20),
-                fontsize=10, fontstyle="italic", color=COLORS["isolated"],
-                arrowprops=dict(arrowstyle="->", color=COLORS["isolated"], lw=1))
+    # Annotation moved to the right side so it doesn't overlap bars
+    ax.annotate("0%: structurally\nimpossible for\nper-tool systems",
+                xy=(1 - width/2, 0), xytext=(1.15, 28),
+                fontsize=9, fontstyle="italic", color=COLORS["isolated"],
+                ha="center",
+                arrowprops=dict(arrowstyle="->", color=COLORS["isolated"], lw=1.2))
 
     plt.tight_layout()
     save(fig, "fig6_cross_tool")
