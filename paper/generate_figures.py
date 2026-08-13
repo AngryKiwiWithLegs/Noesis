@@ -65,16 +65,16 @@ def fig3_ab_comparison():
     """Bar chart: with-memory vs without-memory hit rates for 3 models."""
     import math
 
-    # Load from result JSONs — all now at n≥111
+    # All three models truncated to n=110 (same profiles, same question order)
     files = [
-        ("Gemini\nFlash", RESULTS / "ab_comparison_en_150_20260630.json"),
-        ("Gemma3\n4B", RESULTS / "ab_ollama_en_gemma3_4b_20260811_010709.json"),
-        ("Qwen2.5\n3B", RESULTS / "ab_ollama_en_qwen2.5_3b_20260811_014114.json"),
+        ("Gemini\nFlash", RESULTS / "ab_n110_gemini_flash.json"),
+        ("Gemma3\n4B", RESULTS / "ab_n110_gemma3_4b.json"),
+        ("Qwen2.5\n3B", RESULTS / "ab_n110_qwen2.5_3b.json"),
     ]
 
     def load_hits(path):
         data = json.loads(Path(path).read_text())
-        details = data.get("details", data.get("results", []))
+        details = data.get("details", [])
         pairs = []
         for d in details:
             w = d.get("with_mem_hit", d.get("with_memory_hit", False))
@@ -83,7 +83,6 @@ def fig3_ab_comparison():
         with_hit = sum(1 for w, _ in pairs if w)
         without_hit = sum(1 for _, wo in pairs if wo)
         n = len(pairs)
-        # McNemar
         b = sum(1 for w, wo in pairs if w and not wo)
         c = sum(1 for w, wo in pairs if not w and wo)
         chi2 = (abs(b - c) - 1) ** 2 / max(1, b + c) if (b + c) > 0 else 0

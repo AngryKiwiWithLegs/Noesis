@@ -1,18 +1,17 @@
 \begin{table}[ht]
 \centering
-\caption{A/B comparison: memory injection improves answer accuracy across all models. All results statistically significant ($p < 0.001$, McNemar's test).}
+\caption{A/B comparison: memory injection improves answer accuracy across all models. All models tested on the same $n{=}110$ questions (22 profiles $\times$ 5 questions). All $p < 0.001$ (McNemar's test).}
 \label{tab:ab_results}
 \begin{tabular}{lccccc}
 \toprule
-\textbf{Model} & \textbf{$n$} & \textbf{With memory} & \textbf{Without} & \textbf{$\Delta$pp} & \textbf{McNemar $\chi^2$} \\
+\textbf{Model} & \textbf{$n$} & \textbf{With memory} & \textbf{Without} & \textbf{$\Delta$pp} & \textbf{$\chi^2$} \\
 \midrule
-Gemini Flash  & 111 & 84.7\% & 41.4\% & \textbf{+43.2} & 42.48 \\
-gemma3:4b     & 150 & 84.7\% & 32.0\% & \textbf{+52.7} & 75.11 \\
-qwen2.5:3b    & 150 & 65.3\% & 32.7\% & \textbf{+32.7} & 35.45 \\
+Gemini Flash  & 110 & 85.5\% & 41.8\% & \textbf{+43.6} & 42.48 \\
+gemma3:4b     & 110 & 82.7\% & 34.5\% & \textbf{+48.2} & 51.02 \\
+qwen2.5:3b    & 110 & 62.7\% & 37.3\% & \textbf{+25.5} & 16.57 \\
 \bottomrule
 \end{tabular}
 \\[4pt]
-\footnotesize All $p < 0.001$. Gemini $n{=}111$ due to free-tier rate limiting (planned $n{=}150$); \\
-local models completed full $n{=}150$. Discordant pairs: Gemini $b{=}50,c{=}2$; \\
-gemma3 $b{=}80,c{=}1$; qwen2.5 $b{=}57,c{=}8$.
+\footnotesize All $p < 0.001$, df$=1$. Discordant pairs ($b{=}$helped, $c{=}$hurt): \\
+Gemini $b{=}50, c{=}2$; gemma3 $b{=}53, c{=}0$; qwen2.5 $b{=}36, c{=}8$.
 \end{table}
