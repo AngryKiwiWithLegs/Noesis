@@ -158,8 +158,9 @@ advantage of user-scoped rather than tool-scoped memory.
 t-SNE~\citep{tsne} and UMAP~\citep{umap} project high-dimensional
 embeddings for inspection; force-directed layouts~\citep{forcedirected}
 model attraction/repulsion in 2D. Our star map (\S\ref{sec:viz}) extends
-force-directed layout to 3D with a time-spring axis so that semantic
-clusters remain volumetric while recency reads as height.
+force-directed layout to 3D and adds weak axis springs, so semantic
+clusters still form freely while time reads left to right and confidence
+bottom to top.
 
 % ══════════════════════════════════════════════════════════════════════════════
 \section{System Design}
@@ -432,22 +433,29 @@ below top-$k$), not to sharing.
   \centering
   \includegraphics[width=0.95\linewidth]{fig5_star_map.png}
   \caption{The star map. Semantic neighbors attract into volumetric
-  constellations. Time runs from older (left) to newer (right) and height
-  reflects confidence; color encodes age, size encodes type and activity,
-  and brightness encodes activation weight.}
+  constellations. Time runs from older (left) to newer (right), height
+  reflects confidence, and color encodes topic; star size encodes type and
+  activation weight, and brightness also tracks activation weight.}
   \label{fig:starmap}
 \end{figure}
 
 The stored memory graph is visualized as a galaxy (Figure~\ref{fig:starmap}).
-Positions are not assigned by axes; they emerge from a force simulation:
-\emph{semantic attraction} pulls embedding-similar thoughts together in 3D,
-\emph{repulsion} prevents overlap (with an inter-cluster regime that keeps
-galaxies separated), a weak \emph{time spring} biases height by recency,
-and \emph{semantic Z-adhesion} keeps related thoughts from being sheared
-apart in height. Topic constellations are therefore \emph{discovered} by
-the physics rather than imposed---the visual counterpart of the clustering
-the retrieval pipeline exploits. The viewer is a local web tool shipped
-with the system.
+Each thought is a star placed by a short force simulation. Weak springs
+pull each star toward its creation time on the horizontal axis and its
+confidence on the vertical axis; \emph{semantic attraction} pulls it toward
+its most similar neighbors (embedding cosine $\geq 0.45$); and
+\emph{repulsion} keeps stars from overlapping while pushing different
+topics apart. The springs are weak enough that attraction wins locally, so
+clusters form from embedding similarity while time and confidence stay
+readable at a glance; topic labels only decide which clusters repel. This
+makes the memory store inspectable rather than a black box: older thoughts
+sit to the left, settled ones sit high, and hovering a star shows its text
+and confidence. In the store shown, 355 of 601 thoughts fall into the
+catch-all ``general'' topic, which the extractor assigns when no known
+topic matches, and only 18 have settled, so the view exposes at a glance
+both how conservative the lifecycle is and how coarse topic assignment
+still is. The viewer is a local web tool shipped with the system; it opens
+the store read-only, so inspecting memory never changes it.
 
 % ══════════════════════════════════════════════════════════════════════════════
 \section{Discussion}
