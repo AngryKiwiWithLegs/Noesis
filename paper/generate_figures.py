@@ -3,9 +3,11 @@
 generate_figures.py
 
 Generates publication-quality figures for the Noesis paper from the
-experiment JSON data in noesis_experiment/results/.
+experiment JSON data in experiments/results/.
 
-Outputs PNG (300 DPI) + PDF to paper/figures/.
+Each figure is drawn at the exact size of its frame in the paper (inches), so
+text prints at its true point size. Outputs PNG (300 DPI) + PDF to
+paper/figures/.
 """
 import json
 from pathlib import Path
@@ -13,290 +15,270 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
+from matplotlib.ticker import FixedLocator, FuncFormatter, NullLocator
 import numpy as np
 
 RESULTS = Path("/Users/mac27ssd/Noesis/experiments/results")
 OUT = Path("/Users/mac27ssd/Noesis/paper/figures")
 OUT.mkdir(parents=True, exist_ok=True)
 
-# ── Style ─────────────────────────────────────────────────────────────────────
+# ── Palette (validated with the dataviz palette validator, light mode) ───────
+# Noesis is always blue; baselines are gray, or orange/aqua when there are two.
+COLORS = {
+    "noesis": "#2a78d6",     # categorical slot 1
+    "naive": "#eb6834",      # categorical slot 2
+    "recent": "#1baf7a",     # categorical slot 3 (<3:1 → always direct-labelled)
+    "baseline": "#87857e",   # neutral gray for "without memory" / "isolated"
+}
+INK, INK2, MUTED = "#0b0b0b", "#52514e", "#898781"
+GRID, AXIS = "#e1e0d9", "#c3c2b7"
+
 plt.rcParams.update({
-    "font.size": 12,
-    "font.family": "serif",
-    "axes.labelsize": 13,
-    "axes.titlesize": 14,
-    "xtick.labelsize": 11,
-    "ytick.labelsize": 11,
-    "legend.fontsize": 10,
-    "figure.dpi": 300,
-    "savefig.dpi": 300,
-    "savefig.bbox": "tight",
+    "font.family": "Arial",
+    "font.size": 9,
+    "axes.labelsize": 9,
+    "axes.labelcolor": INK2,
+    "axes.edgecolor": AXIS,
+    "axes.linewidth": 0.8,
     "axes.spines.top": False,
     "axes.spines.right": False,
+    "axes.spines.left": False,
+    "xtick.color": INK2,
+    "ytick.color": INK2,
+    "xtick.labelsize": 8.5,
+    "ytick.labelsize": 8.5,
+    "xtick.major.size": 0,
+    "ytick.major.size": 0,
+    "xtick.minor.size": 0,
+    "ytick.minor.size": 0,
+    "ytick.major.pad": 4,
+    "legend.fontsize": 8.5,
+    "legend.frameon": False,
+    "pdf.fonttype": 3,   # subset glyphs (mpl 3.4 embeds whole fonts with 42)
+    "savefig.bbox": "standard",
 })
-
-COLORS = {
-    "noesis": "#22d3ee",
-    "noesis_light": "#67e8f9",
-    "naive": "#f87171",
-    "naive_light": "#fca5a5",
-    "recent": "#fbbf24",
-    "isolated": "#9aa0b4",
-    "without": "#6b7280",
-    "gemini": "#4285f4",
-    "gemma": "#34a853",
-    "qwen": "#ea4335",
-}
 
 
 def save(fig, name):
-    """Save as both PNG and PDF."""
-    fig.savefig(OUT / f"{name}.png", facecolor="white")
+    fig.savefig(OUT / f"{name}.png", dpi=300, facecolor="white")
     fig.savefig(OUT / f"{name}.pdf", facecolor="white")
     plt.close(fig)
     print(f"  ✓ {name}.png + {name}.pdf")
 
 
+def ygrid(ax):
+    """Recessive hairline gridlines behind the data."""
+    ax.yaxis.grid(True, color=GRID, linewidth=0.6)
+    ax.set_axisbelow(True)
+
+
+def mcnemar_chi2(b, c):
+    return (abs(b - c) - 1) ** 2 / (b + c) if (b + c) else 0.0
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
-# Figure 3: A/B Comparison — Hit Rates by Model
+# Figure 3: A/B Comparison — accuracy with vs without memory, per model
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def fig3_ab_comparison():
-    """Bar chart: with-memory vs without-memory hit rates for 3 models."""
-    import math
-
+    """Grouped columns: without-memory (gray) vs with-Noesis (blue)."""
     # All three models truncated to n=110 (same profiles, same question order)
     files = [
-        ("Gemini\nFlash", RESULTS / "ab_n110_gemini_flash.json"),
-        ("Gemma3\n4B", RESULTS / "ab_n110_gemma3_4b.json"),
-        ("Qwen2.5\n3B", RESULTS / "ab_n110_qwen2.5_3b.json"),
+        ("Gemini Flash-Lite", "cloud", RESULTS / "ab_n110_gemini_flash.json"),
+        ("gemma3:4b", "local", RESULTS / "ab_n110_gemma3_4b.json"),
+        ("qwen2.5:3b", "local", RESULTS / "ab_n110_qwen2.5_3b.json"),
     ]
 
-    def load_hits(path):
-        data = json.loads(Path(path).read_text())
-        details = data.get("details", [])
-        pairs = []
-        for d in details:
-            w = d.get("with_mem_hit", d.get("with_memory_hit", False))
-            wo = d.get("without_mem_hit", d.get("without_memory_hit", False))
-            pairs.append((bool(w), bool(wo)))
-        with_hit = sum(1 for w, _ in pairs if w)
-        without_hit = sum(1 for _, wo in pairs if wo)
-        n = len(pairs)
-        b = sum(1 for w, wo in pairs if w and not wo)
-        c = sum(1 for w, wo in pairs if not w and wo)
-        chi2 = (abs(b - c) - 1) ** 2 / max(1, b + c) if (b + c) > 0 else 0
-        return with_hit, without_hit, n, chi2
-
-    models = []
-    with_rates = []
-    without_rates = []
-    ns = []
-    p_stars = []
-
-    for label, path in files:
-        if not path.exists():
-            print(f"  ⚠ {path.name} not found, skipping")
-            continue
-        wh, woh, n, chi2 = load_hits(path)
-        models.append(label)
-        with_rates.append(wh / n * 100)
-        without_rates.append(woh / n * 100)
+    labels, without, with_, sig, ns = [], [], [], [], []
+    for name, where, path in files:
+        details = json.loads(path.read_text())["details"]
+        w = [bool(d["with_mem_hit"]) for d in details]
+        wo = [bool(d["without_mem_hit"]) for d in details]
+        n = len(details)
+        b = sum(x and not y for x, y in zip(w, wo))
+        c = sum(y and not x for x, y in zip(w, wo))
+        labels.append(f"{name}\n{where}")
+        with_.append(100 * sum(w) / n)
+        without.append(100 * sum(wo) / n)
+        sig.append(mcnemar_chi2(b, c) > 10.83)   # p < 0.001, df = 1
         ns.append(n)
-        # Significance stars
-        if chi2 > 10.83: p_stars.append("***")
-        elif chi2 > 6.63: p_stars.append("**")
-        elif chi2 > 3.84: p_stars.append("*")
-        else: p_stars.append("")
 
-    x = np.arange(len(models))
-    width = 0.32
+    W, H = 5.25, 3.9089
+    fig = plt.figure(figsize=(W, H))
+    ax = fig.add_axes([0.125, 0.15, 0.855, 0.72])
 
-    fig, ax = plt.subplots(figsize=(8, 5.5))
-    bars1 = ax.bar(x - width/2, without_rates, width, label="Without memory",
-                   color=COLORS["without"], alpha=0.8, edgecolor="white", linewidth=0.5)
-    bars2 = ax.bar(x + width/2, with_rates, width, label="With Noesis",
-                   color=COLORS["noesis"], alpha=0.9, edgecolor="white", linewidth=0.5)
+    x = np.arange(len(labels))
+    bw, gap = 0.30, 0.02
+    ax.bar(x - (bw + gap) / 2, without, bw, color=COLORS["baseline"], zorder=2)
+    ax.bar(x + (bw + gap) / 2, with_, bw, color=COLORS["noesis"], zorder=2)
 
-    # Value labels — placed well above bars, no overlap
-    for bar, rate in zip(bars1, without_rates):
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 3,
-                f"{rate:.0f}%", ha="center", va="bottom", fontsize=10, color=COLORS["without"])
-    for bar, rate, star in zip(bars2, with_rates, p_stars):
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 3,
-                f"{rate:.0f}%{star}", ha="center", va="bottom",
-                fontsize=10, fontweight="bold", color=COLORS["noesis"])
+    for i in range(len(x)):
+        ax.text(x[i] - (bw + gap) / 2, without[i] + 1.8, f"{without[i]:.1f}%",
+                ha="center", va="bottom", fontsize=8.5, color=INK2)
+        ax.text(x[i] + (bw + gap) / 2, with_[i] + 1.8,
+                f"{with_[i]:.1f}%" + ("***" if sig[i] else ""),
+                ha="center", va="bottom", fontsize=9, fontweight="bold", color=INK)
 
-    ax.set_ylabel("Hit Rate (%)")
-    ax.set_title("Memory Injection Improves Answer Accuracy", fontsize=13)
     ax.set_xticks(x)
-    ax.set_xticklabels([f"{m}\n(n={n})" for m, n in zip(models, ns)], fontsize=11)
-    ax.legend(loc="upper left", framealpha=0.9)
-    ax.set_ylim(0, 110)
-    ax.axhline(y=50, color="gray", linestyle="--", alpha=0.2)
+    ax.set_xticklabels(labels)
+    for t in ax.get_xticklabels():
+        t.set_color(INK)
+    ax.set_xlim(-0.6, len(x) - 0.4)
+    ax.set_ylim(0, 100)
+    ax.set_yticks([0, 25, 50, 75, 100])
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0f}%"))
+    ax.set_ylabel("Accuracy (keyword hit)")
+    ygrid(ax)
 
-    # Footnote below the figure (using fig.text, not ax.text)
-    fig.text(0.5, 0.01, "*** p < 0.001  (McNemar's test, df=1)",
-             ha="center", fontsize=9, color="gray")
-
-    plt.subplots_adjust(bottom=0.15)
+    fig.legend(handles=[Patch(color=COLORS["baseline"], label="Without memory"),
+                        Patch(color=COLORS["noesis"], label="With Noesis")],
+               loc="upper left", bbox_to_anchor=(0.115, 0.995), ncol=2,
+               handlelength=1.0, handleheight=1.0, columnspacing=1.6)
+    fig.text(0.98, 0.012,
+             f"n = {ns[0]} paired questions per model   ·   *** p < 0.001, McNemar's test",
+             ha="right", va="bottom", fontsize=7.6, color=MUTED)
     save(fig, "fig3_ab_comparison")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Figure 4: Scale Degradation — THE HERO FIGURE
+# Figure 4: Scale degradation — token cost and ranking vs memory size
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def fig4_scale_degradation():
-    """Dual-axis: token cost (left) + MRR (right) vs memory scale."""
-    # Use the latest scale degradation run
+    """Two panels: (a) tokens injected per query, (b) MRR, vs memories stored."""
     data = json.loads((RESULTS / "scale_degradation_20260630_142946.json").read_text())
+    curve = sorted(data["curve"], key=lambda p: p["n_memories"])
+    scales = [p["n_memories"] for p in curve]
+    series = [  # (json key, label, color, marker)
+        ("Noesis", "Noesis", COLORS["noesis"], "o"),
+        ("naive-RAG", "Naive RAG (inject all)", COLORS["naive"], "s"),
+        ("recent-window", "Recent window", COLORS["recent"], "^"),
+    ]
+    tok = {k: [p[k]["avg_tokens_per_query"] for p in curve] for k, *_ in series}
+    mrr = {k: [p[k]["mrr"] for p in curve] for k, *_ in series}
 
-    # Extract data — try different structures
-    if "results" in data:
-        points = data["results"]
-    elif "scales" in data:
-        points = data["scales"]
-    else:
-        points = data if isinstance(data, list) else data.get("data", [])
+    W, H = 5.8333, 2.3270
+    fig = plt.figure(figsize=(W, H))
+    ax1 = fig.add_axes([0.085, 0.19, 0.355, 0.60])
+    ax2 = fig.add_axes([0.585, 0.19, 0.355, 0.60])
 
-    scales = []
-    noesis_tok, naive_tok, recent_tok = [], [], []
-    noesis_mrr, naive_mrr, recent_mrr = [], [], []
+    def style_x(ax):
+        ax.set_xscale("log")
+        ax.set_xlim(7, 1400)
+        ax.xaxis.set_major_locator(FixedLocator(scales))
+        ax.xaxis.set_minor_locator(NullLocator())
+        ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:,.0f}"))
+        ax.set_xlabel("Memories in store")
+        ygrid(ax)
 
-    for p in points:
-        if not isinstance(p, dict):
-            continue
-        n = p.get("n", p.get("scale", p.get("num_memories")))
-        if n is None:
-            continue
-        scales.append(n)
+    for k, label, color, marker in series:
+        for ax, ys in ((ax1, tok[k]), (ax2, mrr[k])):
+            ax.plot(scales, ys, color=color, linewidth=1.6, marker=marker,
+                    markersize=5, markeredgecolor="white", markeredgewidth=0.9,
+                    solid_capstyle="round", solid_joinstyle="round",
+                    zorder=3 if k == "Noesis" else 2)
 
-        for strategy, tok_list, mrr_list in [
-            ("noesis", noesis_tok, noesis_mrr),
-            ("naive", naive_tok, naive_mrr),
-            ("recent", recent_tok, recent_mrr),
-        ]:
-            s_data = p.get(strategy, p.get(strategy.title(), p))
-            if isinstance(s_data, dict):
-                tok_list.append(s_data.get("tokens", s_data.get("avg_tokens", 0)))
-                mrr_list.append(s_data.get("mrr", 0))
-            else:
-                tok_list.append(0)
-                mrr_list.append(0)
-
-    # If parsing failed, use known report numbers
-    if not scales:
-        print("  ⚠ Parsing failed, using report numbers from SCALE_DEGRADATION_REPORT")
-        scales = [10, 50, 100, 200, 500]
-        noesis_tok = [144, 202, 205, 212, 207]
-        naive_tok = [120, 677, 1380, 2827, 7192]
-        recent_tok = [57, 73, 73, 75, 75]
-        noesis_mrr = [0.90, 0.90, 0.90, 0.90, 0.90]
-        naive_mrr = [0.28, 0.02, 0.01, 0.00, 0.002]
-        recent_mrr = [0.23, 0.00, 0.00, 0.00, 0.00]
-
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
-
-    # ── Left panel: Token cost ──
-    ax1.plot(scales, noesis_tok, "o-", color=COLORS["noesis"], linewidth=2.5,
-             markersize=8, label="Noesis", zorder=3)
-    ax1.plot(scales, naive_tok, "s-", color=COLORS["naive"], linewidth=2.5,
-             markersize=8, label="Naive-RAG", zorder=2)
-    ax1.plot(scales, recent_tok, "^--", color=COLORS["recent"], linewidth=2,
-             markersize=7, label="Recent-window", alpha=0.7, zorder=1)
-
-    # Annotate the 35× gap
-    if len(scales) >= 5:
-        gap_x = scales[-1]
-        gap_n = noesis_tok[-1]
-        gap_r = naive_tok[-1]
-        ax1.annotate(f"{gap_r//gap_n}× more\n tokens",
-                     xy=(gap_x, gap_r), xytext=(gap_x * 0.4, gap_r * 0.7),
-                     fontsize=12, fontweight="bold", color=COLORS["naive"],
-                     arrowprops=dict(arrowstyle="->", color=COLORS["naive"], lw=1.5))
-        ax1.annotate(f"~{gap_n} tokens",
-                     xy=(gap_x, gap_n), xytext=(gap_x * 0.4, gap_n * 2.5),
-                     fontsize=11, fontweight="bold", color=COLORS["noesis"],
-                     arrowprops=dict(arrowstyle="->", color=COLORS["noesis"], lw=1.5))
-
-    ax1.set_xlabel("Number of Memories in Store")
-    ax1.set_ylabel("Avg Tokens Injected per Query")
-    ax1.set_title("(a) Token Cost: Noesis Stays Flat")
-    ax1.legend(loc="upper left")
-    ax1.set_xscale("log")
+    # (a) tokens — log y, direct end labels, 35x bracket
+    style_x(ax1)
     ax1.set_yscale("log")
-    ax1.grid(True, alpha=0.2)
+    ax1.set_ylim(40, 14000)
+    ax1.yaxis.set_major_locator(FixedLocator([50, 100, 200, 500, 1000, 2000, 5000, 10000]))
+    ax1.yaxis.set_minor_locator(NullLocator())
+    ax1.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:,.0f}"))
+    ax1.set_title("(a) Tokens injected per query", loc="left", fontsize=9,
+                  fontweight="bold", color=INK, pad=6)
+    end = scales[-1]
+    for k in ("naive-RAG", "Noesis", "recent-window"):
+        ax1.text(end * 1.18, tok[k][-1], f"{tok[k][-1]:,}", ha="left", va="center",
+                 fontsize=8.2, color=INK2)
+    ratio = tok["naive-RAG"][-1] / tok["Noesis"][-1]
+    bx = end * 3.4
+    ax1.annotate("", xy=(bx, tok["naive-RAG"][-1]), xytext=(bx, tok["Noesis"][-1]),
+                 arrowprops=dict(arrowstyle="<|-|>", color=INK2, lw=0.8,
+                                 mutation_scale=6, shrinkA=0, shrinkB=0))
+    ax1.text(bx * 1.12, np.sqrt(tok["naive-RAG"][-1] * tok["Noesis"][-1]),
+             f"{ratio:.0f}×", ha="left", va="center", fontsize=9,
+             fontweight="bold", color=INK)
+    ax1.set_xlim(7, 4600)
 
-    # ── Right panel: MRR ──
-    ax2.plot(scales, noesis_mrr, "o-", color=COLORS["noesis"], linewidth=2.5,
-             markersize=8, label="Noesis", zorder=3)
-    ax2.plot(scales, naive_mrr, "s-", color=COLORS["naive"], linewidth=2.5,
-             markersize=8, label="Naive-RAG", zorder=2)
-    ax2.plot(scales, recent_mrr, "^--", color=COLORS["recent"], linewidth=2,
-             markersize=7, label="Recent-window", alpha=0.7, zorder=1)
+    # (b) MRR — linear, label Noesis plateau and naive-RAG floor
+    style_x(ax2)
+    ax2.set_ylim(-0.04, 1.04)
+    ax2.set_yticks([0, 0.25, 0.5, 0.75, 1.0])
+    ax2.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.2f}" if v else "0"))
+    ax2.set_title("(b) Rank of the target memory (MRR)", loc="left", fontsize=9,
+                  fontweight="bold", color=INK, pad=6)
+    ax2.text(end * 1.18, mrr["Noesis"][-1], f"{mrr['Noesis'][-1]:.2f}",
+             ha="left", va="center", fontsize=8.2, color=INK2)
+    ax2.text(end * 1.18, 0.0, f"{mrr['naive-RAG'][-1]:.3f}".rstrip("0"),
+             ha="left", va="center", fontsize=8.2, color=INK2)
 
-    ax2.set_xlabel("Number of Memories in Store")
-    ax2.set_ylabel("Mean Reciprocal Rank (MRR)")
-    ax2.set_title("(b) Retrieval Quality: Noesis Maintains Rank-1")
-    ax2.legend(loc="center right")
-    ax2.set_xscale("log")
-    ax2.set_ylim(-0.05, 1.05)
-    ax2.grid(True, alpha=0.2)
-
-    fig.suptitle("Scale Degradation: Noesis vs Baselines (10–500 Memories)",
-                 fontsize=14, fontweight="bold", y=1.02)
-    plt.tight_layout()
+    handles = [Line2D([], [], color=c, marker=m, linewidth=1.6, markersize=5,
+                      markeredgecolor="white", markeredgewidth=0.9, label=l)
+               for _, l, c, m in series]
+    fig.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, 1.0),
+               ncol=3, handlelength=2.0, columnspacing=2.0)
     save(fig, "fig4_scale_degradation")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Figure 6: Cross-Tool Consistency
+# Figure 6: Cross-Tool Consistency (Figure 5 in the paper)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def fig6_cross_tool():
-    """Bar chart: Noesis shared vs isolated per-tool memory."""
-    # From report: Noesis 20/40 (50%), Isolated 3/40 (7.5%) at n=40
-    # Also cross-tool-only: Noesis 10/27 (37%), Isolated 0/27 (0%)
+    """Grouped columns: isolated per-tool memory (gray) vs Noesis shared (blue)."""
+    det = json.loads((RESULTS / "cross_tool_20260630_205622.json").read_text())["details"]
+    # "Strictly cross-tool": the stance was stated in exactly one tool, and a
+    # different tool asks about it.
+    strict = [d for d in det if len(d["source_tools"]) == 1
+              and d["query_tool"] not in d["source_tools"]]
+    groups = [("All scenarios", det), ("Strictly cross-tool", strict)]
 
-    categories = ["All scenarios\n(n=40)", "Cross-tool only\n(n=27)"]
-    noesis_rates = [50.0, 37.0]
-    isolated_rates = [7.5, 0.0]
+    W, H = 4.9583, 3.5071
+    fig = plt.figure(figsize=(W, H))
+    ax = fig.add_axes([0.11, 0.15, 0.86, 0.71])
 
-    x = np.arange(len(categories))
-    width = 0.32
+    x = np.arange(len(groups))
+    bw, gap = 0.30, 0.02
+    for i, (name, rows) in enumerate(groups):
+        n = len(rows)
+        iso = sum(r["isolated_hit"] for r in rows)
+        noe = sum(r["noesis_hit"] for r in rows)
+        xi, xn = x[i] - (bw + gap) / 2, x[i] + (bw + gap) / 2
+        ax.bar(xi, 100 * iso / n, bw, color=COLORS["baseline"], zorder=2)
+        ax.bar(xn, 100 * noe / n, bw, color=COLORS["noesis"], zorder=2)
+        if iso == 0:
+            # a zero-height column is invisible: mark its slot on the baseline
+            ax.plot([xi - bw / 2, xi + bw / 2], [0, 0], color=COLORS["baseline"],
+                    linewidth=2.2, solid_capstyle="butt", zorder=3, clip_on=False)
+            ax.text(xi, 1.6, f"0%\n(0/{n})", ha="center", va="bottom",
+                    fontsize=8.5, color=INK2, linespacing=1.15)
+            ax.text(xi, 11.5, "no access to\nother tools'\nmemories", ha="center",
+                    va="bottom", fontsize=7.6, color=MUTED, linespacing=1.15)
+        else:
+            ax.text(xi, 100 * iso / n + 1.6, f"{100 * iso / n:.1f}%\n({iso}/{n})",
+                    ha="center", va="bottom", fontsize=8.5, color=INK2, linespacing=1.15)
+        ax.text(xn, 100 * noe / n + 1.6, f"{100 * noe / n:.1f}%\n({noe}/{n})",
+                ha="center", va="bottom", fontsize=9, color=INK, fontweight="bold",
+                linespacing=1.15)
 
-    fig, ax = plt.subplots(figsize=(7, 5))
-    bars1 = ax.bar(x - width/2, isolated_rates, width, label="Isolated (per-tool)",
-                   color=COLORS["isolated"], alpha=0.8, edgecolor="white", linewidth=0.5)
-    bars2 = ax.bar(x + width/2, noesis_rates, width, label="Noesis (shared)",
-                   color=COLORS["noesis"], alpha=0.9, edgecolor="white", linewidth=0.5)
-
-    for bar, rate in zip(bars1, isolated_rates):
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 2,
-                f"{rate}%", ha="center", va="bottom", fontsize=11, color=COLORS["isolated"])
-    for bar, rate in zip(bars2, noesis_rates):
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 2,
-                f"{rate}%", ha="center", va="bottom", fontsize=11,
-                fontweight="bold", color=COLORS["noesis"])
-
-    ax.set_ylabel("Retrieval Hit Rate (%)")
-    ax.set_title("Cross-Tool Memory: Shared vs Isolated", fontsize=13)
     ax.set_xticks(x)
-    ax.set_xticklabels(categories, fontsize=11)
-    ax.legend(loc="upper right", framealpha=0.9)
-    ax.set_ylim(0, 65)
+    ax.set_xticklabels([f"{name}\n(n = {len(rows)})" for name, rows in groups])
+    for t in ax.get_xticklabels():
+        t.set_color(INK)
+    ax.set_xlim(-0.6, len(x) - 0.4)
+    ax.set_ylim(0, 62)
+    ax.set_yticks([0, 20, 40, 60])
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0f}%"))
+    ax.set_ylabel("Retrieval hit rate")
+    ygrid(ax)
 
-    # Annotation pointing to the 0% isolated bar in "Cross-tool only" (index 1)
-    # The isolated bar is at x=1-width/2, y=0
-    ax.annotate("0%: structurally impossible\nfor per-tool systems",
-                xy=(1 - width/2, 0.5), xytext=(0.55, 30),
-                fontsize=9, fontstyle="italic", color=COLORS["isolated"],
-                ha="center", va="center",
-                arrowprops=dict(arrowstyle="->", color=COLORS["isolated"], lw=1.5,
-                                connectionstyle="arc3,rad=0.3"))
-
-    plt.tight_layout()
+    fig.legend(handles=[Patch(color=COLORS["baseline"], label="Isolated (per-tool memory)"),
+                        Patch(color=COLORS["noesis"], label="Noesis (shared memory)")],
+               loc="upper left", bbox_to_anchor=(0.10, 0.995), ncol=2,
+               handlelength=1.0, handleheight=1.0, columnspacing=1.6)
     save(fig, "fig6_cross_tool")
 
 
