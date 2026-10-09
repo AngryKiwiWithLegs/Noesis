@@ -134,7 +134,7 @@ def fig1_architecture():
 
     # Storage
     box(ax, 0.60, 0.40, 2.20, 1.02, "Hot store",
-        ["sqlite-vec · < 1 ms retrieval"], style="neutral")
+        ["sqlite-vec · serves retrieval"], style="neutral")
     box(ax, 2.55, 0.40, 3.95, 1.02, "Cold store",
         ["Obsidian vault (Markdown)", "human-readable, editable"], style="neutral")
     arrow(ax, (1.40, 1.95 - g), (1.40, 1.02 + g))
