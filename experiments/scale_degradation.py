@@ -113,8 +113,8 @@ def build_store(n_memories: int, tmp_path: Path):
 
 def eval_strategies(m, queries):
     from noesis.context.signals import semantic_signal, recency_signal, core_fact_signal
-    results = {"Noesis": [], "naive-RAG": [], "recent-window": []}
-    token_costs = {"Noesis": 0, "naive-RAG": 0, "recent-window": 0}
+    results = {"Noesis": [], "naive-RAG": [], "recent-window": [], "topk-RAG": []}
+    token_costs = {"Noesis": 0, "naive-RAG": 0, "recent-window": 0, "topk-RAG": 0}
 
     for q_text, expect_kw in queries:
         # --- Noesis: ContextBuilder.build (budget 1200) ---
@@ -158,6 +158,18 @@ def eval_strategies(m, queries):
         rec_sys = "Here is what is known:\n" + "\n".join(f"- {t}" for t in rec_texts)
         token_costs["recent-window"] += _est_tokens(rec_sys)
 
+        # --- top-k RAG: standard dense retrieval, 5 nearest memories, no gating/budget ---
+        qv = m.embedding.embed(q_text)
+        tk = m.vector_store.search(qv, top_k=5, filter={"user_id": "scale"})
+        tk_texts = [r.get("text","") for r in tk]
+        tk_hit = any(_kw_match(t, expect_kw) for t in tk_texts)
+        tk_mrr = 0.0
+        for rank, t in enumerate(tk_texts, 1):
+            if _kw_match(t, expect_kw): tk_mrr = 1.0/rank; break
+        results["topk-RAG"].append({"hit":tk_hit, "mrr":tk_mrr})
+        tk_sys = "Here is what is known:\n" + "\n".join(f"- {t}" for t in tk_texts)
+        token_costs["topk-RAG"] += _est_tokens(tk_sys)
+
     # average over queries
     summary = {}
     for s in results:
@@ -191,7 +203,7 @@ def main():
         summary = eval_strategies(m, queries)
         point = {"n_memories": n, **summary}
         curve.append(point)
-        for s in ["Noesis","naive-RAG","recent-window"]:
+        for s in ["Noesis","naive-RAG","recent-window","topk-RAG"]:
             d = summary[s]
             print(f"    {s:16s} recall={d['recall']:.0%}  mrr={d['mrr']:.3f}  tokens/q={d['avg_tokens_per_query']}")
 

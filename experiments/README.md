@@ -44,3 +44,20 @@ python3 experiments/verify_reports.py
 `verify_reports.py` is the integrity check: it recomputes all 25 report
 metrics from first principles against `results/*.json` and prints PASS/FAIL
 for each. As of the last run: **25/25 PASS**.
+
+## Re-runs for the paper (October 2026)
+
+`ablation_baseline_en_20261009_190520.json`, `poisoning_exact_20261009_190546.json`
+and `scale_degradation_20261009_190657.json` were produced with the June
+software versions: Python 3.12.11 (x86-64), torch 2.2.2, transformers 4.44.2,
+sentence-transformers 3.0.1, numpy 1.26.4, scipy 1.13.1, scikit-learn 1.5.2,
+all-MiniLM-L6-v2. Before the changes below, the re-runs reproduced the June
+ablation and scale numbers exactly.
+
+- Ablation and poisoning: a leak now counts only when the retrieved item *is*
+  a tentative/poison statement. The old keyword metric also counted settled
+  memories that shared a word with one ("Kafka", "Emacs").
+- Scale: adds a standard top-5 dense-retrieval RAG baseline (`topk-RAG`).
+
+`python3 experiments/verify_paper.py` recomputes every number printed in the
+paper from these files and the June result files.

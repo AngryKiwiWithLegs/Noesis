@@ -30,6 +30,7 @@ COLORS = {
     "noesis": "#2a78d6",     # categorical slot 1
     "naive": "#eb6834",      # categorical slot 2
     "recent": "#1baf7a",     # categorical slot 3 (<3:1 → always direct-labelled)
+    "topk": "#eda100",       # categorical slot 4 (<3:1 → always direct-labelled)
     "baseline": "#87857e",   # neutral gray for "without memory" / "isolated"
 }
 INK, INK2, MUTED = "#0b0b0b", "#52514e", "#898781"
@@ -148,13 +149,15 @@ def fig3_ab_comparison():
 
 def fig4_scale_degradation():
     """Two panels: (a) tokens injected per query, (b) MRR, vs memories stored."""
-    data = json.loads((RESULTS / "scale_degradation_20260630_142946.json").read_text())
+    # 2026-10-09 re-run: reproduces the June run exactly and adds a top-5 RAG baseline
+    data = json.loads((RESULTS / "scale_degradation_20261009_190657.json").read_text())
     curve = sorted(data["curve"], key=lambda p: p["n_memories"])
     scales = [p["n_memories"] for p in curve]
     series = [  # (json key, label, color, marker)
         ("Noesis", "Noesis", COLORS["noesis"], "o"),
         ("naive-RAG", "Naive RAG (inject all)", COLORS["naive"], "s"),
         ("recent-window", "Recent window", COLORS["recent"], "^"),
+        ("topk-RAG", "Top-5 RAG", COLORS["topk"], "D"),
     ]
     tok = {k: [p[k]["avg_tokens_per_query"] for p in curve] for k, *_ in series}
     mrr = {k: [p[k]["mrr"] for p in curve] for k, *_ in series}
@@ -175,10 +178,11 @@ def fig4_scale_degradation():
 
     for k, label, color, marker in series:
         for ax, ys in ((ax1, tok[k]), (ax2, mrr[k])):
-            ax.plot(scales, ys, color=color, linewidth=1.6, marker=marker,
-                    markersize=5, markeredgecolor="white", markeredgewidth=0.9,
+            ax.plot(scales, ys, color=color, linewidth=0.9 if k == "topk-RAG" else 1.6, marker=marker,
+                    markersize=2.8 if k == "topk-RAG" else 5.4,
+                    markeredgecolor="white", markeredgewidth=0 if k == "topk-RAG" else 0.9,
                     solid_capstyle="round", solid_joinstyle="round",
-                    zorder=3 if k == "Noesis" else 2)
+                    zorder={"topk-RAG": 4, "Noesis": 3}.get(k, 2))
 
     # (a) tokens — log y, direct end labels, 35x bracket
     style_x(ax1)
@@ -190,8 +194,8 @@ def fig4_scale_degradation():
     ax1.set_title("(a) Tokens injected per query", loc="left", fontsize=9,
                   fontweight="bold", color=INK, pad=6)
     end = scales[-1]
-    for k in ("naive-RAG", "Noesis", "recent-window"):
-        ax1.text(end * 1.18, tok[k][-1], f"{tok[k][-1]:,}", ha="left", va="center",
+    for k, dy in (("naive-RAG", 1.0), ("Noesis", 1.0), ("recent-window", 1.32), ("topk-RAG", 1 / 1.32)):
+        ax1.text(end * 1.18, tok[k][-1] * dy, f"{tok[k][-1]:,}", ha="left", va="center",
                  fontsize=8.2, color=INK2)
     ratio = tok["naive-RAG"][-1] / tok["Noesis"][-1]
     bx = end * 3.4
@@ -212,6 +216,8 @@ def fig4_scale_degradation():
                   fontweight="bold", color=INK, pad=6)
     ax2.text(end * 1.18, mrr["Noesis"][-1], f"{mrr['Noesis'][-1]:.2f}",
              ha="left", va="center", fontsize=8.2, color=INK2)
+    ax2.text(scales[0], mrr["Noesis"][0] - 0.08, "Noesis and top-5 RAG overlap",
+             ha="left", va="top", fontsize=7.6, color=MUTED)
     ax2.text(end * 1.18, 0.0, f"{mrr['naive-RAG'][-1]:.3f}".rstrip("0"),
              ha="left", va="center", fontsize=8.2, color=INK2)
 
@@ -219,7 +225,7 @@ def fig4_scale_degradation():
                       markeredgecolor="white", markeredgewidth=0.9, label=l)
                for _, l, c, m in series]
     fig.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, 1.0),
-               ncol=3, handlelength=2.0, columnspacing=2.0)
+               ncol=4, handlelength=2.0, columnspacing=1.4)
     save(fig, "fig4_scale_degradation")
 
 
@@ -300,15 +306,15 @@ def export_table_data():
 \toprule
 \textbf{Configuration} & \textbf{Recall@5} & \textbf{MRR} & \textbf{Prec@5} & \textbf{Tentative Leak} \\
 \midrule
-\textbf{Noesis (full)}  & \textbf{100\%} & \textbf{1.000} & \textbf{96\%} & \textbf{10} \\
-Noesis w/o core-fact    & 100\% & 1.000 & 96\% & 10 \\
-Noesis w/o recency      & 100\% & 1.000 & 96\% & 10 \\
-Noesis w/o gating        & 100\% & 1.000 & 88\% & 29 \\
+\textbf{Noesis (full)}  & \textbf{100\%} & \textbf{1.000} & \textbf{100\%} & \textbf{0} \\
+Noesis w/o core-fact    & 100\% & 1.000 & 100\% & 0 \\
+Noesis w/o recency      & 100\% & 1.000 & 100\% & 0 \\
+Noesis w/o gating        & 100\% & 1.000 & 92\% & 19 \\
 Noesis w/o semantic     & 49\%  & 0.160 & 100\% & 0 \\
 \midrule
-Naive-RAG               & 100\% & 1.000 & 88\% & 29 \\
+Naive-RAG               & 100\% & 1.000 & 92\% & 19 \\
 Recent-window           & 22\%  & 0.099 & 100\% & 0 \\
-Random                  & 45\%  & 0.206 & 94\% & 15 \\
+Random                  & 45\%  & 0.206 & 100\% & 0 \\
 \bottomrule
 \end{tabular}
 \end{table}"""
