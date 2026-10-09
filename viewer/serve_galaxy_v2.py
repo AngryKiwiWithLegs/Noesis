@@ -1,18 +1,31 @@
 #!/usr/bin/env python3
 """
-Noesis Star Map v2 — Four-Force Physics Visualization
-======================================================
+Noesis Star Map v2 — Force-Directed 3D Visualization
+=====================================================
 Implements the design doc §7 (Module 1): a 3D force-directed layout where
-constellations *emerge* from semantic similarity, not manual topic banding.
+clusters form from embedding similarity while time and confidence stay
+readable as axes.
 
-Physics model (per-frame, four forces):
-  A. Semantic attraction — pulls similar thoughts together on XY
-  B. Global repulsion    — prevents overlap (spatial-hash optimized)
-  C. Time spring (Z)     — newer nodes float higher (stratigraphic)
-  D. Semantic Z adhesion — keeps same-topic nodes at similar heights
+Physics model (per frame, in full XYZ; runs ~180 frames, then freezes):
+  0. Axis springs (weak)  — X toward creation time (old → new),
+                            Y toward confidence (low → high),
+                            Z (weakest) toward log age, so newer sits slightly higher
+  A. Semantic attraction  — pulls each node toward its top-K neighbors
+                            (cosine >= 0.45), scaled by similarity
+  B. Repulsion            — same topic: short-range anti-overlap only;
+                            different topic: long-range push that separates clusters
+Topic labels only affect repulsion; attraction uses embeddings alone.
+The force constants are inline in simulate(); of the `params` sent to the
+page, only damping, Ht/H0/alpha and system_start are used (Ka, Kr, Kz, Ks
+and sim_threshold are reported but not applied — there is no Z-adhesion force).
+
+Rendering: color = topic (or age via the "Color by Age" toggle, whose label
+names the mode it switches to); size = type × activation weight;
+brightness = activation weight. Lines join neighbor pairs with similarity >= 0.5.
 
 Server-side: decodes embedding vectors from the sqlite-vec shadow table
-(no extension needed) and precomputes each node's top-K semantic neighbors.
+(no extension needed), precomputes each node's top-K semantic neighbors,
+and opens the store read-only.
 
 Usage:
     python3 serve_galaxy_v2.py [--port 8791] [--db ~/.noesis/hot.db]

@@ -324,9 +324,9 @@ Random                  & 45\%  & 0.206 & 94\% & 15 \\
 \toprule
 \textbf{Metric} & \textbf{Before fix} & \textbf{After fix} & \textbf{Change} \\
 \midrule
-Old stance leaked into context & 28/30 (93\%) & 2/30 (7\%) & $-86$pp \\
+Old stance leaked into context & 28/30 (93\%) & 2/30 (7\%) & $-87$pp \\
 New stance surfaced            & 12/30 (40\%) & 28/30 (93\%) & $+53$pp \\
-Ideal outcome (new + suppress old) & 1/30 (3\%) & 26/30 (87\%) & $+84$pp \\
+Ideal outcome (new + suppress old) & 1/30 (3\%) & 27/30 (90\%) & $+87$pp \\
 \bottomrule
 \end{tabular}
 \end{table}"""
