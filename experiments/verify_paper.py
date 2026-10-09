@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 verify_paper.py — recompute every experimental number printed in the paper
-(paper/main.tex and the Pages/Word versions) from the raw JSON results in
+(paper/noesis_paper.tex and the Pages/Word versions) from the raw JSON results in
 experiments/results/, and print PASS/FAIL for each.
 
 Each check names the exact raw file it reads, so the paper's numbers are tied
