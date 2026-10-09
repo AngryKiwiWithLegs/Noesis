@@ -46,8 +46,11 @@ context with a token budget. Across three models (Gemini Flash-Lite,
 gemma3:4b, qwen2.5:3b) on 110 paired questions each, memory injection raises
 answer accuracy from 41.8\% to 85.5\%, 34.5\% to 82.7\%, and 37.3\% to
 62.7\% respectively (all $p<0.001$, McNemar's test). At 500 stored memories,
-Noesis injects 35 times fewer tokens than a naive RAG baseline while placing
-9 of 10 targets at rank 1 (MRR 0.90 vs.\ 0.002). On strictly cross-tool
+Noesis keeps 9 of 10 targets at rank 1 with about 207 injected tokens, 35
+times fewer than injecting every memory (MRR 0.90 vs.\ 0.002); a standard
+top-5 RAG ranks as well with fewer tokens, so Noesis's distinct gain is
+filtering: where ungated retrieval surfaced unverified or planted statements
+19 and 13 times in two tests, Noesis surfaced none. On strictly cross-tool
 queries, Noesis retrieves 37\% where per-tool isolation is structurally bound
 to 0\%. I release the system, experiment harness, and all raw results.
 \end{abstract}
@@ -87,10 +90,12 @@ This paper makes the following contributions:
   tentative$\to$\allowbreak provisional$\to$\allowbreak settled via a four-signal scorer, with
   type-specific time decay and cluster-aware supersession that reduced
   stale-stance leakage from 93\% to 7\% (\S\ref{sec:supersession}).
-  \item \textbf{Budget-capped selective injection that scales}
-  (\S\ref{sec:scale}). At 500 memories Noesis injects $\sim$207 tokens
-  (35 times fewer than naive RAG) while holding MRR at 0.90; naive RAG's
-  MRR collapses to 0.002 as targets are buried (\S\ref{sec:scale}).
+  \item \textbf{Gated injection that scales}
+  (\S\ref{sec:ablation}--\S\ref{sec:scale}). At 500 memories Noesis injects
+  $\sim$207 tokens (35 times fewer than injecting everything) while holding
+  MRR at 0.90; a standard top-5 RAG matches that ranking at lower cost, and
+  Noesis's gate is what keeps unverified and planted statements out (0 vs.\
+  19 and 0 vs.\ 13).
   \item \textbf{Quantified cross-tool memory sharing} (\S\ref{sec:crosstool}).
   With a shared per-user store, Noesis retrieves 37\% of strictly cross-tool
   queries versus 0\% for per-tool isolation (50\% vs.\ 7.5\% over all 40
@@ -114,7 +119,7 @@ released.\footnote{\url{https://github.com/AngryKiwiWithLegs/Noesis}}
   \includegraphics[width=0.95\linewidth]{fig1_architecture.pdf}
   \caption{Noesis system architecture. Tools connect through an MCP server,
   an OpenAI-compatible proxy, or a WebSocket; Phase 1 stores the utterance
-  synchronously ($<$15\,ms) and Phase 2 asynchronously extracts, scores, and
+  synchronously (median 21\,ms) and Phase 2 asynchronously extracts, scores, and
   links the thought. Hot store (sqlite-vec) serves retrieval; cold store
   (Obsidian vault) keeps memory human-readable and editable.}
   \label{fig:architecture}
@@ -186,9 +191,11 @@ thought (``I am a backend engineer'') should outlive an \emph{event}
 (``I tried Bun yesterday''), and the taxonomy encodes this as type-specific
 half-lives.
 
-Capture is two-phase. \emph{Phase 1} is synchronous and bounded ($<$15\,ms):
-embed, deduplicate by hash, insert as \emph{tentative}. The conversation
-never blocks on memory. \emph{Phase 2} is asynchronous: an extractor (a
+Capture is two-phase. \emph{Phase 1} is synchronous: embed, deduplicate by
+hash, insert as \emph{tentative} (median 21\,ms, p99 684\,ms over 100 adds on
+an x86-64 Mac). \emph{Phase 2} runs in the background, so the conversation
+never waits for it; building the injected context adds a median of 21\,ms
+(p99 55\,ms) per request. In \emph{Phase 2}, an extractor (a
 small cloud LLM, or a deterministic fallback) classifies the thought; a
 confidence scorer updates its status; a supersession check retires
 contradicted predecessors; the cold store (Markdown + YAML frontmatter in an
@@ -321,8 +328,13 @@ keyword-hit; paired outcomes are tested with McNemar's $\chi^2$.
 experiments run against the real pipeline without LLM calls, measuring
 Recall@5, MRR, Precision@5, tentative leakage, and injected tokens.
 
-\paragraph{Reproducibility.} Every number in this paper is recomputed from
-raw JSON by a released verification script.
+\paragraph{Reproducibility.} Every experimental number in this paper is
+recomputed from the raw result files by a released script
+(\texttt{experiments/verify\_paper.py}), which also reads the lifecycle
+constants from the source. The ablation and scale experiments were re-run in
+October 2026 with the June software versions; they reproduced the June
+numbers exactly before the corrected leak metric and the top-5 baseline were
+added.
 
 % ══════════════════════════════════════════════════════════════════════════════
 \section{Results}
@@ -367,48 +379,65 @@ but reaches only 62.7\%, which points to a model-capability ceiling rather
 than a retrieval failure; the saved runs do not record the injected context,
 so this is not yet confirmed.
 
+Accuracy alone does not separate retrieval strategies at this scale. In a
+separate end-to-end run on 50 questions (10 profiles, Gemini Flash-Lite),
+Noesis, injecting every stored memory, and injecting the five most recent
+memories scored 41, 40, and 41 of 50, against 22 of 50 with no memory. With
+only 3--9 stored memories per profile in that run, all three strategies
+inject nearly the same context; they diverge on filtering and cost as the
+store grows (\S\ref{sec:ablation}--\S\ref{sec:scale}).
+
 \subsection{RQ2: Semantic retrieval drives recall; gating keeps unverified thoughts out}
 \label{sec:ablation}
 
 \begin{table}[!htbp]
   \centering
-  \caption{Ablation and baselines (50 queries, retrieval-layer).}
+  \caption{Ablation and baselines (50 queries, retrieval-layer; the full
+  system uses a 2{,}000-token budget here). Leak counts retrieved tentative
+  thoughts.}
   \label{tab:ablation}
   \begin{tabular}{lcccc}
     \toprule
     \textbf{Config} & \textbf{Recall@5} & \textbf{MRR} & \textbf{Prec@5} & \textbf{Leak} \\
     \midrule
-    \textbf{Noesis (full)}   & \textbf{100\%} & \textbf{1.000} & \textbf{96\%} & \textbf{10} \\
-    w/o core-fact signal     & 100\% & 1.000 & 96\% & 10 \\
-    w/o recency signal       & 100\% & 1.000 & 96\% & 10 \\
-    w/o confidence gating    & 100\% & 1.000 & 88\% & \textbf{29} \\
+    \textbf{Noesis (full)}   & \textbf{100\%} & \textbf{1.000} & \textbf{100\%} & \textbf{0} \\
+    w/o core-fact signal     & 100\% & 1.000 & 100\% & 0 \\
+    w/o recency signal       & 100\% & 1.000 & 100\% & 0 \\
+    w/o confidence gating    & 100\% & 1.000 & 92\% & \textbf{19} \\
     w/o semantic retrieval   & 49\%  & 0.160 & 100\% & 0 \\
     \midrule
-    Naive RAG                & 100\% & 1.000 & 88\% & 29 \\
+    Naive RAG                & 100\% & 1.000 & 92\% & 19 \\
     Recent-window            & 22\%  & 0.099 & 100\% & 0 \\
-    Random                   & 45\%  & 0.206 & 94\% & 15 \\
+    Random                   & 45\%  & 0.206 & 100\% & 0 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 Removing semantic retrieval collapses recall (100\%$\to$49\%), confirming it
 as the main source of recall (Table~\ref{tab:ablation}). Removing the
-confidence gate leaves recall intact but leaks 29 tentative thoughts versus
-10---gating is what keeps \emph{unverified} material out of the prompt.
+confidence gate leaves recall intact but lets tentative thoughts into 19 of
+the 250 retrieved slots, where the full system lets in none---gating is what
+keeps \emph{unverified} material out of the prompt. Without the gate the
+retriever is plain top-5 retrieval, so the ``w/o confidence gating'' and
+``Naive RAG'' rows are the same configuration. A separate poisoning test
+gives the same picture: with 5 settled facts and 8 hedged statements that
+contradict them, ungated top-5 retrieval returned a hedged statement in 13 of
+25 slots across 5 queries, and Noesis in none.
 Core-fact and recency signals show no measurable effect in this query-driven
 suite; their value emerges on identity-relevant but topically unrelated
 queries, which this suite undersamples; testing them needs a dedicated query
 set.
 
-\subsection{RQ3: Cost stays flat while baselines explode}
+\subsection{RQ3: Retrieval keeps cost flat as memory grows}
 \label{sec:scale}
 
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=\linewidth]{fig4_scale_degradation.pdf}
   \caption{Scale behavior from 10 to 500 stored memories. (a) Noesis's
-  injected tokens stay flat ($\sim$207) while naive RAG grows to 7{,}192
-  (35 times). (b) Noesis holds MRR at 0.90; naive RAG collapses to 0.002
+  injected tokens stay flat ($\sim$207) while naive RAG (inject all) grows to
+  7{,}192 (35 times); top-5 RAG stays at 66--68. (b) Noesis and top-5 RAG
+  hold MRR at 0.90; naive RAG collapses to 0.002
   as targets are buried; recent-window loses recall entirely past $n{=}10$.}
   \label{fig:scale}
 \end{figure}
@@ -420,7 +449,12 @@ set; the 1{,}200-token budget is never reached. MRR holds at 0.90: 9 of the
 10 targets sit at rank 1, and the tenth is never retrieved. Naive RAG keeps
 recall only by injecting everything: 7{,}192 tokens at $n{=}500$, with the
 target buried near rank 500 (MRR 0.002). Recent-window recall collapses to
-0\% beyond $n{=}10$: the window forgets everything older. The methodological
+0\% beyond $n{=}10$: the window forgets everything older. A standard top-5 RAG,
+which embeds the query and injects its five nearest memories, does as well as
+Noesis on this benchmark: the same 9 of 10 targets at rank 1, with 66--68
+tokens per query. Flat cost and good ranking therefore come from retrieval
+itself rather than from anything specific to Noesis; what Noesis adds is the
+gate (\S\ref{sec:ablation}), which top-5 RAG lacks. The methodological
 takeaway: \emph{recall alone is misleading}; rank and token cost must be
 reported together.
 
@@ -474,10 +508,11 @@ clusters form from embedding similarity while time and confidence stay
 readable at a glance; topic labels only decide which clusters repel. This
 makes the memory store inspectable rather than a black box: older thoughts
 sit to the left, settled ones sit high, and hovering a star shows its text
-and confidence. In the store shown, 355 of 601 thoughts fall into the
-catch-all ``general'' topic, which the extractor assigns when no known
-topic matches, and only 18 have settled, so the view exposes at a glance
-both how conservative the lifecycle is and how coarse topic assignment
+and confidence. The store shown is the local development store,
+populated by the experiment and demo runs rather than by real use: of its
+601 thoughts, 355 sit in the catch-all ``general'' topic, which the extractor
+assigns when no known topic matches, and 18 have settled. Even so, the view
+surfaces such patterns at a glance; here it shows how coarse topic assignment
 still is. The viewer is a local web tool shipped with the system; it opens
 the store read-only, so inspecting memory never changes it.
 
@@ -513,7 +548,8 @@ the domain map. A broader mind-change detector is the matching fix.
 \paragraph{Negative results.} I report that the supersession check
 initially never ran, so stale stances leaked 93\% of the time until it was
 fixed (\S\ref{sec:supersession}); that core-fact and recency signals showed
-no effect in my ablation suite; and that a 3B model appears
+no effect in my ablation suite; that a standard top-5 RAG matches Noesis's
+ranking at lower cost on the scale benchmark; and that a 3B model appears
 comprehension-capped. I consider these findings part of the contribution.
 
 % ══════════════════════════════════════════════════════════════════════════════
@@ -555,9 +591,12 @@ replacement verbs and a domain keyword map; paraphrased mind-changes outside
 its lexicon will be missed. The supersession fix was developed and validated
 on the same 30 scenarios, so its 93\%~$\to$~7\% result is in-sample;
 held-out, paraphrased mind-changes are needed to measure it fairly. The
-scale experiment's naive-RAG baseline injects every stored memory; a top-$k$
-baseline under the same token budget would be a stronger comparison and has
-not yet been run.
+scale experiment's naive-RAG baseline injects every stored memory; the top-5
+baseline added in \S\ref{sec:scale} is the stronger comparison, and on this
+benchmark it ties Noesis on ranking. The ablation and poisoning leak counts
+were corrected in October 2026: the original keyword-based metric also counted
+settled memories that merely shared a word with a tentative one (for example,
+``Kafka'').
 
 Noesis also adds an attack surface. The local proxy sees every request,
 including provider API keys and full conversations; enabling cloud
@@ -573,9 +612,10 @@ is not a defense against deliberate poisoning.
 
 Noesis shows that \emph{what} a memory system injects matters as much as
 \emph{whether} it injects. A confidence lifecycle earns injection rights
-through repetition and consistency; selective, gated retrieval keeps cost
-flat as memory grows (35 times cheaper than naive RAG at $n{=}500$ with
-better ranking); and a shared per-user store makes cross-tool consistency
+through repetition and consistency, and its gate keeps unverified and planted
+statements out of the prompt where plain retrieval lets them in; retrieval
+keeps cost flat as memory grows (35 times cheaper than injecting everything at
+$n{=}500$, though a standard top-5 RAG is cheaper still); and a shared per-user store makes cross-tool consistency
 possible where per-tool architectures are structurally bound to fail. The
 result is a local-first layer that makes a 4B local model answer personal
 questions about as accurately as a small cloud model (82.7\% vs.\ 85.5\% for

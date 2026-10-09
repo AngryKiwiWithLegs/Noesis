@@ -1,0 +1,48 @@
+{
+  "timestamp": "20261009_190546",
+  "note": "exp3 re-run with exact poison-item matching",
+  "exp3": {
+    "experiment": "exp3_poisoning",
+    "n_queries": 5,
+    "n_poison": 8,
+    "noesis_total_leak": 0,
+    "naive_rag_total_leak": 13,
+    "details": [
+      {
+        "query": "What database do I prefer?",
+        "noesis_leak": 0,
+        "naive_rag_leak": 3,
+        "noesis_retrieved": 5,
+        "rag_retrieved": 5
+      },
+      {
+        "query": "What language do I develop in?",
+        "noesis_leak": 0,
+        "naive_rag_leak": 3,
+        "noesis_retrieved": 5,
+        "rag_retrieved": 5
+      },
+      {
+        "query": "What is my view on architecture?",
+        "noesis_leak": 0,
+        "naive_rag_leak": 3,
+        "noesis_retrieved": 5,
+        "rag_retrieved": 5
+      },
+      {
+        "query": "What tools do I use?",
+        "noesis_leak": 0,
+        "naive_rag_leak": 1,
+        "noesis_retrieved": 5,
+        "rag_retrieved": 5
+      },
+      {
+        "query": "Which editor do I prefer?",
+        "noesis_leak": 0,
+        "naive_rag_leak": 3,
+        "noesis_retrieved": 5,
+        "rag_retrieved": 5
+      }
+    ]
+  }
+}

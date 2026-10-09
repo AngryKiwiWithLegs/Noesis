@@ -208,6 +208,7 @@ def evaluate_config(name, retrieve_fn, cases, k=5):
     truth_phrases = [[_distinctive_phrases(t) for t in tc.relevant_texts] for tc in cases]
     noise_phrases = [_distinctive_phrases(m.text) for m in MEMORY_POOL if m.status == "tentative"]
     noise_flat = set().union(*noise_phrases) if noise_phrases else set()
+    tentative_texts = {m.text for m in MEMORY_POOL if m.status == "tentative"}
 
     for ci, tc in enumerate(cases):
         retrieved = retrieve_fn(tc.query)[:k]
@@ -227,11 +228,11 @@ def evaluate_config(name, retrieve_fn, cases, k=5):
                 mrr = 1.0 / rank
                 break
 
-        # Precision@k: fraction of retrieved that are NOT noise memories
-        relevant_count = sum(1 for rt in retrieved_texts
-                             if not _matches_any(rt, noise_flat))
-        precision = relevant_count / len(retrieved) if retrieved else 0
-        leak = sum(1 for rt in retrieved_texts if _matches_any(rt, noise_flat))
+        # Precision@k / leak: a retrieved node counts as noise only if it IS one
+        # of the tentative pool items. (Phrase matching against noise text used
+        # to flag settled memories that merely share a keyword, e.g. "Kafka".)
+        leak = sum(1 for rt in retrieved_texts if rt.strip() in tentative_texts)
+        precision = (len(retrieved) - leak) / len(retrieved) if retrieved else 0
 
         results.append({"query": tc.query, "recall": recall, "mrr": mrr,
                         "precision": precision, "tentative_leak": leak,

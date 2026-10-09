@@ -123,7 +123,7 @@ def fig1_architecture():
 
     # Two-phase capture + confidence scorer
     box(ax, 0.60, 1.95, 2.20, 2.62, "Phase 1 · sync",
-        ["embed → dedupe → insert", "as tentative · < 15 ms"])
+        ["embed → dedupe → insert", "as tentative · 21 ms median"])
     box(ax, 2.55, 1.95, 3.95, 2.62, "Phase 2 · async",
         ["extract → score →", "supersede → store"])
     box(ax, 4.20, 1.95, 5.30, 2.62, "Confidence",

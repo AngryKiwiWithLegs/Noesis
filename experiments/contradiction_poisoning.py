@@ -229,8 +229,12 @@ def run_exp3():
         noe_texts = [n["text"] for n in noe]
         rag_texts = [r.get("text","") for r in rag]
 
-        noe_leak = sum(1 for t in noe_texts if any(kw in t.lower() for kw in poison_kws))
-        rag_leak = sum(1 for t in rag_texts if any(kw in t.lower() for kw in poison_kws))
+        # A leak is a retrieved node that IS one of the poison statements.
+        # (Substring keywords also hit settled facts, e.g. "emacs" in
+        # "I prefer Vim over Emacs", and "go" inside ordinary words.)
+        poison_texts = {p[0] for p in poison}
+        noe_leak = sum(1 for t in noe_texts if t.strip() in poison_texts)
+        rag_leak = sum(1 for t in rag_texts if t.strip() in poison_texts)
         total_noe_leak += noe_leak
         total_rag_leak += rag_leak
 
