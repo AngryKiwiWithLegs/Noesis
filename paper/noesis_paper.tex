@@ -378,7 +378,10 @@ stale-stance leakage from 93\% to 7\% (Table~\ref{tab:supersession}).
 At query time, three channels run in parallel (Figure~\ref{fig:pipeline}):
 BM25 for exact terms, dense retrieval for paraphrase, and two lightweight
 signals (recency, core-facts). Channels fuse via reciprocal-rank fusion with
-time-decay weighting. A confidence gate drops everything below
+time-decay weighting. The semantic channel also attempts a one-hop expansion
+over links between notes in the vault; in the current code this step adds
+nothing (\S\ref{sec:discussion}), so every reported result comes from flat
+retrieval. A confidence gate drops everything below
 \emph{provisional}, and a hard token budget (1{,}200 tokens) truncates the
 remainder. The result is injected into the system prompt as compact
 structured lines.
@@ -644,7 +647,8 @@ not to sharing.
   \label{fig:starmap}
 \end{figure}
 
-The stored memory graph is visualized as a galaxy (Figure~\ref{fig:starmap}).
+The star map displays the stored thoughts as a galaxy
+(Figure~\ref{fig:starmap}).
 Each thought is a star placed by a short force simulation. Weak springs
 pull each star toward its creation time on the horizontal axis and its
 confidence on the vertical axis; \emph{semantic attraction} pulls it toward
@@ -661,7 +665,10 @@ populated by the experiment and demo runs rather than by real use: of its
 assigns when no known topic matches, and 18 have settled. Even so, the view
 surfaces such patterns at a glance; here it shows how coarse topic assignment
 still is. The viewer is a local web tool shipped with the system; it opens
-the store read-only, so inspecting memory never changes it.
+the store read-only, so inspecting memory never changes it. The map is a
+display, not a retrieval structure: its attraction edges are computed by the
+viewer, are never stored, and do not affect what is retrieved or injected, so
+it says nothing about whether graph structure improves answers.
 
 % ══════════════════════════════════════════════════════════════════════════════
 \section{Discussion}
@@ -729,12 +736,31 @@ deduplicate them against the harness's own summaries and instruction files,
 and never let them grant permissions or override higher-priority
 instructions.
 
+\paragraph{Graph structure: what exists and what is tested.} Noesis keeps
+several kinds of links, but the evaluated system is not a graph-based
+reasoner. Supersession links (\texttt{superseded\_by}) are implemented and
+evaluated (Table~\ref{tab:supersession}). Topic clusters are implemented and
+used, since the scorer counts repetition and contradiction only within a
+thought's topic, but no experiment isolates their effect. Links from thoughts
+to wiki pages (\texttt{fact\_ref}) are implemented but not evaluated. The
+semantic channel also calls a one-hop expansion over the \emph{Related} links
+between notes in the vault, but in the current code it cannot add a memory:
+links between thoughts are written with 8-character identifiers, while the
+store looks up full 12-character identifiers, and topic and wiki links do not
+point to stored thoughts. The ablation and scale stores were also built
+without the background pipeline, so they contain no such links. Every
+reported retrieval result therefore comes from flat retrieval. The star map
+(\S\ref{sec:viz}) is a visualization only, and typed claim graphs, branching,
+and structured injection are proposals (\S\ref{sec:future}).
+
 \paragraph{Negative results.} I report that the supersession check
 initially never ran, so stale stances leaked 93\% of the time until it was
 fixed (\S\ref{sec:supersession}); that core-fact and recency signals added
 no recall in my ablation suite; that a standard top-5 RAG matches Noesis's
-ranking at lower cost on the scale benchmark; and that a 3B model appears
-comprehension-capped. I consider these findings part of the contribution.
+ranking at lower cost on the scale benchmark; that a 3B model appears
+comprehension-capped; and that the one-hop graph expansion in the retrieval
+path never adds a memory. I consider these findings part of the
+contribution.
 
 % ══════════════════════════════════════════════════════════════════════════════
 \section{Future Work}
@@ -765,6 +791,24 @@ extraction, maintenance, retrieval, and generation rather than injected tokens
 alone. Counting repetition only across distinct user statements, with their
 sources recorded, is the matching fix for the first gap in
 \S\ref{sec:discussion}.
+
+\paragraph{Typed temporal claim graph.} A remembered claim could link to a
+user, project, entity, source utterance, tool, and time interval, with
+explicit relations for support, contradiction, derivation, and supersession;
+project and time scope would let ``PostgreSQL for analytics'' and ``MySQL for
+a legacy application'' coexist instead of conflicting. Zep's temporal graph is
+the closest precedent~\citep{zep}. Derivation links matter for provenance: ten
+claims derived from one utterance are not ten observations, and a frequently
+copied error can become highly connected, so degree or centrality should not
+raise confidence. The deciding experiment crosses representation with
+admission policy: a flat store and a graph-backed store, each with and without
+the same confidence gate, with extraction, source access, backbone model, and
+token budget held fixed, reporting retrieval and answer correctness alongside
+graph-construction cost, latency, the rate of incorrect links, and the effect
+of removing or correcting a source. Fixing the identifier mismatch above would
+let the existing one-hop expansion serve as a first, simple graph condition.
+Learned graph models are a further step that would need held-out users,
+domains, and time periods.
 
 % ══════════════════════════════════════════════════════════════════════════════
 \section{Limitations}
