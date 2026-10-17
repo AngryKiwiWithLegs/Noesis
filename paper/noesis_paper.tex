@@ -332,7 +332,8 @@ keyword-hit; paired outcomes are tested with McNemar's $\chi^2$.
 
 \paragraph{Retrieval-layer experiments.} Ablation, scale, and cross-tool
 experiments run against the real pipeline without LLM calls, measuring
-Recall@5, MRR, Precision@5, tentative leakage, and injected tokens.
+Recall@5, MRR, the recall and size of the full injected context, tentative
+leakage, and injected tokens.
 
 \paragraph{Reproducibility.} Every experimental number in this paper is
 recomputed from the raw result files by a released script
@@ -340,7 +341,7 @@ recomputed from the raw result files by a released script
 constants from the source. The ablation and scale experiments were re-run in
 October 2026 with the June software versions; they reproduced the June
 numbers exactly before the corrected leak metric and the top-5 baseline were
-added.
+added. The ablation was later corrected further (\S\ref{sec:limitations}).
 
 % ══════════════════════════════════════════════════════════════════════════════
 \section{Results}
@@ -398,41 +399,53 @@ store grows (\S\ref{sec:ablation}--\S\ref{sec:scale}).
 
 \begin{table}[!htbp]
   \centering
-  \caption{Ablation and baselines (50 queries, retrieval-layer; the full
-  system uses a 2{,}000-token budget here). Leak counts retrieved tentative
-  thoughts.}
+  \caption{Ablation and baselines (50 queries over 28 memories, 5 of them
+  tentative; retrieval-layer, 2{,}000-token budget). A retrieved memory counts
+  only if it is the ground-truth memory itself. Recall@5 and MRR use the first
+  five memories in injection order; context recall, items, and leak cover
+  everything the configuration injects, and leak counts tentative memories
+  among those slots.}
   \label{tab:ablation}
-  \begin{tabular}{lcccc}
+  \begin{tabular}{lccccc}
     \toprule
-    \textbf{Config} & \textbf{Recall@5} & \textbf{MRR} & \textbf{Prec@5} & \textbf{Leak} \\
+    \textbf{Config} & \textbf{Recall@5} & \textbf{MRR} & \textbf{Context recall} & \textbf{Items} & \textbf{Leak} \\
     \midrule
-    \textbf{Noesis (full)}   & \textbf{100\%} & \textbf{1.000} & \textbf{100\%} & \textbf{0} \\
-    w/o core-fact signal     & 100\% & 1.000 & 100\% & 0 \\
-    w/o recency signal       & 100\% & 1.000 & 100\% & 0 \\
-    w/o confidence gating    & 100\% & 1.000 & 92\% & \textbf{19} \\
-    w/o semantic retrieval   & 49\%  & 0.160 & 100\% & 0 \\
+    \textbf{Noesis (full)}   & \textbf{99\%} & \textbf{1.000} & \textbf{100\%} & \textbf{10.9} & \textbf{0/546} \\
+    w/o core-fact signal     & 99\% & 1.000 & 100\% & 9.7  & 0/487 \\
+    w/o recency signal       & 99\% & 1.000 & 100\% & 9.7  & 0/484 \\
+    w/o confidence gating    & 99\% & 1.000 & 100\% & 11.5 & \textbf{73/573} \\
+    w/o semantic retrieval   & 24\% & 0.105 & 24\%  & 5.0  & 0/250 \\
     \midrule
-    Naive RAG                & 100\% & 1.000 & 92\% & 19 \\
-    Recent-window            & 22\%  & 0.099 & 100\% & 0 \\
-    Random                   & 45\%  & 0.206 & 100\% & 0 \\
+    Top-5 RAG                & 99\% & 1.000 & 99\%  & 5.0  & 19/250 \\
+    Recent-window            & 17\% & 0.084 & 17\%  & 5.0  & 50/250 \\
+    Random                   & 12\% & 0.063 & 12\%  & 5.0  & 51/250 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-Removing semantic retrieval collapses recall (100\%$\to$49\%), confirming it
+Each Noesis variant runs the real context builder with exactly one component
+switched off, so signal order, deduplication, and the token budget stay the
+same; the baselines draw from every stored memory, tentative ones included.
+Status and confidence are assigned when the test store is built, so this
+suite tests whether retrieval respects those labels, not whether the
+lifecycle derives them from conversation. With 28 memories the semantic
+channel is dense retrieval alone (BM25 fusion starts at 300 memories).
+
+Removing semantic retrieval collapses recall (99\%$\to$24\%), confirming it
 as the main source of recall (Table~\ref{tab:ablation}). Removing the
-confidence gate leaves recall intact but lets tentative thoughts into 19 of
-the 250 retrieved slots, where the full system lets in none---gating is what
-keeps \emph{unverified} material out of the prompt. Without the gate the
-retriever is plain top-5 retrieval, so the ``w/o confidence gating'' and
-``Naive RAG'' rows are the same configuration. A separate poisoning test
-gives the same picture: with 5 settled facts and 8 hedged statements that
-contradict them, ungated top-5 retrieval returned a hedged statement in 13 of
-25 slots across 5 queries, and Noesis in none.
-Core-fact and recency signals show no measurable effect in this query-driven
-suite; their value emerges on identity-relevant but topically unrelated
-queries, which this suite undersamples; testing them needs a dedicated query
-set.
+confidence gate leaves recall unchanged but lets tentative thoughts into 73
+of the 573 injected slots, where the full system injects none---gating is
+what keeps \emph{unverified} material out of the prompt. Ungated top-5
+retrieval ranks as well as Noesis here (Recall@5 99\%, MRR 1.000), as it does
+at scale (\S\ref{sec:scale}), but injects a tentative thought in 19 of its
+250 slots. A separate poisoning test gives the same picture: with 5 settled
+facts and 8 hedged statements that contradict them, ungated top-5 retrieval
+returned a hedged statement in 13 of 25 slots across 5 queries, and Noesis
+in none. Removing the core-fact or recency signal changes nothing
+measurable: each adds about one memory per query (10.9 vs.\ 9.7 items)
+without changing recall. The builder adds these signals after the eight
+semantic results, so they never reach the first five slots; whether they
+help on queries the semantic channel misses needs a dedicated query set.
 
 \subsection{RQ3: Retrieval keeps cost flat as memory grows}
 \label{sec:scale}
@@ -553,8 +566,8 @@ the domain map. A broader mind-change detector is the matching fix.
 
 \paragraph{Negative results.} I report that the supersession check
 initially never ran, so stale stances leaked 93\% of the time until it was
-fixed (\S\ref{sec:supersession}); that core-fact and recency signals showed
-no effect in my ablation suite; that a standard top-5 RAG matches Noesis's
+fixed (\S\ref{sec:supersession}); that core-fact and recency signals added
+no recall in my ablation suite; that a standard top-5 RAG matches Noesis's
 ranking at lower cost on the scale benchmark; and that a 3B model appears
 comprehension-capped. I consider these findings part of the contribution.
 
@@ -602,7 +615,16 @@ baseline added in \S\ref{sec:scale} is the stronger comparison, and on this
 benchmark it ties Noesis on ranking. The ablation and poisoning leak counts
 were corrected in October 2026: the original keyword-based metric also counted
 settled memories that merely shared a word with a tentative one (for example,
-``Kafka'').
+``Kafka''). After an external review, I corrected the ablation further: it
+now scores exact memory identity (the old phrase matcher credited any memory
+sharing wording such as ``I prefer''); it drops ``Precision@5'', which
+counted non-tentative results rather than relevant ones; it runs every
+variant through the same context builder (the old core-fact and recency rows
+could not differ from the full system); it applies the memories' ages, which
+the test store had silently dropped; and its recent-window and random
+baselines can now return tentative memories. Together these changes lowered
+the weak baselines (random 45\%~$\to$~12\%, w/o semantic 49\%~$\to$~24\%
+Recall@5) while Noesis moved from 100\% to 99\%.
 
 Noesis also adds an attack surface. The local proxy sees every request,
 including provider API keys and full conversations; enabling cloud

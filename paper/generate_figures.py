@@ -297,24 +297,31 @@ def export_table_data():
     tables_dir = OUT.parent / "tables"
     tables_dir.mkdir(exist_ok=True)
 
-    # ── Table 3: Ablation results (from report) ──
+    # ── Table 3: Ablation results (exact-identity scoring, October 2026) ──
+    abl = {r["config"]: r for r in json.load(
+        open(RESULTS / "ablation_baseline_en_20261017_102429.json"))["results"]}
+    rows = [("Noesis-full", r"\textbf{Noesis (full)}"), ("Noesis-no-core", "w/o core-fact signal"),
+            ("Noesis-no-recency", "w/o recency signal"), ("Noesis-no-gating", "w/o confidence gating"),
+            ("Noesis-no-semantic", "w/o semantic retrieval"), None, ("naive-RAG", "Top-5 RAG"),
+            ("recent-window", "Recent-window"), ("random", "Random")]
+    body = []
+    for row in rows:
+        if row is None:
+            body.append(r"\midrule")
+            continue
+        r = abl[row[0]]
+        body.append(f"{row[1]} & {100 * r['recall@5']:.0f}\\% & {r['mrr']:.3f} & "
+                    f"{100 * r['context_recall']:.0f}\\% & {r['context_items']:.1f} & "
+                    f"{r['tentative_leak_total']}/{r['context_slots_total']} \\\\")
     ablation_latex = r"""\begin{table}[ht]
 \centering
-\caption{Ablation study: retrieval-layer evaluation (50 queries, English). Removing each component shows its contribution.}
+\caption{Ablation and baselines (50 queries over 28 memories, 5 of them tentative; retrieval-layer, 2{,}000-token budget). A retrieved memory counts only if it is the ground-truth memory itself. Recall@5 and MRR use the first five memories in injection order; context recall, items, and leak cover everything the configuration injects, and leak counts tentative memories among those slots.}
 \label{tab:ablation}
-\begin{tabular}{lcccc}
+\begin{tabular}{lccccc}
 \toprule
-\textbf{Configuration} & \textbf{Recall@5} & \textbf{MRR} & \textbf{Prec@5} & \textbf{Tentative Leak} \\
+\textbf{Config} & \textbf{Recall@5} & \textbf{MRR} & \textbf{Context recall} & \textbf{Items} & \textbf{Leak} \\
 \midrule
-\textbf{Noesis (full)}  & \textbf{100\%} & \textbf{1.000} & \textbf{100\%} & \textbf{0} \\
-Noesis w/o core-fact    & 100\% & 1.000 & 100\% & 0 \\
-Noesis w/o recency      & 100\% & 1.000 & 100\% & 0 \\
-Noesis w/o gating        & 100\% & 1.000 & 92\% & 19 \\
-Noesis w/o semantic     & 49\%  & 0.160 & 100\% & 0 \\
-\midrule
-Naive-RAG               & 100\% & 1.000 & 92\% & 19 \\
-Recent-window           & 22\%  & 0.099 & 100\% & 0 \\
-Random                  & 45\%  & 0.206 & 100\% & 0 \\
+""" + "\n".join(body) + r"""
 \bottomrule
 \end{tabular}
 \end{table}"""
