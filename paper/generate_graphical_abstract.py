@@ -69,10 +69,10 @@ ax.text(0.22, 1.12, "A thought passes the gate once it is firmly stated, repeate
 
 # ── Right: three results ─────────────────────────────────────────────────────
 tiles = [
-    ("Answer accuracy with memory", "+25.5 to +48.2 pp",
+    ("Keyword-hit rate with memory", "+25.5 to +48.2 pp",
      "3 models × 110 questions, all p < 0.001\ne.g. gemma3:4b: 34.5% → 82.7%"),
-    ("Unverified statements injected", "0 vs. 19",
-     "Noesis vs. ungated retrieval (ablation);\nplanted statements: 0 vs. 13"),
+    ("Tentative statements injected", "0 vs. 19",
+     "Noesis vs. ungated top-5 RAG (ablation);\nhedged contradictions: 0 vs. 13"),
     ("Recall on strictly cross-tool queries", "37% vs. 0%",
      "shared store vs. per-tool memory"),
 ]
