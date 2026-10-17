@@ -34,7 +34,7 @@ def arrow(p0, p1, color=INK2):
 
 
 # Title
-ax.text(0.22, H - 0.30, "Noesis: memory that earns its way into the prompt, shared across AI tools",
+ax.text(0.22, H - 0.30, "Noesis: memory admitted to the prompt by rule, shared across AI tools",
         ha="left", va="center", fontsize=12.5, fontweight="bold", color=INK)
 
 # ── Left: how it works ────────────────────────────────────────────────────────

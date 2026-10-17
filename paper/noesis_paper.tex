@@ -57,7 +57,7 @@ filtering: where ungated retrieval surfaced tentative or hedged statements 19
 and 13 times in two constructed tests, Noesis surfaced none; the gate filters
 by how firmly something was said, not by whether it is true. On strictly cross-tool
 queries, Noesis retrieves 37\% where per-tool isolation is structurally bound
-to 0\%. I release the system, experiment harness, and all raw results.
+to 0\%. I release the system, the experiment harness, and the saved raw results.
 
 \smallskip\noindent\textbf{Keywords:} large language models; LLM memory;
 retrieval-augmented generation; personalization; cross-tool memory;
@@ -88,9 +88,10 @@ grows linearly with memory size and buries the relevant signal (I measure
 7{,}192 tokens at $n{=}500$).
 
 Noesis is built on a different premise: \emph{what} gets injected matters as
-much as \emph{whether} anything is injected. Thoughts should earn their way
-into the context the way beliefs earn their way into a mind: through
-repetition, consistency, and survival against contradiction.
+much as \emph{whether} anything is injected. A captured statement should reach
+the prompt only when the evidence that the user holds it is strong enough:
+firm wording, repetition, agreement across tools, and no contradiction. This
+is a rule about admission, not a check on truth.
 
 This paper makes the following contributions:
 
@@ -120,11 +121,13 @@ This paper makes the following contributions:
   a small local model (qwen2.5:3b, $+25.5$pp); all $p<0.001$.
 \end{enumerate}
 
-The system is local-first: embeddings and retrieval run on-device
-(sqlite-vec + all-MiniLM-L6-v2), and only optional LLM-based extraction calls
-a cloud API. All code, the experiment harness, raw results, and a
-verification script that recomputes every reported number from raw JSON are
-released.\footnote{\url{https://github.com/AngryKiwiWithLegs/Noesis}}
+Storage and retrieval are local: embeddings and retrieval run on-device
+(sqlite-vec + all-MiniLM-L6-v2). Conversation text leaves the machine only
+when optional LLM-based extraction is enabled or when the proxy forwards a
+request to a cloud model, which then also receives the injected memories.
+All code, the experiment harness, the saved raw results
+(\S\ref{sec:setup} lists which records were not kept), and a script that
+recomputes every reported number from them are released.\footnote{\url{https://github.com/AngryKiwiWithLegs/Noesis}}
 
 \begin{figure}[!htbp]
   \centering
@@ -337,7 +340,10 @@ firmly stated thought with no conflict (``I prefer X'', assertion 0.8)
 therefore scores exactly 0.45 and becomes injectable, while settling always
 requires repetition: at least three similar earlier thoughts with cross-tool
 corroboration, or six without. \emph{Provisional} thoughts inject when
-topic-relevant; \emph{settled} thoughts always inject. Confidence evolves
+topic-relevant; \emph{settled} thoughts always inject. The result is a
+rule-based admission score: it decides what may be injected, not whether a
+thought is true, and a score of 0.75 is not a calibrated 75\% probability of
+being correct~\citep{guo2017calibration}. Confidence evolves
 incrementally: reinforcement $+0.10\,(1-C)$, conflict $-0.20$, and time decay
 $C \leftarrow C\, e^{-0.693\,\Delta t / t_{1/2}}$ with $t_{1/2}$ set by type
 (Table~\ref{tab:thought_types}).
@@ -471,7 +477,8 @@ although hits were scored on the full answer; the Gemini A/B run kept no
 answer text, because its records were recovered from the run's console log,
 which printed only hit marks; and no run kept the full prompt or the injected
 context. The released files therefore support checking the arithmetic, not
-re-scoring the answers.
+re-scoring the answers. The code, data, and paper sources used here are
+tagged \texttt{v1.0-preprint} in the repository.
 
 % ══════════════════════════════════════════════════════════════════════════════
 \section{Results}
@@ -523,6 +530,10 @@ memories scored 41, 40, and 41 of 50, against 22 of 50 with no memory. With
 only 3--9 stored memories per profile in that run, all three strategies
 inject nearly the same context; they diverge on filtering and cost as the
 store grows (\S\ref{sec:ablation}--\S\ref{sec:scale}).
+The A/B result therefore shows that having personal context available helps
+on these tasks; it does not show that the confidence lifecycle beats simpler
+ways of supplying the same memories, which the end-to-end run could not
+separate.
 
 \subsection{RQ2: Semantic retrieval drives recall; gating keeps tentative thoughts out}
 \label{sec:ablation}
@@ -532,7 +543,8 @@ store grows (\S\ref{sec:ablation}--\S\ref{sec:scale}).
   \caption{Ablation and baselines (50 queries over 28 memories, 5 of them
   tentative; retrieval-layer, 2{,}000-token budget). A retrieved memory counts
   only if it is the ground-truth memory itself. Recall@5 and MRR use the first
-  five memories in injection order; context recall, items, and leak cover
+  five memories in injection order, and a query that returns fewer than five
+  memories is scored on what it returns; context recall, items, and leak cover
   everything the configuration injects, and leak counts tentative memories
   among those slots.}
   \label{tab:ablation}
@@ -629,7 +641,9 @@ construction. The 7 scenarios where the asking tool did see the stance are a
 fairer comparison: isolated memory retrieves 3 of 7 and Noesis 6 of 7. Over
 all 40 scenarios, Noesis retrieves 50\% and the isolated baseline 7.5\%.
 This is the structural argument: per-tool memory systems cannot share by
-design, and no amount of per-tool tuning closes the gap. Noesis's misses
+design, and no amount of per-tool tuning closes the gap. The comparison therefore shows the value of access to a
+shared store, not an advantage over another shared-memory system, which would
+need both systems to see the same records. Noesis's misses
 trace to retrieval precision (the memory exists but ranks below top-$k$),
 not to sharing.
 
