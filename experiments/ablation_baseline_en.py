@@ -7,14 +7,31 @@ entirely in English. No LLM calls — purely retrieval-layer evaluation.
 
 Configs evaluated (same as before, English test set):
   Noesis-full / no-core / no-recency / no-semantic / no-gating  (ablation)
-  naive-RAG / recent-window / random / all-inject              (baselines)
+  naive-RAG / recent-window / random                           (baselines)
+
+Every Noesis variant runs the real ContextBuilder with exactly one component
+switched off, so signal order, dedup and the token budget stay the same.
+Baselines draw from every stored memory, tentative ones included, because
+they stand for systems without a gate.
+
+Scoring (October 2026 revision): a retrieved memory counts as relevant only if
+it IS a ground-truth memory (exact text identity; every pool text is unique).
+Two views of each config:
+  @5      the first 5 memories, in injection order (Recall@5, MRR)
+  context everything the config would inject (recall, items, tentative leak)
+Queries that return fewer than 5 memories are scored on what they return.
+Status and confidence are assigned when the store is built, so this suite
+tests whether retrieval respects the labels, not whether the lifecycle
+derives them from conversation.
 """
 from __future__ import annotations
 import os, sys, json, time, random, tempfile
+from contextlib import nullcontext
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Callable
+from unittest.mock import patch
 
 NOESIS_DIR = "/Users/mac27ssd/Noesis"
 RESULTS_DIR = Path("/Users/mac27ssd/ZCodeProject/noesis_experiment/results")
@@ -37,7 +54,7 @@ class TestCase:
     relevant_texts: list[str]
     description: str
 
-# ── Richer memory pool (25 items incl. 5 noise) ─────────────────────────────────
+# ── Richer memory pool (28 items incl. 5 noise) ─────────────────────────────────
 MEMORY_POOL = [
     # identity
     MemoryItem("My name is John, I am a backend engineer", "identity", "settled", 0.90, 0, "identity"),
@@ -150,114 +167,78 @@ def _build_store(pool, tmp_path):
         hid = r["results"][0]["id"]
         m.vector_store.update(hid, {
             "status": item.status, "confidence": item.confidence,
-            "created_at": now - item.age_days * 86400,
         })
+        # update() does not accept created_at, so set the age directly
+        # (before October 2026 every age was silently dropped).
+        m.vector_store._con.execute("UPDATE items SET created_at=? WHERE hash_id=?",
+                                    [now - item.age_days * 86400, hid])
+    m.vector_store._con.commit()
     return m
 
 
-def _keywords(text):
-    import re
-    clean = re.sub(r"[,.!?\s]+", " ", text)
-    return [t for t in clean.split() if len(t) >= 3]
+# Exact identity: every pool text is unique, and the store returns it verbatim.
+POOL_INDEX = {m.text: i for i, m in enumerate(MEMORY_POOL)}
+TENTATIVE = {i for i, m in enumerate(MEMORY_POOL) if m.status == "tentative"}
 
-# Stopwords that should never count as a distinctive match on their own.
-_STOP = {"the","and","for","over","its","than","with","from","that","this",
-         "have","has","are","was","were","our","its","into","about","just",
-         "last","week","month","years","year","team","system","better","alone",
-         "native","working","lines","code","engineer","engineers","backend",
-         "frontend","million","thousand","daily","active","users","production"}
 
-def _distinctive_phrases(text):
-    """Extract contiguous 2-3 word phrases that contain at least one
-    non-stopword token. These are specific enough to avoid spurious matches
-    on common words like 'name', 'engineer', 'backend'."""
-    import re
-    clean = re.sub(r"[,.!?\s]+", " ", text).strip()
-    toks = [t for t in clean.split() if t]
-    phrases = set()
-    # 2-grams and 3-grams
-    for n in (3, 2):
-        for i in range(len(toks) - n + 1):
-            gram = " ".join(toks[i:i+n]).lower()
-            # require at least one non-stopword token in the gram
-            gram_toks = gram.split()
-            if any(gt not in _STOP for gt in gram_toks):
-                phrases.add(gram)
-    # Also keep rare single tokens (proper nouns, numbers, distinctive terms)
-    for t in toks:
-        tl = t.lower()
-        if len(tl) >= 4 and tl not in _STOP and not tl.isalpha() or \
-           tl in {"postgresql","mysql","sqlite-vec","sqlite","faiss","python",
-                  "java","vim","grafana","prometheus","tailwind","typescript",
-                  "javascript","docker","rust","microservices","monoliths",
-                  "graphql","rest","kafka","rabbitmq","berlin","aws","us-east-1",
-                  "qcon","concurrency","bug","payment","mysql","monolith",
-                  "memory","safety","json","keybindings","css"}:
-            phrases.add(tl)
-    return phrases
-
-def _matches_any(retrieved_text, truth_phrases):
-    """A retrieved node matches if it contains a distinctive phrase verbatim."""
-    rt = retrieved_text.lower()
-    return any(p in rt for p in truth_phrases)
+def _ids(memories):
+    """Pool index of each retrieved memory (None if the text is not in the pool)."""
+    return [POOL_INDEX.get(m.get("text", "").strip()) for m in memories]
 
 
 def evaluate_config(name, retrieve_fn, cases, k=5):
     results = []
-    # Precompute distinctive phrases for ground truth + noise
-    truth_phrases = [[_distinctive_phrases(t) for t in tc.relevant_texts] for tc in cases]
-    noise_phrases = [_distinctive_phrases(m.text) for m in MEMORY_POOL if m.status == "tentative"]
-    noise_flat = set().union(*noise_phrases) if noise_phrases else set()
-    tentative_texts = {m.text for m in MEMORY_POOL if m.status == "tentative"}
-
-    for ci, tc in enumerate(cases):
-        retrieved = retrieve_fn(tc.query)[:k]
-        retrieved_texts = [r.get("text", "") for r in retrieved]
-
-        # Recall@k: each ground-truth item must be matched by a distinctive phrase
-        hits = 0
-        for truth_pset in truth_phrases[ci]:
-            if any(_matches_any(rt, truth_pset) for rt in retrieved_texts):
-                hits += 1
-        recall = hits / len(tc.relevant_texts)
-
-        # MRR: rank of first retrieved node matching any ground-truth phrase
-        mrr = 0.0
-        for rank, rt in enumerate(retrieved_texts, 1):
-            if any(_matches_any(rt, tp) for tp in truth_phrases[ci]):
-                mrr = 1.0 / rank
-                break
-
-        # Precision@k / leak: a retrieved node counts as noise only if it IS one
-        # of the tentative pool items. (Phrase matching against noise text used
-        # to flag settled memories that merely share a keyword, e.g. "Kafka".)
-        leak = sum(1 for rt in retrieved_texts if rt.strip() in tentative_texts)
-        precision = (len(retrieved) - leak) / len(retrieved) if retrieved else 0
-
-        results.append({"query": tc.query, "recall": recall, "mrr": mrr,
-                        "precision": precision, "tentative_leak": leak,
-                        "retrieved_count": len(retrieved)})
+    for tc in cases:
+        context = _ids(retrieve_fn(tc.query))
+        top = context[:k]
+        truth = {POOL_INDEX[t] for t in tc.relevant_texts}
+        rank = next((r for r, i in enumerate(top, 1) if i in truth), None)
+        results.append({"query": tc.query,
+                        "recall": len(truth & set(top)) / len(truth),
+                        "mrr": 1.0 / rank if rank else 0.0,
+                        "context_recall": len(truth & set(context)) / len(truth),
+                        "context_items": len(context),
+                        "tentative_leak": sum(1 for i in context if i in TENTATIVE),
+                        "unknown_items": sum(1 for i in context if i is None)})
     avg = lambda key: round(sum(r[key] for r in results)/len(results), 4)
     return {"config": name, "recall@5": avg("recall"), "mrr": avg("mrr"),
-            "precision@5": avg("precision"),
+            "context_recall": avg("context_recall"),
+            "context_items": avg("context_items"),
             "tentative_leak_total": sum(r["tentative_leak"] for r in results),
+            "context_slots_total": sum(r["context_items"] for r in results),
+            "unknown_items_total": sum(r["unknown_items"] for r in results),
             "detail": results}
 
 
 def make_configs(memory):
+    import noesis.context.builder as builder_mod
     builder = memory._ctx_builder
     retriever = memory._retriever
     vs = memory.vector_store
+
+    def build(q, **replaced):
+        """The real ContextBuilder, with the named signal functions replaced."""
+        with patch.multiple(builder_mod, **replaced) if replaced else nullcontext():
+            return _parse_ctx(builder.build(q, user_id="abl_en", budget_tokens=2000))
+
+    off = lambda *a, **kw: []
+    # The same three signals with their status filters removed.
+    ungated = {
+        "semantic_signal":  lambda q, u, r, top_k=8: r.search(q, user_id=u, top_k=top_k),
+        "recency_signal":   lambda u, store, n=3: _everything(store, u)[:n],
+        "core_fact_signal": lambda u, store, top_k=3: sorted(
+            (m for m in store.get_all(u) if m["type"] in ("identity", "preference")),
+            key=lambda m: (-m["confidence"], -m["created_at"]))[:top_k],
+    }
     configs = {}
-    configs["Noesis-full"] = lambda q: _parse_ctx(builder.build(q, user_id="abl_en", budget_tokens=2000))
-    configs["Noesis-no-core"] = lambda q: _signals(q, memory, False, True, True)
-    configs["Noesis-no-recency"] = lambda q: _signals(q, memory, True, False, True)
-    configs["Noesis-no-semantic"] = lambda q: _signals(q, memory, True, True, False)
-    configs["Noesis-no-gating"] = lambda q: retriever.search(q, user_id="abl_en", top_k=5)
+    configs["Noesis-full"] = lambda q: build(q)
+    configs["Noesis-no-core"] = lambda q: build(q, core_fact_signal=off)
+    configs["Noesis-no-recency"] = lambda q: build(q, recency_signal=off)
+    configs["Noesis-no-semantic"] = lambda q: build(q, semantic_signal=off)
+    configs["Noesis-no-gating"] = lambda q: build(q, **ungated)
     configs["naive-RAG"] = lambda q: retriever.search(q, user_id="abl_en", top_k=5)
-    configs["recent-window"] = lambda q: vs.get_recent("abl_en", n=5)
-    configs["random"] = lambda q: _random(vs, k=5)
-    configs["all-inject"] = lambda q: vs.get_recent("abl_en", n=100, filter={"status":{"$in":["provisional","settled"]}})
+    configs["recent-window"] = lambda q: _everything(vs, "abl_en")[:5]
+    configs["random"] = lambda q: random.sample(_everything(vs, "abl_en"), 5)
     return configs
 
 def _parse_ctx(ctx_str):
@@ -271,24 +252,9 @@ def _parse_ctx(ctx_str):
             except: pass
     return nodes
 
-def _signals(query, memory, use_core, use_recency, use_semantic):
-    candidates = []
-    from noesis.context.signals import semantic_signal, recency_signal, core_fact_signal
-    if use_semantic:
-        try: candidates += semantic_signal(query, "abl_en", memory._retriever, top_k=8)
-        except: pass
-    if use_recency:
-        try: candidates += recency_signal("abl_en", memory.vector_store, n=3)
-        except: pass
-    if use_core:
-        try: candidates += core_fact_signal("abl_en", memory.vector_store, top_k=3)
-        except: pass
-    return candidates
-
-def _random(vs, k=5):
-    import random as rnd
-    items = vs.get_recent("abl_en", n=100)
-    return rnd.sample(items, min(k, len(items)))
+def _everything(vs, user_id):
+    """Every stored memory, tentative included, newest first."""
+    return sorted(vs.get_all(user_id), key=lambda m: -m["created_at"])
 
 
 def main():
@@ -309,15 +275,19 @@ def main():
         print(f"> Eval: {name}")
         res = evaluate_config(name, fn, TEST_CASES, k=5)
         all_results.append(res)
-        print(f"  Recall@5={res['recall@5']:.1%}  MRR={res['mrr']:.3f}  Prec@5={res['precision@5']:.1%}  leak={res['tentative_leak_total']}\n")
+        print(f"  Recall@5={res['recall@5']:.1%}  MRR={res['mrr']:.3f}  context recall={res['context_recall']:.1%}  "
+              f"items={res['context_items']:.1f}  leak={res['tentative_leak_total']}/{res['context_slots_total']}\n")
+        if res["unknown_items_total"]:
+            print(f"  ! {res['unknown_items_total']} retrieved texts not found in the pool\n")
     all_results.sort(key=lambda x: x["recall@5"], reverse=True)
     print("="*72)
     print("  Final ranking (by Recall@5)")
     print("="*72)
-    print(f"  {'Config':<20s} {'Recall@5':>10s} {'MRR':>8s} {'Prec@5':>8s} {'Leak':>6s}")
-    print(f"  {'-'*54}")
+    print(f"  {'Config':<20s} {'Recall@5':>10s} {'MRR':>8s} {'Ctx rec':>8s} {'Items':>6s} {'Leak':>9s}")
+    print(f"  {'-'*66}")
     for r in all_results:
-        print(f"  {r['config']:<20s} {r['recall@5']:>9.1%} {r['mrr']:>8.3f} {r['precision@5']:>8.1%} {r['tentative_leak_total']:>6d}")
+        print(f"  {r['config']:<20s} {r['recall@5']:>9.1%} {r['mrr']:>8.3f} {r['context_recall']:>8.1%} "
+              f"{r['context_items']:>6.1f} {r['tentative_leak_total']:>4d}/{r['context_slots_total']:<4d}")
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     path = RESULTS_DIR / f"ablation_baseline_en_{ts}.json"
     with open(path, "w", encoding="utf-8") as f:

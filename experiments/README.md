@@ -20,7 +20,7 @@ experiments/
 | Script | What it measures |
 |---|---|
 | `ab_comparison_en.py` / `ab_comparison.py` | A/B: with-Noesis vs without-memory, EN + ZH |
-| `ablation_baseline_en.py` | Component ablation (semantic/gating/graph off) |
+| `ablation_baseline_en.py` | Component ablation (semantic/recency/core-fact/gating off) |
 | `B_e2e_strategy_en.py` | End-to-end vs naive-RAG vs recent-window vs no-memory |
 | `cross_tool.py` | Cross-tool consistency (same user, different AI tools) |
 | `contradiction_poisoning.py` | Robustness to contradictory/stale stances |
@@ -58,6 +58,16 @@ ablation and scale numbers exactly.
   a tentative/poison statement. The old keyword metric also counted settled
   memories that shared a word with one ("Kafka", "Emacs").
 - Scale: adds a standard top-5 dense-retrieval RAG baseline (`topk-RAG`).
+- Ablation, second correction (`ablation_baseline_en_20261017_102429.json`,
+  same software versions; two runs gave identical results): scoring uses exact
+  memory identity instead of phrase matching (which credited any memory sharing
+  wording such as "I prefer"); "Precision@5", which only counted non-tentative
+  results, is replaced by the recall, size and leak of the full injected
+  context; every Noesis variant runs the real `ContextBuilder` with one signal
+  replaced, so the old core-fact and recency rows can now differ from the full
+  system; memory ages are written to the store (`update()` had dropped them);
+  and the recent-window and random baselines draw from every stored memory,
+  tentative ones included.
 
 `python3 experiments/verify_paper.py` recomputes every number printed in the
 paper from these files and the June result files.

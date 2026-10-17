@@ -87,15 +87,24 @@ for what, paper, actual in [("old stance leaked before", 28, bl), ("old stance l
                             ("leak before % (93%)", 93, round(100 * bl / 30)), ("leak after % (7%)", 7, round(100 * al / 30))]:
     chk("Table 2", what, paper, actual)
 
-# ── RQ2: ablation (Table 4) — corrected leak metric ─────────────────────────────
-abl = {r["config"]: r for r in load("ablation_baseline_en_20261009_190520.json")["results"]}
-for cfg, rec, mrr, prec, leak in [("Noesis-full", 1.00, 1.000, 1.000, 0), ("Noesis-no-core", 1.00, 1.000, 1.000, 0),
-                                  ("Noesis-no-recency", 1.00, 1.000, 1.000, 0), ("Noesis-no-gating", 1.00, 1.000, 0.924, 19),
-                                  ("Noesis-no-semantic", 0.49, 0.160, 1.000, 0), ("naive-RAG", 1.00, 1.000, 0.924, 19),
-                                  ("recent-window", 0.22, 0.099, 1.000, 0), ("random", 0.45, 0.206, 1.000, 0)]:
+# ── RQ2: ablation (Table 4) — exact-identity scoring, isolated variants ────────
+abl = {r["config"]: r for r in load("ablation_baseline_en_20261017_102429.json")["results"]}
+for cfg, rec, mrr, crec, items, leak, slots in [
+        ("Noesis-full", 99, 1.000, 100, 10.9, 0, 546), ("Noesis-no-core", 99, 1.000, 100, 9.7, 0, 487),
+        ("Noesis-no-recency", 99, 1.000, 100, 9.7, 0, 484), ("Noesis-no-gating", 99, 1.000, 100, 11.5, 73, 573),
+        ("Noesis-no-semantic", 24, 0.105, 24, 5.0, 0, 250), ("naive-RAG", 99, 1.000, 99, 5.0, 19, 250),
+        ("recent-window", 17, 0.084, 17, 5.0, 50, 250), ("random", 12, 0.063, 12, 5.0, 51, 250)]:
     r = abl[cfg]
-    chk("Table 4", f"{cfg}", (rec, mrr, prec, leak),
-        (round(r["recall@5"], 2), round(r["mrr"], 3), round(r["precision@5"], 3), r["tentative_leak_total"]))
+    chk("Table 4", f"{cfg}", (rec, mrr, crec, items, leak, slots),
+        (round(100 * r["recall@5"]), round(r["mrr"], 3), round(100 * r["context_recall"]),
+         round(r["context_items"], 1), r["tentative_leak_total"], r["context_slots_total"]))
+chk("Table 4", "every retrieved memory maps to a pool memory", 0,
+    sum(r["unknown_items_total"] for r in abl.values()))
+old_abl = {r["config"]: r for r in load("ablation_baseline_en_20261009_190520.json")["results"]}
+chk("Limitations", "old phrase-matched Recall@5: random 45%, w/o semantic 49%, Noesis 100%", (45, 49, 100),
+    tuple(round(100 * old_abl[c]["recall@5"]) for c in ("random", "Noesis-no-semantic", "Noesis-full")))
+chk("RQ2", "items per query: full 10.9, w/o core / recency 9.7", (10.9, 9.7, 9.7),
+    tuple(round(abl[c]["context_items"], 1) for c in ("Noesis-full", "Noesis-no-core", "Noesis-no-recency")))
 
 # ── RQ2: poisoning (exact poison-item matching) ─────────────────────────────────
 po = load("poisoning_exact_20261009_190546.json")["exp3"]

@@ -1,20 +1,20 @@
 \begin{table}[ht]
 \centering
-\caption{Ablation study: retrieval-layer evaluation (50 queries, English). Removing each component shows its contribution.}
+\caption{Ablation and baselines (50 queries over 28 memories, 5 of them tentative; retrieval-layer, 2{,}000-token budget). A retrieved memory counts only if it is the ground-truth memory itself. Recall@5 and MRR use the first five memories in injection order; context recall, items, and leak cover everything the configuration injects, and leak counts tentative memories among those slots.}
 \label{tab:ablation}
-\begin{tabular}{lcccc}
+\begin{tabular}{lccccc}
 \toprule
-\textbf{Configuration} & \textbf{Recall@5} & \textbf{MRR} & \textbf{Prec@5} & \textbf{Tentative Leak} \\
+\textbf{Config} & \textbf{Recall@5} & \textbf{MRR} & \textbf{Context recall} & \textbf{Items} & \textbf{Leak} \\
 \midrule
-\textbf{Noesis (full)}  & \textbf{100\%} & \textbf{1.000} & \textbf{100\%} & \textbf{0} \\
-Noesis w/o core-fact    & 100\% & 1.000 & 100\% & 0 \\
-Noesis w/o recency      & 100\% & 1.000 & 100\% & 0 \\
-Noesis w/o gating        & 100\% & 1.000 & 92\% & 19 \\
-Noesis w/o semantic     & 49\%  & 0.160 & 100\% & 0 \\
+\textbf{Noesis (full)} & 99\% & 1.000 & 100\% & 10.9 & 0/546 \\
+w/o core-fact signal & 99\% & 1.000 & 100\% & 9.7 & 0/487 \\
+w/o recency signal & 99\% & 1.000 & 100\% & 9.7 & 0/484 \\
+w/o confidence gating & 99\% & 1.000 & 100\% & 11.5 & 73/573 \\
+w/o semantic retrieval & 24\% & 0.105 & 24\% & 5.0 & 0/250 \\
 \midrule
-Naive-RAG               & 100\% & 1.000 & 92\% & 19 \\
-Recent-window           & 22\%  & 0.099 & 100\% & 0 \\
-Random                  & 45\%  & 0.206 & 100\% & 0 \\
+Top-5 RAG & 99\% & 1.000 & 99\% & 5.0 & 19/250 \\
+Recent-window & 17\% & 0.084 & 17\% & 5.0 & 50/250 \\
+Random & 12\% & 0.063 & 12\% & 5.0 & 51/250 \\
 \bottomrule
 \end{tabular}
 \end{table}
