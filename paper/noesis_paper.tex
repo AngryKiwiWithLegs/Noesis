@@ -36,9 +36,10 @@
 \begin{abstract}
 Users converse with multiple AI assistants daily, yet each tool's memory is
 isolated: a stance expressed in one tool is unknown to the others, and each
-conversation starts from scratch. Existing approaches either store flat facts
-without a notion of confidence, or inject all retrieved context regardless of
-relevance, causing token costs to explode with memory size. I present
+conversation starts from scratch. Shared and evolving memory layers already
+exist; this paper studies a narrower design choice: an explicit admission rule
+that decides whether a captured statement is firm enough to enter the prompt
+at all. I present
 \textbf{Noesis}, a local-first memory layer that (1) extracts typed
 \emph{thoughts} from conversations across tools into a shared per-user store,
 (2) gates injection behind a confidence lifecycle in which thoughts mature from
@@ -74,15 +75,17 @@ GPT; a design decision reached with Gemini is invisible to Claude. The
 reasoning a user performs across tools, such as their positions, preferences,
 and open questions, evaporates at every tool boundary.
 
-Two families of systems address parts of this problem, each with a critical
-gap. \emph{Fact stores} such as Mem0~\citep{mem0} persist extracted facts but
-treat all memories equally: a firmly held professional identity and a
-passing mention of a tool have the same standing, and there is no mechanism
-for a memory to earn trust over time. \emph{Retrieval-augmented generation}
-(RAG)~\citep{lewis2020rag} retrieves relevant context for each query, but
-naive variants inject everything retrieved; as personal memory grows into
-the hundreds of items, injected context grows linearly, burying the relevant
-signal and inflating cost (I measure 7{,}192 tokens at $n{=}500$).
+Existing systems already address much of this problem (\S\ref{sec:related}).
+Mem0~\citep{mem0} extracts and consolidates salient facts from conversations
+and offers a graph-based variant; OpenMemory MCP~\citep{openmemory} shares one
+local store across MCP clients; Zep~\citep{zep} records when facts become valid
+and invalid in a temporal knowledge graph; and Hindsight~\citep{hindsight}
+separates facts from opinions and attaches an evolving confidence score to
+each opinion. \emph{Retrieval-augmented generation}
+(RAG)~\citep{lewis2020rag} supplies the underlying mechanism of fetching
+relevant context per query; its simplest variant, injecting every stored item,
+grows linearly with memory size and buries the relevant signal (I measure
+7{,}192 tokens at $n{=}500$).
 
 Noesis is built on a different premise: \emph{what} gets injected matters as
 much as \emph{whether} anything is injected. Thoughts should earn their way
@@ -138,39 +141,126 @@ released.\footnote{\url{https://github.com/AngryKiwiWithLegs/Noesis}}
 \section{Related Work}
 \label{sec:related}
 
-\paragraph{Memory for LLM agents.}
-MemGPT~\citep{memgpt} treats the LLM as an operating system paging memory
-between contexts; Letta extends this with archival storage. Mem0~\citep{mem0}
-extracts and updates atomic facts with an LLM pipeline, reporting gains over
-full-history baselines; A-MEM~\citep{amem} links memories into an evolving
-Zettelkasten-style network, and Zep~\citep{zep} stores them in a temporal
-knowledge graph. Generative Agents~\citep{generativeagents} rank memories by
-recency, importance, and relevance, and MemoryBank~\citep{memorybank} lets
-them fade along an Ebbinghaus forgetting curve, the closest precedents for
-Noesis's type-specific decay. OpenMemory MCP~\citep{openmemory} already
-shares one local store across MCP clients such as Cursor and Claude Desktop.
-Noesis differs in (a) its lifecycle, where a memory must earn injection
-rights before it reaches the prompt, and (b) its entry points beyond MCP: an
-OpenAI-compatible proxy and a browser extension make clients outside MCP
-first-class participants. Benchmarks such as LoCoMo~\citep{locomo} and
-LongMemEval~\citep{longmemeval} offer standard long-term-memory evaluations
-that this paper does not yet use.
+This is a targeted review, not a systematic one; sources were last checked on
+17 October 2026. I cite peer-reviewed versions where they exist; preprints and
+vendor announcements are marked as such in the references, and statements
+about a system describe the cited version, not later releases.
+
+\paragraph{Foundations of agent memory.}
+Maintaining information beyond a context window is not new.
+MemGPT~\citep{memgpt} treats context management as movement between memory
+tiers; Generative Agents~\citep{generativeagents} store experience, synthesize
+reflections from it, and rank memories by recency, importance, and relevance;
+and MemoryBank~\citep{memorybank} lets memories fade along an Ebbinghaus
+forgetting curve, the closest precedent for Noesis's type-specific decay.
+Together these separate storage, consolidation, retrieval, and control.
+Recent surveys organize the field by the forms, functions, and dynamics of
+memory~\citep{hu2025memory} and, for graph-based memory, by extraction,
+storage, retrieval, and evolution~\citep{yang2026graphmemory}. Against this
+background, Noesis's candidate contribution is narrow: an \emph{admission
+policy} that decides which stored items are eligible to be injected at all.
+
+\paragraph{Shared and evolving memory services.}
+Mem0~\citep{mem0} extracts and consolidates salient facts from ongoing
+conversations, and its graph-based variant captures relations between them.
+OpenMemory MCP~\citep{openmemory} runs a Mem0-based store locally and shares
+it across MCP clients such as Cursor, Claude Desktop, Windsurf, and Cline,
+through tools that add, search, list, and delete memories. Noesis shares this
+local, cross-client design. It differs in two respects: it also captures
+clients outside MCP, through an OpenAI-compatible proxy and a browser
+extension; and it withholds stored items whose status is below provisional,
+whereas the OpenMemory announcement describes no rule that withholds memories
+by confidence or status. Zep~\citep{zep} builds a temporal knowledge graph
+(Graphiti) of episodes, entities, and communities. Each fact edge carries
+validity timestamps, an LLM compares new facts with related existing ones,
+and a contradicted fact is invalidated rather than deleted; retrieval combines
+cosine similarity, BM25, and breadth-first graph search with rerankers. Zep's
+invalidation answers the question Noesis's supersession check (\S\ref{sec:supersession})
+answers---is this stance still current?---with a more general, LLM-based
+mechanism, where Noesis uses replacement verbs and a domain keyword map that
+are cheaper but narrower. Zep's paper describes relevance reranking but no
+threshold that keeps a valid fact out of the results; Noesis's gate addresses
+that separate question of whether a statement was asserted firmly enough to be
+used.
+
+\paragraph{Hindsight.}
+Hindsight~\citep{hindsight} is the closest system to Noesis. It separates
+an agent's memory into four networks (objective world facts, the agent's own
+experiences, opinions, and observations that summarize entities), extracts
+facts with an LLM, and recalls them through four channels (semantic, BM25,
+graph spreading activation, and temporal) fused with reciprocal-rank fusion,
+reranked with a cross-encoder, and capped by a token budget. Its opinions
+carry a confidence score that evidence reinforces, weakens, or contradicts.
+Typed memory, hybrid retrieval with a budget, and evolving belief confidence
+are therefore all established, and I do not claim them as contributions.
+The differences are narrower. First, Hindsight's confidence is attached to
+opinions the \emph{agent} forms during reflection, and, in the description I
+examined, it is not a condition for recall; Noesis scores the \emph{user's}
+own statements of every type and admits nothing below provisional into the
+prompt. Second, the intended deployment differs: Hindsight indexes memory in
+PostgreSQL with pgvector and calls an LLM to extract facts, whereas Noesis runs
+on SQLite with a CPU embedding model and falls back to deterministic
+extraction without an API key. Third, Noesis captures conversations from
+several different AI tools into one store. I have not compared the two
+systems empirically, and this paper does not show that Noesis's gate
+improves on confidence-annotated recall.
+
+\paragraph{Learned and graph-structured memory control.}
+A-MEM~\citep{amem} builds Zettelkasten-style notes and updates their links and
+attributes as new memories arrive. GraphRAG~\citep{graphrag} builds an entity
+graph with precomputed community summaries to answer global questions about a
+document corpus, a different task from tracking one user's changing
+preferences. AgeMem~\citep{agemem} exposes storing, retrieving, updating,
+summarizing, and discarding as tool actions and trains the agent's policy to
+use them with reinforcement learning; MRAgent~\citep{mragent} accesses an
+associative Cue--Tag--Content graph iteratively, guided by intermediate
+reasoning. These systems treat memory management as a control and learning
+problem. Noesis instead uses fixed rules: its intended advantages are
+transparency (each admission decision traces to a score and a threshold, and
+memory is human-editable Markdown), low overhead, and portability across
+tools, not task performance, which this paper does not compare against them.
+
+\paragraph{Benchmarks.}
+LoCoMo~\citep{locomo} and LongMemEval~\citep{longmemeval}, which tests
+extraction, multi-session and temporal reasoning, knowledge updates, and
+abstention, are the standard long-term-memory evaluations; Hindsight and
+MRAgent report results on both. This paper does not yet use them, and results
+across systems on them are comparable only when the backbone model, scoring,
+available history, and budget are aligned.
+
+\paragraph{Memory security.}
+Persistent memory adds attack surface. MINJA~\citep{minja} plants malicious
+records in an agent's memory through ordinary queries and observed outputs,
+without direct access to the memory store. A recent survey~\citep{lin2026memsecurity}
+organizes attacks and defenses across six lifecycle phases (write, store,
+retrieve, execute, share and propagate, forget and roll back) and argues that
+memory security cannot be retrofitted at retrieval or execution time alone.
+Noesis's confidence gate acts at retrieval time and filters by how firmly
+something was said, so it does not address write-time attacks: a firmly
+worded planted statement reaches provisional (\S\ref{sec:lifecycle},
+\S\ref{sec:limitations}). A shared cross-tool store also adds a propagation
+path, since a record written through one tool is injected into the others.
+``Local-first'' here describes storage and retrieval; when configured,
+conversation text still reaches a cloud extraction model, and injected
+memories reach whichever provider answers the request.
 
 \paragraph{Retrieval-augmented generation.}
 RAG~\citep{lewis2020rag} and successors retrieve per-query context.
 Self-RAG~\citep{selfrag} and FLARE~\citep{flare} improve retrieval quality
 or adaptivity, but address corpus QA, not a user's evolving personal memory.
-My scale experiment (\S\ref{sec:scale}) shows why naive inject-everything
-retrieval fails for personal memory: cost grows linearly and ranking
-collapses. Noesis pairs hybrid retrieval (BM25 + vector + RRF, with
-time-decay weighting) with a hard token budget and a confidence gate.
+My scale experiment (\S\ref{sec:scale}) shows that injecting every stored
+memory fails for personal memory (cost grows linearly and ranking collapses)
+and that a standard top-5 retriever avoids both. Noesis pairs hybrid
+retrieval (BM25 + vector + RRF, with time-decay weighting) with a hard token
+budget and a confidence gate.
 
 \paragraph{Personalization.}
 PALR~\citep{palr} and related work personalize outputs from user interaction
 history, typically for recommendation-style tasks. Chat-tool vendor memory
 features (e.g., ChatGPT memory) are per-product and closed. Noesis's
-cross-tool experiment (\S\ref{sec:crosstool}) demonstrates a structural
-advantage of user-scoped rather than tool-scoped memory.
+cross-tool experiment (\S\ref{sec:crosstool}) shows the benefit of
+user-scoped over tool-scoped access; it does not compare Noesis with other
+shared stores.
 
 \paragraph{Visualization of embedding spaces.}
 t-SNE~\citep{tsne} and UMAP~\citep{umap} project high-dimensional
