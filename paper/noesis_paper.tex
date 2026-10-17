@@ -279,7 +279,8 @@ API clients point at a local OpenAI-compatible proxy, which injects memory
 into the system prompt, forwards the request to the configured provider
 (cloud or local), and captures the conversation for memory formation;
 Claude Desktop connects through an MCP server and the browser extension
-through a WebSocket.
+through a WebSocket. These routes do not behave alike, and the experiments use
+only the proxy (\S\ref{sec:setup}).
 
 \subsection{Thought taxonomy and two-phase capture}
 \label{sec:taxonomy}
@@ -428,7 +429,29 @@ outcomes are tested with McNemar's $\chi^2$.
 \paragraph{Retrieval-layer experiments.} Ablation, scale, and cross-tool
 experiments run against the real pipeline without LLM calls, measuring
 Recall@5, MRR, the recall and size of the full injected context, tentative
-leakage, and injected tokens.
+leakage, and injected tokens. They call the Python API directly, bypassing
+all three integration routes; the cross-tool experiment simulates different
+tools by labeling each stored statement with a source tool rather than by
+running real clients.
+
+\paragraph{Integration routes.} Noesis offers three routes into the same
+store (Figure~\ref{fig:architecture}), but they behave differently, and this
+paper evaluates one of them end to end. The \emph{proxy} retrieves context for
+the latest user message, appends it to the system message, forwards the
+request, and stores the exchange, so injection and capture are automatic; the
+A/B and end-to-end experiments (\S\ref{sec:ab}) run through it. The \emph{MCP
+server} exposes five tools (\texttt{remember}, \texttt{recall},
+\texttt{wiki\_query}, \texttt{inspect\_memory}, \texttt{memory\_status}).
+Under MCP the host coordinates the model and aggregates context, and tools
+are model-controlled~\citep{mcpspec}: nothing is stored unless the model calls
+\texttt{remember}, in words the model chooses, and nothing is injected unless
+it calls \texttt{recall}. Exposing these tools therefore does not ensure that
+they are called at the right time, and the MCP route is not equivalent to the
+proxy. The server implements the 2024-11-05 protocol revision and has unit
+tests, but no experiment here uses it. The \emph{browser extension} sends each
+completed user--assistant turn on the ChatGPT, Claude, Gemini, and Perplexity
+web apps to the daemon over a WebSocket. It only captures: it cannot inject
+memory into those pages, and it is not evaluated here.
 
 \paragraph{Reproducibility.} Every experimental number in this paper is
 recomputed from the raw result files by a released script
@@ -669,6 +692,43 @@ better'' uses no listed replacement verb and names no known domain, and once
 because ``I switched to Node.js'' has the verb but Node.js is missing from
 the domain map. A broader mind-change detector is the matching fix.
 
+\paragraph{Noesis inside an agent harness.} An execution harness is the
+software around a model that manages a task's control flow, tool use, state,
+and recovery, for example by carrying progress across
+sessions~\citep{anthropicharness}; it is distinct from the experiment harness
+used in this paper. Noesis fits inside such a harness as a memory service, not
+as a replacement for orchestration, and what follows is a proposal that this
+paper does not implement or evaluate. Before a model step, the harness would
+identify the user, project, task, and access scope, request approved memories,
+and insert a bounded evidence block that names each memory's source; after the
+step, it would send candidate memories with their sources for asynchronous
+processing; and it would keep an explicit \texttt{recall} call for when a tool
+result changes the question. LangGraph shows the intended division of labor:
+it keeps thread-scoped checkpoints of a run's state separate from a
+cross-thread store for long-term memory such as user
+preferences~\citep{langgraph}. Noesis could fill the second role but not the
+first: remembering that a user prefers PostgreSQL is different from recording
+which step of an interrupted database migration has finished.
+
+\paragraph{What a harness integration would need.} A harness would need a
+contract that the current code does not provide: reads, candidate writes,
+corrections, deletion, and audit, each with stable event identifiers and a
+record of where every memory came from. Today, corrections and deletions
+happen only by editing or deleting the Markdown files in the vault. Three
+further gaps are visible in the code. First, the repetition signal counts
+every stored record in the same topic that shares at least two keywords,
+whatever its source, and the proxy stores each request's full message list;
+replayed history, retried requests, and assistant paraphrases can therefore
+raise a memory's confidence as if new evidence had arrived. I have not
+measured how often this happens. Second, a statement is stored at once but
+becomes injectable only after the asynchronous Phase~2 scores it, and read
+consistency under concurrent agents is unspecified. Third, retrieved memories
+are appended to the system message under a plain heading, in the same message
+as the host's own instructions; an integration should mark them as data,
+deduplicate them against the harness's own summaries and instruction files,
+and never let them grant permissions or override higher-priority
+instructions.
+
 \paragraph{Negative results.} I report that the supersession check
 initially never ran, so stale stances leaked 93\% of the time until it was
 fixed (\S\ref{sec:supersession}); that core-fact and recency signals added
@@ -695,6 +755,16 @@ injected memory, directly addressing the qwen2.5 comprehension ceiling.
 \paragraph{Stronger evaluation.} LLM-as-judge scoring to complement keyword
 hits; distractor questions; a second cloud model to replicate the Gemini
 result; longitudinal deployment data beyond synthetic profiles.
+
+\paragraph{Harness-level evaluation.} With the model, tasks, tools, and
+budgets held fixed, compare a harness's native memory, a simple shared store,
+and Noesis-backed memory on task completion, correct use of preferences,
+resumption after an interruption, stale-information errors, isolation between
+projects, and unnecessary retrieval calls, counting the full cost of capture,
+extraction, maintenance, retrieval, and generation rather than injected tokens
+alone. Counting repetition only across distinct user statements, with their
+sources recorded, is the matching fix for the first gap in
+\S\ref{sec:discussion}.
 
 % ══════════════════════════════════════════════════════════════════════════════
 \section{Limitations}
