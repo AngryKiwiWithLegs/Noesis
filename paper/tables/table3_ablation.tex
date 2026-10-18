@@ -1,6 +1,6 @@
 \begin{table}[ht]
 \centering
-\caption{Ablation and baselines (50 queries over 28 memories, 5 of them tentative; retrieval-layer, 2{,}000-token budget). A retrieved memory counts only if it is the ground-truth memory itself. Recall@5 and MRR use the first five memories in injection order, and a query that returns fewer than five memories is scored on what it returns; context recall, items, and leak cover everything the configuration injects, and leak counts tentative memories among those slots.}
+\caption{Ablation and baselines (50 queries over 28 memories, 5 tentative; retrieval-layer, 2{,}000-token budget). A retrieved memory counts only if it is the ground-truth memory. Recall@5 and MRR use the first five memories in injection order (or all, if fewer are returned); context recall, items, and leak cover everything injected, and leak counts tentative memories among those slots.}
 \label{tab:ablation}
 \begin{tabular}{lccccc}
 \toprule
