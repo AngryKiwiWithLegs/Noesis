@@ -10,7 +10,7 @@ read from the Noesis source. Run from anywhere:
 
     python3 experiments/verify_paper.py
 """
-import ast, json, math, os, sqlite3, sys
+import ast, json, math, os, random, sqlite3, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -54,6 +54,23 @@ for model, fname, w, wo, d, x2 in [
     chk("RQ1", f"{model}: McNemar chi2", x2, round(mcnemar_cc(b, c), 2))
     chk("RQ1", f"{model}: p < 0.001 (chi2 > 10.83)", True, mcnemar_cc(b, c) > 10.83)
 chk("RQ1", "memory hurt in 10 of 330 answers", (10, 330), (sum(v[4] for v in ab.values()), sum(v[5] for v in ab.values())))
+
+def profile_bootstrap(det, draws=20000, seed=0):
+    """95% percentile interval (pp) for the paired gain, resampling whole profiles."""
+    by = {}
+    for r in det:
+        by.setdefault(r["profile"], []).append(int(r["with_mem_hit"]) - int(r["without_mem_hit"]))
+    profiles = sorted(by)
+    rng = random.Random(seed)
+    gains = []
+    for _ in range(draws):
+        picks = [by[rng.choice(profiles)] for _ in profiles]
+        gains.append(sum(map(sum, picks)) / sum(map(len, picks)))
+    gains.sort()
+    return len(profiles), round(100 * gains[int(0.025 * draws)], 1), round(100 * gains[int(0.975 * draws)], 1)
+
+for model, ci in [("Gemini Flash-Lite", (34.5, 51.8)), ("gemma3:4b", (37.3, 59.1)), ("qwen2.5:3b", (13.6, 36.4))]:
+    chk("RQ1", f"{model}: 95% interval resampling 22 profiles", (22,) + ci, profile_bootstrap(ab[model][0]))
 _, gw, gwo, *_ = ab["gemma3:4b"]
 chk("Discussion", "gemma3:4b relative gain %", 139, round(100 * (gw - gwo) / gwo))
 same_q = all(a["question"].startswith(b_["question"][:36]) or b_["question"].startswith(a["question"][:36])

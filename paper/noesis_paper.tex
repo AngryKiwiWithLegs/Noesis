@@ -466,7 +466,11 @@ tagged \texttt{v1.0-preprint} in the repository.
 Table~\ref{tab:ab_results} and Figure~\ref{fig:ab} show the headline
 result. Three findings stand out. First, \emph{injection helps everywhere}:
 all three models improve significantly, and memory \emph{hurt} in only 10 of
-330 paired answers (3.0\%). Second, \emph{memory levels the field between
+330 paired answers (3.0\%). Because the five questions of a profile share one
+memory store, I also resampled whole profiles (20{,}000 draws over the 22
+profiles): the 95\% intervals for the gains are $+34.5$ to $+51.8$ points for
+Gemini Flash-Lite, $+37.3$ to $+59.1$ for gemma3:4b, and $+13.6$ to $+36.4$
+for qwen2.5:3b, all above zero. Second, \emph{memory levels the field between
 local and cloud}: with injection, gemma3:4b (4B parameters, local) reaches
 82.7\%, nearly matching Gemini Flash-Lite's 85.5\%, while its no-memory
 baseline (34.5\%) trails Gemini's 41.8\%. Third, \emph{the smallest model
