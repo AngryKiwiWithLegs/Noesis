@@ -80,7 +80,7 @@ def mcnemar_chi2(b, c):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Figure 3: A/B Comparison — accuracy with vs without memory, per model
+# Figure 3: A/B Comparison — keyword-hit rate with vs without memory, per model
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def fig3_ab_comparison():
@@ -130,7 +130,7 @@ def fig3_ab_comparison():
     ax.set_ylim(0, 100)
     ax.set_yticks([0, 25, 50, 75, 100])
     ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0f}%"))
-    ax.set_ylabel("Accuracy (keyword hit)")
+    ax.set_ylabel("Keyword-hit rate")
     ygrid(ax)
 
     fig.legend(handles=[Patch(color=COLORS["baseline"], label="Without memory"),

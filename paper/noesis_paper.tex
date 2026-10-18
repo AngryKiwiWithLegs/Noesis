@@ -156,8 +156,9 @@ rule, under which nothing below provisional is injected and which the
 OpenMemory announcement does not describe, and (b) entry points beyond MCP (an
 OpenAI-compatible proxy and a browser extension). Its candidate contribution
 is therefore the admission policy, not memory beyond a context window in
-general. Benchmarks such as LoCoMo~\citep{locomo} and
-LongMemEval~\citep{longmemeval} are not yet used here.
+general. Benchmarks such as LoCoMo~\citep{locomo},
+LongMemEval~\citep{longmemeval}, and the in-progress
+LongMemEval-V2~\citep{longmemevalv2} are not yet used here.
 
 \paragraph{Hindsight.} Hindsight~\citep{hindsight}, the closest system,
 separates world facts, the agent's experiences, opinions, and entity
@@ -169,11 +170,16 @@ examined, does not gate recall, whereas Noesis gates the \emph{user's} own
 statements, runs on SQLite with a CPU embedding model, and pools several AI
 tools into one store. I have not compared the two empirically.
 
-\paragraph{Learned memory control.} AgeMem~\citep{agemem}
-learns when to store, retrieve, update, summarize, or discard memories. Noesis
-uses fixed rules instead; its intended advantages (transparency, low overhead,
-portability) are not measured here beyond the latencies in
-\S\ref{sec:taxonomy}.
+\paragraph{Learned and graph-structured memory control.} Surveys organize
+agent memory by forms, functions, and dynamics~\citep{hu2025memory} and graph
+memory by extraction, storage, retrieval, and
+evolution~\citep{yang2026graphmemory}. GraphRAG~\citep{graphrag} summarizes
+entity communities across a corpus, a different task from tracking one user's
+preferences. AgeMem~\citep{agemem} learns when to store, retrieve, update,
+summarize, or discard memories, and MRAgent~\citep{mragent} explores an
+associative memory graph guided by reasoning. Noesis uses fixed rules instead;
+its intended advantages (transparency, low overhead, portability) are not
+measured here beyond the latencies in \S\ref{sec:taxonomy}.
 
 \paragraph{Memory security.} MINJA~\citep{minja} plants malicious memories
 through ordinary queries, and a survey~\citep{lin2026memsecurity} argues that
@@ -587,7 +593,8 @@ in both leaks the detector never fired, because its lexicon lacked the
 replacement verb in one case and the domain (Node.js) in the other.
 
 \paragraph{Noesis inside an agent harness.} An execution harness manages a
-task's control flow, tools, state, and recovery~\citep{anthropicharness};
+task's control flow, tools, state, and recovery~\citep{anthropicharness}, and
+useful scaffolding changes as models improve~\citep{anthropicharness2026};
 Noesis would serve inside one as memory, not orchestration, though this is
 neither implemented nor evaluated here. The harness would insert approved
 memories for the current user, project, and scope as a bounded, sourced block
@@ -630,7 +637,8 @@ supersession relations would let ``PostgreSQL for analytics'' and ``MySQL for
 a legacy app'' coexist, as in Zep~\citep{zep}; derived claims are not
 independent evidence, so graph centrality should not raise confidence, and the
 deciding test crosses flat and graph-backed stores with and without the same
-gate.
+gate. A graph neural network~\citep{battaglia2018relational} would also need
+held-out users, domains, and time periods.
 
 \paragraph{Stronger evaluation.} LLM-as-judge scoring to complement keyword
 hits; distractor questions; a second cloud model; longitudinal data beyond
