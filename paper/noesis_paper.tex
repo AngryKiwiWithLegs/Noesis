@@ -156,9 +156,8 @@ rule, under which nothing below provisional is injected and which the
 OpenMemory announcement does not describe, and (b) entry points beyond MCP (an
 OpenAI-compatible proxy and a browser extension). Its candidate contribution
 is therefore the admission policy, not memory beyond a context window in
-general. Benchmarks such as LoCoMo~\citep{locomo},
-LongMemEval~\citep{longmemeval}, and LongMemEval-V2~\citep{longmemevalv2} (in
-progress; it adds workflow memory) are not yet used here.
+general. Benchmarks such as LoCoMo~\citep{locomo} and
+LongMemEval~\citep{longmemeval} are not yet used here.
 
 \paragraph{Hindsight.} Hindsight~\citep{hindsight}, the closest system,
 separates world facts, the agent's experiences, opinions, and entity
@@ -170,16 +169,11 @@ examined, does not gate recall, whereas Noesis gates the \emph{user's} own
 statements, runs on SQLite with a CPU embedding model, and pools several AI
 tools into one store. I have not compared the two empirically.
 
-\paragraph{Learned and graph-structured memory control.} Surveys organize
-agent memory by forms, functions, and dynamics~\citep{hu2025memory} and graph
-memory by extraction, storage, retrieval, and
-evolution~\citep{yang2026graphmemory}. GraphRAG~\citep{graphrag} summarizes
-entity communities over a corpus, a different task from tracking one user's
-preferences; AgeMem~\citep{agemem} learns when to store, retrieve, update,
-summarize, or discard; MRAgent~\citep{mragent} explores an associative memory
-graph guided by reasoning. Noesis uses fixed rules instead; its intended
-advantages (transparency, low overhead, portability) are not measured here
-beyond the latencies in \S\ref{sec:taxonomy}.
+\paragraph{Learned memory control.} AgeMem~\citep{agemem}
+learns when to store, retrieve, update, summarize, or discard memories. Noesis
+uses fixed rules instead; its intended advantages (transparency, low overhead,
+portability) are not measured here beyond the latencies in
+\S\ref{sec:taxonomy}.
 
 \paragraph{Memory security.} MINJA~\citep{minja} plants malicious memories
 through ordinary queries, and a survey~\citep{lin2026memsecurity} argues that
@@ -189,23 +183,20 @@ retrieval and judges how firmly something was said, so a firmly worded planted
 statement passes (\S\ref{sec:limitations}), and a shared store spreads it to
 every tool.
 
-{\sloppy
-\paragraph{Retrieval-augmented generation.} RAG~\citep{lewis2020rag} and
-successors such as Self-RAG~\citep{selfrag} and FLARE~\citep{flare} improve
-per-query retrieval for corpus QA, not a user's evolving personal memory.
-Noesis pairs hybrid retrieval with a hard token budget and a confidence gate;
-\S\ref{sec:scale} shows why injecting everything fails for personal memory.\par}
+\paragraph{Retrieval-augmented generation.} RAG~\citep{lewis2020rag} and its
+successors improve per-query retrieval for corpus question answering, not a
+user's evolving personal memory. Noesis pairs hybrid retrieval with a hard
+token budget and a confidence gate; \S\ref{sec:scale} shows why injecting
+everything fails for personal memory.
 
-\paragraph{Personalization.} PALR~\citep{palr} and related work personalize
-outputs from interaction history, mostly for recommendation; chat vendors'
-memory features (e.g., ChatGPT memory) are per-product and closed. Noesis
-scopes memory to the user rather than the tool (\S\ref{sec:crosstool}).
+\paragraph{Personalization.} Chat vendors' memory features (e.g., ChatGPT
+memory) are per-product and closed; Noesis scopes memory to the user rather
+than the tool (\S\ref{sec:crosstool}).
 
-\paragraph{Visualization of embedding spaces.} t-SNE~\citep{tsne} and
-UMAP~\citep{umap} project embeddings for inspection, and force-directed
-layouts~\citep{forcedirected} model attraction and repulsion; the star map
-(\S\ref{sec:viz}) adds weak time and confidence springs to a 3D force-directed
-layout.
+\paragraph{Visualization of embedding spaces.} Force-directed
+layouts~\citep{forcedirected} place points by attraction and repulsion; the
+star map (\S\ref{sec:viz}) adds weak time and confidence springs to a 3D
+force-directed layout of thought embeddings.
 
 % ══════════════════════════════════════════════════════════════════════════════
 \section{System Design}
@@ -361,7 +352,7 @@ firmly (``I prefer\ldots''), which is enough to reach provisional
 the Noesis proxy) and \emph{without} (direct to the provider); all models get
 the identical first $110$ questions (22 profiles). An answer counts as a hit
 if it contains the expected keyword, and I report the keyword-hit rate; paired
-outcomes are tested with McNemar's $\chi^2$.
+outcomes are tested with McNemar's $\chi^2$~\citep{mcnemar1947}.
 
 \paragraph{Retrieval-layer experiments.} Ablation, scale, and cross-tool
 experiments call the real pipeline's Python API without LLM calls, measuring
