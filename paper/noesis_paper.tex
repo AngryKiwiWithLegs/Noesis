@@ -10,7 +10,10 @@
 \usepackage{xcolor}
 \usepackage{microtype}
 \usepackage[numbers,sort&compress]{natbib}
+\renewcommand{\bibfont}{\footnotesize}
+\setlength{\bibsep}{0pt plus 0.5pt}
 \usepackage{subcaption}
+\usepackage{multicol}
 
 \hypersetup{
   colorlinks=true,
@@ -20,6 +23,12 @@
 }
 
 \graphicspath{{figures/}}
+
+% Let tall figures share a page with text instead of taking a float page.
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.6}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.8}
 
 % ── Title ─────────────────────────────────────────────────────────────────────
 \title{Noesis: Selective Memory Injection for\\Cross-Tool AI Conversation Consistency}
@@ -75,23 +84,23 @@ GPT; a design decision reached with Gemini is invisible to Claude. The
 reasoning a user performs across tools, such as their positions, preferences,
 and open questions, evaporates at every tool boundary.
 
-Existing systems already address much of this problem (\S\ref{sec:related}).
-Mem0~\citep{mem0} extracts and consolidates salient facts from conversations
-and offers a graph-based variant; OpenMemory MCP~\citep{openmemory} shares one
-local store across MCP clients; Zep~\citep{zep} records when facts become valid
-and invalid in a temporal knowledge graph; and Hindsight~\citep{hindsight}
-separates facts from opinions and attaches an evolving confidence score to
-each opinion. \emph{Retrieval-augmented generation}
-(RAG)~\citep{lewis2020rag} supplies the underlying mechanism of fetching
-relevant context per query; its simplest variant, injecting every stored item,
-grows linearly with memory size and buries the relevant signal (I measure
+Two families of systems address parts of this problem. \emph{Memory
+layers} such as Mem0~\citep{mem0} extract and consolidate facts from
+conversations; OpenMemory MCP~\citep{openmemory} shares one local store across
+MCP clients; and Zep~\citep{zep} and Hindsight~\citep{hindsight} track how facts
+change and how firmly opinions are held (\S\ref{sec:related}).
+\emph{Retrieval-augmented generation} (RAG)~\citep{lewis2020rag} retrieves
+relevant context for each query, but naive variants inject everything
+retrieved; as personal memory grows into the hundreds of items, injected
+context grows linearly, burying the relevant signal and inflating cost
+(I measure
 7{,}192 tokens at $n{=}500$).
 
 Noesis is built on a different premise: \emph{what} gets injected matters as
-much as \emph{whether} anything is injected. A captured statement should reach
-the prompt only when the evidence that the user holds it is strong enough:
-firm wording, repetition, agreement across tools, and no contradiction. This
-is a rule about admission, not a check on truth.
+much as \emph{whether} anything is injected. Thoughts should earn their way
+into the context the way beliefs earn their way into a mind: through
+repetition, consistency, and survival against contradiction. Earning here
+means passing an admission rule, not being verified as true.
 
 This paper makes the following contributions:
 
@@ -107,8 +116,7 @@ This paper makes the following contributions:
   $\sim$207 tokens (35 times fewer than injecting everything) while holding
   MRR at 0.90; a standard top-5 RAG matches that ranking at lower cost, and
   Noesis's gate is what keeps tentative and hedged statements out (0 vs.\ 19
-  and 0 vs.\ 13 in constructed tests); it does not verify facts or stop
-  deliberate poisoning.
+  and 0 vs.\ 13 in constructed tests).
   \item \textbf{Quantified cross-tool memory sharing} (\S\ref{sec:crosstool}).
   With a shared per-user store, Noesis retrieves 37\% of strictly cross-tool
   queries versus 0\% for per-tool isolation (50\% vs.\ 7.5\% over all 40
@@ -121,17 +129,16 @@ This paper makes the following contributions:
   a small local model (qwen2.5:3b, $+25.5$pp); all $p<0.001$.
 \end{enumerate}
 
-Storage and retrieval are local: embeddings and retrieval run on-device
-(sqlite-vec + all-MiniLM-L6-v2). Conversation text leaves the machine only
-when optional LLM-based extraction is enabled or when the proxy forwards a
-request to a cloud model, which then also receives the injected memories.
-All code, the experiment harness, the saved raw results
-(\S\ref{sec:setup} lists which records were not kept), and a script that
-recomputes every reported number from them are released.\footnote{\url{https://github.com/AngryKiwiWithLegs/Noesis}}
+The system is local-first: embeddings and retrieval run on-device
+(sqlite-vec + all-MiniLM-L6-v2), and conversation text leaves the machine only
+for optional LLM-based extraction or when the proxy forwards a request, with
+its injected memories, to a cloud model. All code, the experiment harness, the
+saved raw results, and a verification script that recomputes every reported
+number from raw JSON are released.\footnote{\url{https://github.com/AngryKiwiWithLegs/Noesis}}
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=0.95\linewidth]{fig1_architecture.pdf}
+  \includegraphics[width=0.64\linewidth]{fig1_architecture.pdf}
   \caption{Noesis system architecture. Tools connect through an MCP server,
   an OpenAI-compatible proxy, or a WebSocket; Phase 1 stores the utterance
   synchronously (median 21\,ms) and Phase 2 asynchronously extracts, scores, and
@@ -144,126 +151,82 @@ recomputes every reported number from them are released.\footnote{\url{https://g
 \section{Related Work}
 \label{sec:related}
 
-This is a targeted review, not a systematic one; sources were last checked on
-17 October 2026. I cite peer-reviewed versions where they exist; preprints and
-vendor announcements are marked as such in the references, and statements
-about a system describe the cited version, not later releases.
+Sources were checked on 17 October 2026; the
+references mark preprints and vendor announcements, and
+\nolinkurl{docs/related_systems.md} tabulates what each cited version describes.
 
-\paragraph{Foundations of agent memory.}
-Maintaining information beyond a context window is not new.
-MemGPT~\citep{memgpt} treats context management as movement between memory
-tiers; Generative Agents~\citep{generativeagents} store experience, synthesize
-reflections from it, and rank memories by recency, importance, and relevance;
-and MemoryBank~\citep{memorybank} lets memories fade along an Ebbinghaus
-forgetting curve, the closest precedent for Noesis's type-specific decay.
-Together these separate storage, consolidation, retrieval, and control.
-Recent surveys organize the field by the forms, functions, and dynamics of
-memory~\citep{hu2025memory} and, for graph-based memory, by extraction,
-storage, retrieval, and evolution~\citep{yang2026graphmemory}. Against this
-background, Noesis's candidate contribution is narrow: an \emph{admission
-policy} that decides which stored items are eligible to be injected at all.
-
-\paragraph{Shared and evolving memory services.}
-Mem0~\citep{mem0} extracts and consolidates salient facts from ongoing
-conversations, and its graph-based variant captures relations between them.
-OpenMemory MCP~\citep{openmemory} runs a Mem0-based store locally and shares
-it across MCP clients such as Cursor, Claude Desktop, Windsurf, and Cline,
-through tools that add, search, list, and delete memories. Noesis shares this
-local, cross-client design. It differs in two respects: it also captures
-clients outside MCP, through an OpenAI-compatible proxy and a browser
-extension; and it withholds stored items whose status is below provisional,
-whereas the OpenMemory announcement describes no rule that withholds memories
-by confidence or status. Zep~\citep{zep} builds a temporal knowledge graph
-(Graphiti) of episodes, entities, and communities. Each fact edge carries
-validity timestamps, an LLM compares new facts with related existing ones,
-and a contradicted fact is invalidated rather than deleted; retrieval combines
-cosine similarity, BM25, and breadth-first graph search with rerankers. Zep's
-invalidation answers the question Noesis's supersession check (\S\ref{sec:supersession})
-answers---is this stance still current?---with a more general, LLM-based
-mechanism, where Noesis uses replacement verbs and a domain keyword map that
-are cheaper but narrower. Zep's paper describes relevance reranking but no
-threshold that keeps a valid fact out of the results; Noesis's gate addresses
-that separate question of whether a statement was asserted firmly enough to be
-used.
+\paragraph{Memory for LLM agents.}
+MemGPT~\citep{memgpt} treats the LLM as an operating system paging memory
+between contexts; Letta extends this with archival storage. Mem0~\citep{mem0}
+extracts and consolidates facts with an LLM pipeline, reporting gains over
+full-history baselines, and has a graph-based variant; A-MEM~\citep{amem} links
+memories into an evolving Zettelkasten-style network, and Zep~\citep{zep} stores
+them in a temporal knowledge graph. Zep invalidates contradicted facts with an LLM, more
+generally than Noesis's supersession rules (\S\ref{sec:supersession}), but
+describes no threshold that keeps a valid fact out.
+Generative Agents~\citep{generativeagents} rank memories by
+recency, importance, and relevance, and MemoryBank~\citep{memorybank} lets
+them fade along an Ebbinghaus forgetting curve, the closest precedents for
+Noesis's type-specific decay. OpenMemory MCP~\citep{openmemory} already
+shares one local store across MCP clients such as Cursor and Claude Desktop.
+Noesis differs in (a) an explicit admission rule, under which items below
+provisional status are never injected and which the OpenMemory announcement
+does not describe, and (b) its entry points beyond MCP: an
+OpenAI-compatible proxy and a browser extension make clients outside MCP
+first-class participants. Against this background, Noesis's candidate
+contribution is narrow: the admission policy, not memory beyond a context
+window in general. Benchmarks such as LoCoMo~\citep{locomo} and
+LongMemEval~\citep{longmemeval} offer standard long-term-memory evaluations
+that this paper does not yet use; LongMemEval-V2~\citep{longmemevalv2} (in progress) adds
+workflow memory.
 
 \paragraph{Hindsight.}
-Hindsight~\citep{hindsight} is the closest system to Noesis. It separates
-an agent's memory into four networks (objective world facts, the agent's own
-experiences, opinions, and observations that summarize entities), extracts
-facts with an LLM, and recalls them through four channels (semantic, BM25,
-graph spreading activation, and temporal) fused with reciprocal-rank fusion,
-reranked with a cross-encoder, and capped by a token budget. Its opinions
-carry a confidence score that evidence reinforces, weakens, or contradicts.
-Typed memory, hybrid retrieval with a budget, and evolving belief confidence
-are therefore all established, and I do not claim them as contributions.
-The differences are narrower. First, Hindsight's confidence is attached to
-opinions the \emph{agent} forms during reflection, and, in the description I
-examined, it is not a condition for recall; Noesis scores the \emph{user's}
-own statements of every type and admits nothing below provisional into the
-prompt. Second, the intended deployment differs: Hindsight indexes memory in
-PostgreSQL with pgvector and calls an LLM to extract facts, whereas Noesis runs
-on SQLite with a CPU embedding model and falls back to deterministic
-extraction without an API key. Third, Noesis captures conversations from
-several different AI tools into one store. I have not compared the two
-systems empirically, and this paper does not show that Noesis's gate
-improves on confidence-annotated recall.
+Hindsight~\citep{hindsight}, the closest system, separates world facts, the
+agent's experiences, opinions, and entity observations, recalls through four
+channels under a token budget, and gives each opinion an evolving confidence,
+so typed memory, budgeted hybrid retrieval, and evolving confidence are not
+Noesis contributions. The differences are narrower: Hindsight's confidence
+belongs to opinions the \emph{agent} forms and, in the version I examined,
+does not gate recall, whereas Noesis gates the \emph{user's} own statements;
+Noesis runs on SQLite with a CPU embedding model and pools several AI tools
+into one store. I have not compared the two empirically.
 
 \paragraph{Learned and graph-structured memory control.}
-A-MEM~\citep{amem} builds Zettelkasten-style notes and updates their links and
-attributes as new memories arrive. GraphRAG~\citep{graphrag} builds an entity
-graph with precomputed community summaries to answer global questions about a
-document corpus, a different task from tracking one user's changing
-preferences. AgeMem~\citep{agemem} exposes storing, retrieving, updating,
-summarizing, and discarding as tool actions and trains the agent's policy to
-use them with reinforcement learning; MRAgent~\citep{mragent} accesses an
-associative Cue--Tag--Content graph iteratively, guided by intermediate
-reasoning. These systems treat memory management as a control and learning
-problem. Noesis instead uses fixed rules: its intended advantages are
-transparency (each admission decision traces to a score and a threshold, and
-memory is human-editable Markdown), low overhead, and portability across
-tools, not task performance, which this paper does not compare against them.
-
-\paragraph{Benchmarks.}
-LoCoMo~\citep{locomo} and LongMemEval~\citep{longmemeval}, which tests
-extraction, multi-session and temporal reasoning, knowledge updates, and
-abstention, are the standard long-term-memory evaluations; Hindsight and
-MRAgent report results on both. This paper does not yet use them, and results
-across systems on them are comparable only when the backbone model, scoring,
-available history, and budget are aligned.
+Surveys organize agent memory by forms, functions, and
+dynamics~\citep{hu2025memory}, and graph memory by extraction, storage,
+retrieval, and evolution~\citep{yang2026graphmemory}. GraphRAG~\citep{graphrag}
+summarizes entity communities for global questions over a corpus, a different
+task from tracking one user's preferences; AgeMem~\citep{agemem} learns when to
+store, retrieve, update, summarize, or discard; and MRAgent~\citep{mragent}
+explores an associative memory graph guided by reasoning. Noesis instead uses
+fixed rules; its intended advantages (transparency, low overhead,
+portability) are unmeasured here apart from the latencies in
+\S\ref{sec:taxonomy}, and task performance is not compared.
 
 \paragraph{Memory security.}
-Persistent memory adds attack surface. MINJA~\citep{minja} plants malicious
-records in an agent's memory through ordinary queries and observed outputs,
-without direct access to the memory store. A recent survey~\citep{lin2026memsecurity}
-organizes attacks and defenses across six lifecycle phases (write, store,
-retrieve, execute, share and propagate, forget and roll back) and argues that
-memory security cannot be retrofitted at retrieval or execution time alone.
-Noesis's confidence gate acts at retrieval time and filters by how firmly
-something was said, so it does not address write-time attacks: a firmly
-worded planted statement reaches provisional (\S\ref{sec:lifecycle},
-\S\ref{sec:limitations}). A shared cross-tool store also adds a propagation
-path, since a record written through one tool is injected into the others.
-``Local-first'' here describes storage and retrieval; when configured,
-conversation text still reaches a cloud extraction model, and injected
-memories reach whichever provider answers the request.
+MINJA~\citep{minja} plants malicious memories through ordinary queries, and a
+survey~\citep{lin2026memsecurity} argues that memory security spans writing,
+storage, retrieval, execution, sharing, and forgetting, and cannot be added at
+retrieval time alone. Noesis's gate acts at retrieval and judges how firmly
+something was said, so a firmly worded planted statement passes
+(\S\ref{sec:limitations}), and a shared store carries a record written in one
+tool into the others.
 
 \paragraph{Retrieval-augmented generation.}
 RAG~\citep{lewis2020rag} and successors retrieve per-query context.
 Self-RAG~\citep{selfrag} and FLARE~\citep{flare} improve retrieval quality
 or adaptivity, but address corpus QA, not a user's evolving personal memory.
-My scale experiment (\S\ref{sec:scale}) shows that injecting every stored
-memory fails for personal memory (cost grows linearly and ranking collapses)
-and that a standard top-5 retriever avoids both. Noesis pairs hybrid
-retrieval (BM25 + vector + RRF, with time-decay weighting) with a hard token
-budget and a confidence gate.
+My scale experiment (\S\ref{sec:scale}) shows why naive inject-everything
+retrieval fails for personal memory: cost grows linearly and ranking
+collapses. Noesis pairs hybrid retrieval (BM25 + vector + RRF, with
+time-decay weighting) with a hard token budget and a confidence gate.
 
 \paragraph{Personalization.}
 PALR~\citep{palr} and related work personalize outputs from user interaction
 history, typically for recommendation-style tasks. Chat-tool vendor memory
 features (e.g., ChatGPT memory) are per-product and closed. Noesis's
-cross-tool experiment (\S\ref{sec:crosstool}) shows the benefit of
-user-scoped over tool-scoped access; it does not compare Noesis with other
-shared stores.
+cross-tool experiment (\S\ref{sec:crosstool}) demonstrates a structural
+advantage of user-scoped rather than tool-scoped memory.
 
 \paragraph{Visualization of embedding spaces.}
 t-SNE~\citep{tsne} and UMAP~\citep{umap} project high-dimensional
@@ -282,8 +245,7 @@ API clients point at a local OpenAI-compatible proxy, which injects memory
 into the system prompt, forwards the request to the configured provider
 (cloud or local), and captures the conversation for memory formation;
 Claude Desktop connects through an MCP server and the browser extension
-through a WebSocket. These routes do not behave alike, and the experiments use
-only the proxy (\S\ref{sec:setup}).
+through a WebSocket.
 
 \subsection{Thought taxonomy and two-phase capture}
 \label{sec:taxonomy}
@@ -342,7 +304,7 @@ requires repetition: at least three similar earlier thoughts with cross-tool
 corroboration, or six without. \emph{Provisional} thoughts inject when
 topic-relevant; \emph{settled} thoughts always inject. The result is a
 rule-based admission score: it decides what may be injected, not whether a
-thought is true, and a score of 0.75 is not a calibrated 75\% probability of
+thought is true, correctly attributed, still valid, or cleared for reuse, and a score of 0.75 is not a calibrated 75\% probability of
 being correct~\citep{guo2017calibration}. Confidence evolves
 incrementally: reinforcement $+0.10\,(1-C)$, conflict $-0.20$, and time decay
 $C \leftarrow C\, e^{-0.693\,\Delta t / t_{1/2}}$ with $t_{1/2}$ set by type
@@ -381,22 +343,22 @@ stale-stance leakage from 93\% to 7\% (Table~\ref{tab:supersession}).
 \subsection{Selective retrieval and injection}
 \label{sec:retrieval}
 
-At query time, three channels run in parallel (Figure~\ref{fig:pipeline}):
-BM25 for exact terms, dense retrieval for paraphrase, and two lightweight
-signals (recency, core-facts). Channels fuse via reciprocal-rank fusion with
-time-decay weighting. The semantic channel also attempts a one-hop expansion
-over links between notes in the vault; in the current code this step adds
-nothing (\S\ref{sec:discussion}), so every reported result comes from flat
-retrieval. A confidence gate drops everything below
-\emph{provisional}, and a hard token budget (1{,}200 tokens) truncates the
-remainder. The result is injected into the system prompt as compact
-structured lines.
+At query time (Figure~\ref{fig:pipeline}), the semantic channel retrieves up
+to eight thoughts by dense similarity; once a user has 300 thoughts it also
+runs BM25 and fuses the two rankings by reciprocal-rank fusion with time-decay
+weighting. Up to three recent and three core (identity and preference)
+thoughts are then appended, duplicates are dropped, and a confidence gate
+excludes everything below \emph{provisional}. A hard token budget (1{,}200
+tokens) truncates the remainder, and the result is injected into the system
+prompt as compact structured lines. A one-hop expansion over vault links
+currently adds nothing (\S\ref{sec:discussion}).
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=\linewidth]{fig2_pipeline.pdf}
-  \caption{Retrieval and injection pipeline. Three channels fuse via RRF;
-  a confidence gate removes non-injectable thoughts; a token budget caps
+  \includegraphics[width=0.85\linewidth]{fig2_pipeline.pdf}
+  \caption{Retrieval and injection pipeline. Dense and BM25 rankings fuse via
+  RRF (BM25 from 300 thoughts); recency and core-fact thoughts are appended; a
+  confidence gate removes non-injectable thoughts; a token budget caps
   injected context.}
   \label{fig:pipeline}
 \end{figure}
@@ -421,7 +383,9 @@ I evaluate four research questions:
 {\sloppy
 \paragraph{Models.} Gemini Flash-Lite (cloud; \texttt{gemini-flash-}\allowbreak\texttt{lite-latest},
 queried 30 June 2026), gemma3:4b and qwen2.5:3b (local via Ollama), spanning
-capability tiers.\par}
+capability tiers. Answers used a 150-token limit and default sampling (no
+temperature set), one per question and condition; the Gemini alias and Ollama
+tags are not immutable, and local model digests were not recorded.\par}
 
 \paragraph{A/B design.} 30 synthetic English user profiles, each with 5
 build statements (an identity statement plus preferences, positions, and
@@ -438,35 +402,23 @@ outcomes are tested with McNemar's $\chi^2$.
 \paragraph{Retrieval-layer experiments.} Ablation, scale, and cross-tool
 experiments run against the real pipeline without LLM calls, measuring
 Recall@5, MRR, the recall and size of the full injected context, tentative
-leakage, and injected tokens. They call the Python API directly, bypassing
-all three integration routes; the cross-tool experiment simulates different
-tools by labeling each stored statement with a source tool rather than by
-running real clients.
+leakage, and injected tokens. They call the Python API directly, and the cross-tool
+experiment simulates tools by labeling each statement's source.
 
-\paragraph{Integration routes.} Noesis offers three routes into the same
-store (Figure~\ref{fig:architecture}), but they behave differently, and this
-paper evaluates one of them end to end. The \emph{proxy} retrieves context for
-the latest user message, appends it to the system message, forwards the
-request, and stores the exchange, so injection and capture are automatic; the
-A/B and end-to-end experiments (\S\ref{sec:ab}) run through it. The \emph{MCP
-server} exposes five tools (\texttt{remember}, \texttt{recall},
-\texttt{wiki\_query}, \texttt{inspect\_memory}, \texttt{memory\_status}).
-Under MCP the host coordinates the model and aggregates context, and tools
-are model-controlled~\citep{mcpspec}: nothing is stored unless the model calls
-\texttt{remember}, in words the model chooses, and nothing is injected unless
-it calls \texttt{recall}. Exposing these tools therefore does not ensure that
-they are called at the right time, and the MCP route is not equivalent to the
-proxy. The server implements the 2024-11-05 protocol revision and has unit
-tests, but no experiment here uses it. The \emph{browser extension} sends each
-completed user--assistant turn on the ChatGPT, Claude, Gemini, and Perplexity
-web apps to the daemon over a WebSocket. It only captures: it cannot inject
-memory into those pages, and it is not evaluated here.
+\paragraph{Integration routes.} Only the proxy, which injects context and
+stores each exchange automatically, is evaluated end to end, in the A/B and
+end-to-end runs (\S\ref{sec:ab}). MCP tools are
+model-controlled~\citep{mcpspec}: nothing is stored or injected unless the
+model calls \texttt{remember} or \texttt{recall}, so exposing them does not
+ensure timely use, and the MCP server has unit tests only. The browser
+extension only captures turns from chat web apps and is not evaluated.
 
 \paragraph{Reproducibility.} Every experimental number in this paper is
 recomputed from the raw result files by a released script
 (\texttt{experiments/verify\_paper.py}), which also reads the lifecycle
 constants from the source. The ablation and scale experiments were re-run in
-October 2026 with the June software versions; they reproduced the June
+October 2026 with the June software versions (Python 3.12.11, torch 2.2.2, transformers
+4.44.2, sentence-transformers 3.0.1, all-MiniLM-L6-v2); they reproduced the June
 numbers exactly before the corrected leak metric and the top-5 baseline were
 added. The ablation was later corrected further (\S\ref{sec:limitations}).
 \texttt{verify\_paper.py} is an arithmetic audit: it checks that each reported
@@ -505,7 +457,7 @@ tagged \texttt{v1.0-preprint} in the repository.
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=0.9\linewidth]{fig3_ab_comparison.pdf}
+  \includegraphics[width=0.78\linewidth]{fig3_ab_comparison.pdf}
   \caption{A/B keyword-hit rate across models ($n{=}110$ each). All improvements
   significant at $p<0.001$.}
   \label{fig:ab}
@@ -517,11 +469,10 @@ all three models improve significantly, and memory \emph{hurt} in only 10 of
 330 paired answers (3.0\%). Second, \emph{memory levels the field between
 local and cloud}: with injection, gemma3:4b (4B parameters, local) reaches
 82.7\%, nearly matching Gemini Flash-Lite's 85.5\%, while its no-memory
-baseline (34.5\%) trails Gemini's 41.8\%. Third, \emph{small models appear
-comprehension-capped}: qwen2.5:3b goes through the same retrieval pipeline
-but reaches only 62.7\%, which points to a model-capability ceiling rather
-than a retrieval failure; the saved runs do not record the injected context,
-so this is not yet confirmed.
+baseline (34.5\%) trails Gemini's 41.8\%. Third, \emph{the smallest model
+gains least}: qwen2.5:3b goes through the same retrieval pipeline but reaches
+only 62.7\%. A model-capability ceiling is one possible reason, but the saved
+runs do not record the injected context, so it remains a hypothesis.
 
 The hit rate alone does not separate retrieval strategies at this scale. In a
 separate end-to-end run on 50 questions (10 profiles, Gemini Flash-Lite),
@@ -530,10 +481,9 @@ memories scored 41, 40, and 41 of 50, against 22 of 50 with no memory. With
 only 3--9 stored memories per profile in that run, all three strategies
 inject nearly the same context; they diverge on filtering and cost as the
 store grows (\S\ref{sec:ablation}--\S\ref{sec:scale}).
-The A/B result therefore shows that having personal context available helps
-on these tasks; it does not show that the confidence lifecycle beats simpler
-ways of supplying the same memories, which the end-to-end run could not
-separate.
+The A/B result therefore shows that personal context
+helps on these tasks, not that the lifecycle beats simpler ways of supplying
+the same memories.
 
 \subsection{RQ2: Semantic retrieval drives recall; gating keeps tentative thoughts out}
 \label{sec:ablation}
@@ -571,7 +521,8 @@ same; the baselines draw from every stored memory, tentative ones included.
 Status and confidence are assigned when the test store is built, so this
 suite tests whether retrieval respects those labels, not whether the
 lifecycle derives them from conversation. With 28 memories the semantic
-channel is dense retrieval alone (BM25 fusion starts at 300 memories).
+channel is dense retrieval alone (BM25 fusion starts at 300 memories). Stale-memory leakage is measured only by the
+supersession test (Table~\ref{tab:supersession}).
 
 Removing semantic retrieval collapses recall (99\%$\to$24\%), confirming it
 as the main source of recall (Table~\ref{tab:ablation}). Removing the
@@ -595,7 +546,7 @@ help on queries the semantic channel misses needs a dedicated query set.
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=\linewidth]{fig4_scale_degradation.pdf}
+  \includegraphics[width=0.88\linewidth]{fig4_scale_degradation.pdf}
   \caption{Scale behavior from 10 to 500 stored memories. (a) Noesis's
   injected tokens stay flat ($\sim$207) while naive RAG (inject all) grows to
   7{,}192 (35 times); top-5 RAG stays at 66--68. (b) Noesis and top-5 RAG
@@ -625,7 +576,7 @@ reported together.
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=0.85\linewidth]{fig6_cross_tool.pdf}
+  \includegraphics[width=0.7\linewidth]{fig6_cross_tool.pdf}
   \caption{Cross-tool retrieval. Isolated per-tool memory scores 0\% on
   strictly cross-tool queries by construction.}
   \label{fig:crosstool}
@@ -641,9 +592,8 @@ construction. The 7 scenarios where the asking tool did see the stance are a
 fairer comparison: isolated memory retrieves 3 of 7 and Noesis 6 of 7. Over
 all 40 scenarios, Noesis retrieves 50\% and the isolated baseline 7.5\%.
 This is the structural argument: per-tool memory systems cannot share by
-design, and no amount of per-tool tuning closes the gap. The comparison therefore shows the value of access to a
-shared store, not an advantage over another shared-memory system, which would
-need both systems to see the same records. Noesis's misses
+design, and no amount of per-tool tuning closes the gap. The comparison therefore shows the value of access, not
+an advantage over another shared-memory system given the same records. Noesis's misses
 trace to retrieval precision (the memory exists but ranks below top-$k$),
 not to sharing.
 
@@ -653,7 +603,7 @@ not to sharing.
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=0.95\linewidth]{fig5_star_map.png}
+  \includegraphics[width=0.85\linewidth]{fig5_star_map.png}
   \caption{The star map. Semantic neighbors attract into volumetric
   constellations. Time runs from older (left) to newer (right), height
   reflects confidence, and color encodes topic; star size encodes type and
@@ -679,10 +629,9 @@ populated by the experiment and demo runs rather than by real use: of its
 assigns when no known topic matches, and 18 have settled. Even so, the view
 surfaces such patterns at a glance; here it shows how coarse topic assignment
 still is. The viewer is a local web tool shipped with the system; it opens
-the store read-only, so inspecting memory never changes it. The map is a
-display, not a retrieval structure: its attraction edges are computed by the
-viewer, are never stored, and do not affect what is retrieved or injected, so
-it says nothing about whether graph structure improves answers.
+the store read-only, so inspecting memory never changes it. The map is a display only: its edges are computed by
+the viewer and never affect retrieval, so it says nothing about whether graph
+structure improves answers.
 
 % ══════════════════════════════════════════════════════════════════════════════
 \section{Discussion}
@@ -698,8 +647,7 @@ direction.
 \paragraph{Memory can close the local--cloud gap.} gemma3:4b posts the
 largest gain ($+48.2$pp; $+139\%$ over its baseline), approaching Gemini
 Flash-Lite once memory is injected. The benefit is not monotonic in model
-size: qwen2.5:3b gains least ($+25.5$pp), consistent with the comprehension
-ceiling in \S\ref{sec:ab}. Memory helps small local models most when they
+size: qwen2.5:3b gains least ($+25.5$pp; \S\ref{sec:ab}). Memory helps small local models most when they
 can use the injected context, which matters for privacy-sensitive and
 offline settings.
 
@@ -713,67 +661,36 @@ better'' uses no listed replacement verb and names no known domain, and once
 because ``I switched to Node.js'' has the verb but Node.js is missing from
 the domain map. A broader mind-change detector is the matching fix.
 
-\paragraph{Noesis inside an agent harness.} An execution harness is the
-software around a model that manages a task's control flow, tool use, state,
-and recovery, for example by carrying progress across
-sessions~\citep{anthropicharness}; it is distinct from the experiment harness
-used in this paper. Noesis fits inside such a harness as a memory service, not
-as a replacement for orchestration, and what follows is a proposal that this
-paper does not implement or evaluate. Before a model step, the harness would
-identify the user, project, task, and access scope, request approved memories,
-and insert a bounded evidence block that names each memory's source; after the
-step, it would send candidate memories with their sources for asynchronous
-processing; and it would keep an explicit \texttt{recall} call for when a tool
-result changes the question. LangGraph shows the intended division of labor:
-it keeps thread-scoped checkpoints of a run's state separate from a
-cross-thread store for long-term memory such as user
-preferences~\citep{langgraph}. Noesis could fill the second role but not the
-first: remembering that a user prefers PostgreSQL is different from recording
-which step of an interrupted database migration has finished.
+\paragraph{Noesis inside an agent harness.} An execution harness manages a
+task's control flow, tools, state, and recovery~\citep{anthropicharness};
+Noesis would sit inside one as a memory service, not as orchestration. None of
+this is implemented or evaluated here. Before a model step, the harness would
+insert approved memories for the current user, project, and access scope as a
+bounded, sourced block, and afterward send candidate memories with their
+sources. LangGraph separates thread-scoped checkpoints from a cross-thread
+store~\citep{langgraph}; Noesis could fill only the second role. An
+integration would also need corrections, deletion, audit, and source lineage.
+Three gaps stand out: repetition counts similar records whatever their source,
+and the proxy stores each request's full history, so replays and assistant
+paraphrases can inflate confidence (unmeasured); new memories become
+injectable only after asynchronous scoring; and injected memories are neither
+marked as data nor deduplicated against the harness's own summaries.
 
-\paragraph{What a harness integration would need.} A harness would need a
-contract that the current code does not provide: reads, candidate writes,
-corrections, deletion, and audit, each with stable event identifiers and a
-record of where every memory came from. Today, corrections and deletions
-happen only by editing or deleting the Markdown files in the vault. Three
-further gaps are visible in the code. First, the repetition signal counts
-every stored record in the same topic that shares at least two keywords,
-whatever its source, and the proxy stores each request's full message list;
-replayed history, retried requests, and assistant paraphrases can therefore
-raise a memory's confidence as if new evidence had arrived. I have not
-measured how often this happens. Second, a statement is stored at once but
-becomes injectable only after the asynchronous Phase~2 scores it, and read
-consistency under concurrent agents is unspecified. Third, retrieved memories
-are appended to the system message under a plain heading, in the same message
-as the host's own instructions; an integration should mark them as data,
-deduplicate them against the harness's own summaries and instruction files,
-and never let them grant permissions or override higher-priority
-instructions.
-
-\paragraph{Graph structure: what exists and what is tested.} Noesis keeps
-several kinds of links, but the evaluated system is not a graph-based
-reasoner. Supersession links (\texttt{superseded\_by}) are implemented and
-evaluated (Table~\ref{tab:supersession}). Topic clusters are implemented and
-used, since the scorer counts repetition and contradiction only within a
-thought's topic, but no experiment isolates their effect. Links from thoughts
-to wiki pages (\texttt{fact\_ref}) are implemented but not evaluated. The
-semantic channel also calls a one-hop expansion over the \emph{Related} links
-between notes in the vault, but in the current code it cannot add a memory:
-links between thoughts are written with 8-character identifiers, while the
-store looks up full 12-character identifiers, and topic and wiki links do not
-point to stored thoughts. The ablation and scale stores were also built
-without the background pipeline, so they contain no such links. Every
-reported retrieval result therefore comes from flat retrieval. The star map
-(\S\ref{sec:viz}) is a visualization only, and typed claim graphs, branching,
-and structured injection are proposals (\S\ref{sec:future}).
+\paragraph{Graph structure.} The evaluated system is not a graph-based
+reasoner: supersession links are implemented and evaluated
+(Table~\ref{tab:supersession}); topic clusters, which limit which records the
+scorer compares, and wiki links are not evaluated separately; and the one-hop
+expansion over vault links cannot add a memory (it writes 8-character
+identifiers but looks up 12-character ones), while the ablation and scale
+stores have no links. Every reported result therefore comes from flat
+retrieval.
 
 \paragraph{Negative results.} I report that the supersession check
 initially never ran, so stale stances leaked 93\% of the time until it was
 fixed (\S\ref{sec:supersession}); that core-fact and recency signals added
 no recall in my ablation suite; that a standard top-5 RAG matches Noesis's
-ranking at lower cost on the scale benchmark; that a 3B model appears
-comprehension-capped; and that the one-hop graph expansion in the retrieval
-path never adds a memory. I consider these findings part of the
+ranking at lower cost on the scale benchmark; that the 3B model gains least; and that the graph expansion never adds a
+memory. I consider these findings part of the
 contribution.
 
 % ══════════════════════════════════════════════════════════════════════════════
@@ -789,40 +706,30 @@ divergence---a longitudinal record of how a user's positions evolve.
 
 \paragraph{Structured injection.} Replacing flat context lines with a
 structured \texttt{user\_thought\_graph} (anchor topic, trajectory with
-weights, cross-links) may improve the ability of small models to exploit
-injected memory, directly addressing the qwen2.5 comprehension ceiling.
+weights, cross-links) may help small models use injected memory.
 
 \paragraph{Stronger evaluation.} LLM-as-judge scoring to complement keyword
 hits; distractor questions; a second cloud model to replicate the Gemini
-result; longitudinal deployment data beyond synthetic profiles.
+result; longitudinal deployment data beyond synthetic profiles. Some questions need tentative thoughts (``what
+alternatives was I considering last week?''), which the gate withholds; tests
+should compare excluding them with retrieving them alongside their
+uncertainty and source, adapting the risk--coverage view of selective
+prediction~\citep{geifman2017selective}.
 
-\paragraph{Harness-level evaluation.} With the model, tasks, tools, and
-budgets held fixed, compare a harness's native memory, a simple shared store,
-and Noesis-backed memory on task completion, correct use of preferences,
-resumption after an interruption, stale-information errors, isolation between
-projects, and unnecessary retrieval calls, counting the full cost of capture,
-extraction, maintenance, retrieval, and generation rather than injected tokens
-alone. Counting repetition only across distinct user statements, with their
-sources recorded, is the matching fix for the first gap in
-\S\ref{sec:discussion}.
+\paragraph{Harness-level evaluation.} With model, tasks, tools, and budget
+fixed, compare native harness memory, a simple shared store, and Noesis on
+task completion, preference use, resumption, stale information, project
+isolation, and needless retrieval, counting cost from capture to generation.
+Counting repetition only across distinct user statements would close the
+first gap in \S\ref{sec:discussion}.
 
-\paragraph{Typed temporal claim graph.} A remembered claim could link to a
-user, project, entity, source utterance, tool, and time interval, with
-explicit relations for support, contradiction, derivation, and supersession;
-project and time scope would let ``PostgreSQL for analytics'' and ``MySQL for
-a legacy application'' coexist instead of conflicting. Zep's temporal graph is
-the closest precedent~\citep{zep}. Derivation links matter for provenance: ten
-claims derived from one utterance are not ten observations, and a frequently
-copied error can become highly connected, so degree or centrality should not
-raise confidence. The deciding experiment crosses representation with
-admission policy: a flat store and a graph-backed store, each with and without
-the same confidence gate, with extraction, source access, backbone model, and
-token budget held fixed, reporting retrieval and answer correctness alongside
-graph-construction cost, latency, the rate of incorrect links, and the effect
-of removing or correcting a source. Fixing the identifier mismatch above would
-let the existing one-hop expansion serve as a first, simple graph condition.
-Learned graph models are a further step that would need held-out users,
-domains, and time periods.
+\paragraph{Typed temporal claim graph.} Claims linked to user, project,
+source, tool, and time, with support, contradiction, derivation, and
+supersession relations, would let ``PostgreSQL for analytics'' and ``MySQL for
+a legacy app'' coexist; Zep~\citep{zep} is the closest precedent. Derived
+claims are not independent observations, so graph centrality should not raise
+confidence. The deciding experiment crosses flat and graph-backed stores with
+and without the same gate, all else fixed.
 
 % ══════════════════════════════════════════════════════════════════════════════
 \section{Limitations}
@@ -845,22 +752,23 @@ the prompt, not final answer quality. The supersession detector relies on
 replacement verbs and a domain keyword map; paraphrased mind-changes outside
 its lexicon will be missed. The supersession fix was developed and validated
 on the same 30 scenarios, so its 93\%~$\to$~7\% result is in-sample;
-held-out, paraphrased mind-changes are needed to measure it fairly. The
+held-out, paraphrased mind-changes, unseen domains, and
+legitimate simultaneous preferences, which a detector that matches by domain
+could wrongly retire, are needed to measure it fairly. The
 scale experiment's naive-RAG baseline injects every stored memory; the top-5
 baseline added in \S\ref{sec:scale} is the stronger comparison, and on this
 benchmark it ties Noesis on ranking. The ablation and poisoning leak counts
 were corrected in October 2026: the original keyword-based metric also counted
 settled memories that merely shared a word with a tentative one (for example,
-``Kafka''). After an external review, I corrected the ablation further: it
-now scores exact memory identity (the old phrase matcher credited any memory
-sharing wording such as ``I prefer''); it drops ``Precision@5'', which
-counted non-tentative results rather than relevant ones; it runs every
-variant through the same context builder (the old core-fact and recency rows
-could not differ from the full system); it applies the memories' ages, which
-the test store had silently dropped; and its recent-window and random
-baselines can now return tentative memories. Together these changes lowered
-the weak baselines (random 45\%~$\to$~12\%, w/o semantic 49\%~$\to$~24\%
-Recall@5) while Noesis moved from 100\% to 99\%.
+``Kafka''). After an external review, the ablation now scores exact memory
+identity (phrase matching had credited any memory sharing wording such as ``I
+prefer''), drops ``Precision@5'' (a non-tentative rate), runs every variant
+through the same context builder (the old core-fact and recency rows could not
+differ from the full system), applies the memories' ages (previously dropped),
+and lets the recent-window and random baselines return tentative memories.
+This lowered the weak baselines (random 45\%~$\to$~12\%, w/o semantic
+49\%~$\to$~24\% Recall@5); Noesis moved from 100\% to 99\%. All results come from my own runs and
+have not been independently replicated.
 
 Noesis also adds an attack surface. The local proxy sees every request,
 including provider API keys and full conversations; enabling cloud
@@ -868,25 +776,25 @@ extraction sends conversation text to a third-party API, which weakens the
 local-first guarantee; and because a single firmly stated sentence already
 reaches provisional (\S\ref{sec:lifecycle}), a planted or mistaken statement
 can enter future prompts. The confidence gate filters hedged statements but
-is not a defense against deliberate poisoning.
+is not a defense against deliberate poisoning. 
 
 % ══════════════════════════════════════════════════════════════════════════════
 \section{Conclusion}
 \label{sec:conclusion}
 
-Noesis shows that \emph{what} a memory system injects matters as much as
-\emph{whether} it injects. A confidence lifecycle decides which thoughts may
-be injected: in constructed tests its gate kept tentative and hedged
-statements out of the prompt where plain retrieval let them in, though it
-judges how firmly something was said, not whether it is true, and is no
-defense against deliberate poisoning. Retrieval keeps cost flat as memory grows (35 times cheaper than injecting everything at
-$n{=}500$, though a standard top-5 RAG is cheaper still); and a shared per-user store makes cross-tool consistency
-possible where per-tool architectures are structurally bound to fail. The
-result is a local-first layer that lets a 4B local model reach nearly the
-keyword-hit rate of a small cloud model (82.7\% vs.\ 85.5\% for Gemini
-Flash-Lite; the gap is not significant on this set, though that does not show the
-two are equivalent)---and that keeps
-the user's reasoning in the user's own vault.
+Injecting a user's own memories raised the keyword-hit rate of all three
+models on personal questions; whether Noesis's lifecycle beats simpler ways of
+supplying the same memories is not yet shown. Its confidence gate kept
+tentative and hedged statements out of the prompt in constructed tests where
+plain retrieval let them in, though it judges how firmly something was said,
+not whether it is true. Retrieval keeps cost flat as memory grows (35 times
+cheaper than injecting everything at $n{=}500$, though a standard top-5 RAG is
+cheaper still), and a shared per-user store gives every connected tool the
+same records, which per-tool stores cannot. The result is a local-first layer
+that brings a 4B local model close to a small cloud model's keyword-hit rate
+(82.7\% vs.\ 85.5\% for Gemini Flash-Lite; not significantly different on this
+set, which does not make them equivalent)---and that keeps the user's
+reasoning in the user's own vault.
 
 \section*{Acknowledgments}
 AI coding assistants were used in this work. ZCode (Z.ai, GLM models)
@@ -899,7 +807,9 @@ raw results by that script, and the author takes full responsibility for the
 paper's content.
 
 % ══════════════════════════════════════════════════════════════════════════════
+\begin{multicols}{2}
 \bibliographystyle{plainnat}
 \bibliography{references}
+\end{multicols}
 
 \end{document}

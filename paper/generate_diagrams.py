@@ -167,7 +167,7 @@ def fig2_pipeline():
     box(ax, 0.04, ylo, 0.58, yhi, "User\nquery", style="neutral", title_size=8.2)
 
     # Three parallel channels
-    chans = [(1.57, "BM25", ["exact terms"]),
+    chans = [(1.57, "BM25", ["≥ 300 thoughts"]),
              (yc,   "Dense vector", ["paraphrase"]),
              (0.27, "Signals", ["recency, core"])]
     cx0, cx1, ch = 0.86, 1.80, 0.21
@@ -181,11 +181,11 @@ def fig2_pipeline():
     for y, *_ in chans:
         arrow(ax, (bus1, y), (cx0 - g, y))
 
-    # Fan-in: channels → bus → RRF
+    # Fan-in: BM25 + dense → bus → RRF; signals bypass RRF and are appended after it
     bus2 = 1.95
-    for y, *_ in chans:
+    for y, *_ in chans[:2]:
         ax.add_line(Line2D([cx1 + g, bus2], [y, y], color=INK2, lw=0.9, zorder=4))
-    ax.add_line(Line2D([bus2, bus2], [chans[2][0], chans[0][0]], color=INK2, lw=0.9, zorder=4))
+    ax.add_line(Line2D([bus2, bus2], [chans[1][0], chans[0][0]], color=INK2, lw=0.9, zorder=4))
 
     stages = [
         (2.10, 2.84, "RRF fusion", ["+ time decay"], "tint"),
@@ -198,6 +198,11 @@ def fig2_pipeline():
         box(ax, x0, ylo, x1, yhi, t, sub, style=st, title_size=8.2, line_size=7.4)
     for a, b in zip(stages, stages[1:]):
         arrow(ax, (a[1] + g, yc), (b[0] - g, yc))
+
+    xj = (stages[0][1] + stages[1][0]) / 2
+    path(ax, [(cx1 + g, chans[2][0]), (xj, chans[2][0]), (xj, yc)])
+    ax.text(xj + 0.05, chans[2][0] + 0.09, "appended", ha="left", va="center",
+            fontsize=7.0, color=MUTED, zorder=3)
 
     save(fig, "fig2_pipeline")
 
