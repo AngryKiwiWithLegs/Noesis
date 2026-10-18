@@ -57,11 +57,11 @@ gemma3:4b, and qwen2.5:3b by 43.6, 48.2, and 25.5 percentage points (all
 $p<0.001$, McNemar's test). At 500 stored memories Noesis injects about 207
 tokens, 35 times fewer than injecting everything, with 9 of 10 targets at rank
 1; a standard top-5 RAG ranks as well with fewer tokens, so Noesis's distinct
-gain is filtering: ungated retrieval surfaced tentative or hedged statements
-19 and 13 times in two constructed tests, Noesis none, though its gate judges
-how firmly something was said, not whether it is true. On strictly cross-tool
-queries Noesis retrieves 37\% of targets, where per-tool isolation is bound to
-0\%. Code, harness, and raw results are released.
+gain is filtering: in two constructed tests, ungated retrieval surfaced
+tentative or hedged statements 19 and 13 times, and Noesis surfaced none. Its
+gate judges how firmly something was said, not whether it is true. On strictly
+cross-tool queries Noesis retrieves 37\% of targets, where per-tool isolation
+is bound to 0\%. The code, experiment harness, and raw results are released.
 
 \smallskip\noindent\textbf{Keywords:} large language models; LLM memory;
 retrieval-augmented generation; personalization; cross-tool memory;
@@ -163,12 +163,12 @@ progress; it adds workflow memory) are not yet used here.
 \paragraph{Hindsight.} Hindsight~\citep{hindsight}, the closest system,
 separates world facts, the agent's experiences, opinions, and entity
 observations, recalls through four channels under a token budget, and gives
-each opinion an evolving confidence, so none of these is a Noesis
-contribution. Its confidence belongs to opinions the \emph{agent} forms and,
-in the version I examined, does not gate recall, whereas Noesis gates the
-\emph{user's} own statements, runs on SQLite with a CPU embedding model, and
-pools several AI tools into one store. I have not compared the two
-empirically.
+each opinion an evolving confidence, so typed memory, budgeted multi-channel
+retrieval, and evolving confidence are not Noesis contributions. Its
+confidence belongs to opinions the \emph{agent} forms and, in the version I
+examined, does not gate recall, whereas Noesis gates the \emph{user's} own
+statements, runs on SQLite with a CPU embedding model, and pools several AI
+tools into one store. I have not compared the two empirically.
 
 \paragraph{Learned and graph-structured memory control.} Surveys organize
 agent memory by forms, functions, and dynamics~\citep{hu2025memory} and graph
@@ -353,14 +353,14 @@ I evaluate four research questions:
 queried 30 June 2026), gemma3:4b and qwen2.5:3b (local via Ollama). Answers used a 150-token limit and default sampling, one per
 question and condition; the Gemini alias and Ollama tags are mutable, and local model digests were not recorded.\par}
 
-\paragraph{A/B design.} Thirty synthetic English profiles each make 5 build
-statements (identity, preferences, positions, decisions), each stated once and
+\paragraph{A/B design.} Each of 30 synthetic English profiles consists of 5
+build statements (identity, preferences, positions, decisions) followed by 5
+test questions with a known expected keyword. Each statement is made once and
 firmly (``I prefer\ldots''), which is enough to reach provisional
-(\S\ref{sec:lifecycle}), followed by 5 test questions with a known expected
-keyword. Each question is answered \emph{with memory} (through the Noesis
-proxy) and \emph{without} (direct to the provider); all models get the
-identical first $110$ questions (22 profiles). An answer counts as a hit if it
-contains the expected keyword, and I report the keyword-hit rate; paired
+(\S\ref{sec:lifecycle}). Each question is answered \emph{with memory} (through
+the Noesis proxy) and \emph{without} (direct to the provider); all models get
+the identical first $110$ questions (22 profiles). An answer counts as a hit
+if it contains the expected keyword, and I report the keyword-hit rate; paired
 outcomes are tested with McNemar's $\chi^2$.
 
 \paragraph{Retrieval-layer experiments.} Ablation, scale, and cross-tool
@@ -427,8 +427,8 @@ First, \emph{injection helps everywhere}: all three models improve
 significantly, and memory \emph{hurt} in only 10 of 330 paired answers
 (3.0\%). Because a profile's five questions share one memory store, I also
 resampled whole profiles (20{,}000 draws over 22 profiles): the 95\% intervals
-for the gains are $+34.5$ to $+51.8$ points (Gemini Flash-Lite), $+37.3$ to
-$+59.1$ (gemma3:4b), and $+13.6$ to $+36.4$ (qwen2.5:3b), all above zero.
+for the gains are $+34.5$ to $+51.8$pp (Gemini Flash-Lite), $+37.3$ to
+$+59.1$pp (gemma3:4b), and $+13.6$ to $+36.4$pp (qwen2.5:3b), all above zero.
 Second, \emph{memory levels the field between local and cloud}: with
 injection, gemma3:4b reaches 82.7\%, close to Gemini Flash-Lite's 85.5\%, from
 a lower baseline (34.5\% vs.\ 41.8\%). Third, \emph{the smallest model gains
@@ -483,18 +483,19 @@ stale-memory leakage is measured only by the supersession test
 
 Removing semantic retrieval collapses recall (99\%$\to$24\%;
 Table~\ref{tab:ablation}). Removing the confidence gate leaves recall
-unchanged but lets tentative thoughts into 73 of 573 injected slots, against
-none for the full system, and ungated top-5 retrieval, which ranks as well as
-Noesis (Recall@5 99\%, MRR 1.000) as it does at scale (\S\ref{sec:scale}),
-injects one in 19 of its 250 slots. A separate poisoning test agrees: with 5
-settled facts and 8 hedged statements contradicting them, ungated top-5
-retrieval returned a hedged statement in 13 of 25 slots across 5 queries,
-Noesis in none. Both tests use hedged statements; a firmly stated false one
-would pass the gate (\S\ref{sec:limitations}). Removing the core-fact or
-recency signal does not change recall: each adds about one memory per query
-(10.9 vs.\ 9.7 items) and, appended after the eight semantic results, never
-reaches the first five slots; whether they help on queries semantic retrieval
-misses needs a dedicated query set.
+unchanged but lets tentative thoughts into 73 of 573 injected slots, where the
+full system injects none. Ungated top-5 retrieval ranks as well as Noesis
+(Recall@5 99\%, MRR 1.000), as it does at scale (\S\ref{sec:scale}), but lets
+a tentative thought into 19 of its 250 slots. A separate poisoning test
+agrees: with 5 settled facts and 8 hedged statements contradicting them,
+ungated top-5 retrieval returned a hedged statement in 13 of 25 slots across 5
+queries, and Noesis returned none. Both tests use hedged statements; a firmly
+stated false one would pass the gate (\S\ref{sec:limitations}). Removing the
+core-fact or recency signal does not change recall: each adds about one memory
+per query (10.9 vs.\ 9.7 items), and because the builder appends them after
+the eight semantic results, they never reach the first five slots. Whether
+they help on queries that semantic retrieval misses needs a dedicated query
+set.
 
 \subsection{RQ3: Retrieval keeps cost flat as memory grows}
 \label{sec:scale}
@@ -578,8 +579,8 @@ answers.
 \paragraph{When memory helps most.} Gains concentrate on questions
 unanswerable without personal context (job, stack, stances); on mainstream
 questions both conditions often answer correctly. Other factors push the other
-way (\S\ref{sec:limitations}), so the gains are not a bound in either
-direction.
+way (\S\ref{sec:limitations}), so these gains should not be read as an upper
+or lower bound.
 
 \paragraph{Memory can close the local--cloud gap.} gemma3:4b gains most
 ($+48.2$pp; $+139\%$ over its baseline) and approaches Gemini Flash-Lite with
@@ -671,15 +672,16 @@ domains, and legitimate simultaneous preferences (which a domain match could
 wrongly retire) are needed. On the scale benchmark top-5 RAG ties Noesis on
 ranking. The ablation and poisoning leak counts were corrected in October 2026
 to stop counting settled memories that merely shared a word with a tentative
-one (for example, ``Kafka''). After an external review, the ablation also
-scores exact memory identity (phrase matching had credited any memory sharing
-wording such as ``I prefer''), drops ``Precision@5'' (a non-tentative rate),
-runs every variant through the same context builder (the old core-fact and
-recency rows could not differ from the full system), applies the memories'
-ages (previously dropped), and lets the recent-window and random baselines
-return tentative memories. This lowered the weak baselines (random
-45\%~$\to$~12\%, w/o semantic 49\%~$\to$~24\% Recall@5); Noesis moved from
-100\% to 99\%. No result has been independently replicated.
+one (for example, ``Kafka''). After an external review, I changed the ablation
+in five ways: it scores exact memory identity instead of shared phrases such
+as ``I prefer''; it drops ``Precision@5'', which measured non-tentative
+results rather than relevant ones; it runs every variant through the same
+context builder, so each differs from the full system in one component only;
+it applies the memories' ages, which the test store had dropped; and it lets
+the recent-window and random baselines return tentative memories. This lowered
+the weak baselines (random 45\%~$\to$~12\%, w/o semantic 49\%~$\to$~24\%
+Recall@5); Noesis moved from 100\% to 99\%. No result has been independently
+replicated.
 
 Noesis also adds an attack surface: the local proxy sees every request,
 including provider API keys and full conversations; optional cloud extraction
@@ -695,14 +697,13 @@ no defense against deliberate poisoning.
 Injecting a user's own memories raised all three models' keyword-hit rates on
 personal questions, though whether Noesis's lifecycle beats simpler ways of
 supplying them is not yet shown. Its gate kept tentative and hedged statements
-out of the prompt in constructed tests where plain retrieval let them in,
-judging how firmly something was said rather than whether it is true.
+out of the prompt in constructed tests where plain retrieval let them in.
 Retrieval keeps cost flat (35 times cheaper than injecting everything at
 $n{=}500$; top-5 RAG is cheaper still), and a shared per-user store gives
 every tool the same records. The result is a local-first layer that brings a
-4B local model close to a small cloud model (82.7\% vs.\ 85.5\%; not
-significantly different here, which does not make them equivalent) and keeps
-the user's reasoning in the user's own vault.
+4B local model's keyword-hit rate close to a small cloud model's (82.7\% vs.\
+85.5\%; the gap is not significant, though that does not make them equal) and
+keeps the user's reasoning in the user's own vault.
 
 \section*{Acknowledgments}
 AI coding assistants were used in this work. ZCode (Z.ai, GLM models)
